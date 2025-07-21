@@ -1,0 +1,13 @@
+{
+  "_checkout": "2021.1.1",
+  "_output_dir": "C:\\Users\\CCLLC\\git",
+  "_repo_dir": "C:\\Users\\CCLLC\\.cookiecutters\\cookiecutter-homeassistant-custom-component",
+  "_template": "gh:oncleben31/cookiecutter-homeassistant-custom-component",
+  "class_name_prefix": "Skybellgen",
+  "domain_name": "skybellgen",
+  "friendly_name": "SkybellGen",
+  "github_user": "tcareyintx",
+  "project_name": "skybellgen",
+  "test_suite": "yes",
+  "version": "0.0.0"
+}

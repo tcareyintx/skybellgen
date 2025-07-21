@@ -1,0 +1,10 @@
+{
+  "domain": "skybellgen",
+  "name": "SkybellGen",
+  "documentation": "https://github.com/tcareyintx/skybellgen",
+  "issue_tracker": "https://github.com/tcareyintx/skybellgen/issues",
+  "dependencies": [],
+  "config_flow": true,
+  "codeowners": ["@tcareyintx"],
+  "requirements": []
+}
