@@ -1,41 +1,74 @@
-"""Constants for SkybellGen."""
-# Base component constants
-NAME = "SkybellGen"
-DOMAIN = "skybellgen"
-DOMAIN_DATA = f"{DOMAIN}_data"
-VERSION = "0.0.0"
+"""Constants for the Skybell Gen Doorbell."""
 
-ATTRIBUTION = "Data provided by http://jsonplaceholder.typicode.com/"
-ISSUE_URL = "https://github.com/tcareyintx/skybellgen/issues"
+import logging
+from typing import Final
 
-# Icons
-ICON = "mdi:format-quote-close"
+from aioskybellgen.helpers.const import (
+    BASIC_MOTION_FD_NOTIFY,
+    BASIC_MOTION_FD_RECORD,
+    BASIC_MOTION_HBD_NOTIFY,
+    BASIC_MOTION_HBD_RECORD,
+    BASIC_MOTION_NOTIFY,
+    BASIC_MOTION_RECORD,
+    IMAGE_QUALITY,
+    MOTION_FD_SENSITIVITY,
+    MOTION_HMBD_SENSITIVITY,
+    MOTION_PIR_SENSITIVITY,
+    MOTION_SENSITIVITY,
+    OUTDOOR_CHIME_VOLUME,
+    SPEAKER_VOLUME,
+)
 
-# Device classes
-BINARY_SENSOR_DEVICE_CLASS = "connectivity"
+DEFAULT_NAME = "SkyBellGen"
+DOMAIN: Final = "skybellgen"
 
-# Platforms
-BINARY_SENSOR = "binary_sensor"
-SENSOR = "sensor"
-SWITCH = "switch"
-PLATFORMS = [BINARY_SENSOR, SENSOR, SWITCH]
+IMAGE_AVATAR = "avatar"
+IMAGE_ACTIVITY = "activity"
 
+DEFAULT_LED_COLOR = [0, 255, 0]
+DEFAULT_BRIGHTNESS = 255
 
-# Configuration and options
-CONF_ENABLED = "enabled"
-CONF_USERNAME = "username"
-CONF_PASSWORD = "password"
+ENUMERATION_VS_VALUES = [
+    "Low",
+    "Medium",
+    "High",
+]
 
-# Defaults
-DEFAULT_NAME = DOMAIN
+ENUMERATION_IQ_VALUES = [
+    "Low",
+    "Medium",
+    "High",
+    "Highest",
+]
 
+ENUMERATION_TYPES = [
+    OUTDOOR_CHIME_VOLUME,
+    SPEAKER_VOLUME,
+    IMAGE_QUALITY,
+    MOTION_SENSITIVITY,
+    MOTION_PIR_SENSITIVITY,
+    MOTION_HMBD_SENSITIVITY,
+    MOTION_FD_SENSITIVITY,
+]
 
-STARTUP_MESSAGE = f"""
--------------------------------------------------------------------
-{NAME}
-Version: {VERSION}
-This is a custom integration!
-If you have any issues with this you need to open an issue here:
-{ISSUE_URL}
--------------------------------------------------------------------
-"""
+TENTH_PERCENT_TYPES = [
+    MOTION_SENSITIVITY,
+    MOTION_PIR_SENSITIVITY,
+    MOTION_HMBD_SENSITIVITY,
+    MOTION_FD_SENSITIVITY,
+]
+
+VOLUME_OPTIONS = ["Low", "Medium", "High"]
+
+IMAGE_OPTIONS = ["Low", "Medium", "High", "Highest"]
+
+BASIC_MOTION_GET_FUNCTION = {
+    BASIC_MOTION_HBD_RECORD: "basic_motion_hbd_record",
+    BASIC_MOTION_HBD_NOTIFY: "basic_motion_hbd_notify",
+    BASIC_MOTION_FD_RECORD: "basic_motion_fd_record",
+    BASIC_MOTION_FD_NOTIFY: "basic_motion_fd_notify",
+    BASIC_MOTION_RECORD: "basic_motion_record",
+    BASIC_MOTION_NOTIFY: "basic_motion_notify",
+}
+
+LOGGER = logging.getLogger(__package__)

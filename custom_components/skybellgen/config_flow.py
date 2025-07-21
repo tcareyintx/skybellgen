@@ -1,106 +1,190 @@
-"""Adds config flow for SkybellGen."""
+"""Config flow for Skybell Gen integration."""
+
+from __future__ import annotations
+
+from collections.abc import Mapping
+import logging
+import os
+from typing import Any
+
+from aioskybellgen import Skybell
+from aioskybellgen.exceptions import (
+    SkybellAuthenticationException,
+    SkybellException,
+)
 import voluptuous as vol
-from homeassistant import config_entries
-from homeassistant.core import callback
-from homeassistant.helpers.aiohttp_client import async_create_clientsession
 
-from .api import SkybellgenApiClient
-from .const import CONF_PASSWORD
-from .const import CONF_USERNAME
+from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
+from homeassistant.const import CONF_EMAIL, CONF_PASSWORD
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
+
 from .const import DOMAIN
-from .const import PLATFORMS
+
+_LOGGER = logging.getLogger(__name__)
 
 
-class SkybellgenFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
-    """Config flow for skybellgen."""
+class SkybellFlowHandler(ConfigFlow, domain=DOMAIN):
+    """Handle a config flow for Skybell."""
 
-    VERSION = 1
-    CONNECTION_CLASS = config_entries.CONN_CLASS_CLOUD_POLL
+    reauth_email: str
 
-    def __init__(self):
-        """Initialize."""
-        self._errors = {}
+    async def async_step_reauth(
+        self, entry_data: Mapping[str, Any]
+    ) -> ConfigFlowResult:
+        """Handle a reauthorization flow request."""
+        self.reauth_email = entry_data[CONF_EMAIL]
+        return await self.async_step_reauth_confirm()
 
-    async def async_step_user(self, user_input=None):
-        """Handle a flow initialized by the user."""
-        self._errors = {}
-
-        # Uncomment the next 2 lines if only a single instance of the integration is allowed:
-        # if self._async_current_entries():
-        #     return self.async_abort(reason="single_instance_allowed")
-
-        if user_input is not None:
-            valid = await self._test_credentials(
-                user_input[CONF_USERNAME], user_input[CONF_PASSWORD]
+    async def async_step_reauth_confirm(
+        self, user_input: dict[str, str] | None = None
+    ) -> ConfigFlowResult:
+        """Handle user's reauth credentials."""
+        errors = {}
+        if user_input:
+            password = user_input[CONF_PASSWORD]
+            _, error = await self._async_validate_reauth_input(
+                email=self.reauth_email, password=password
             )
-            if valid:
-                return self.async_create_entry(
-                    title=user_input[CONF_USERNAME], data=user_input
+            if error is None:
+                entry = self._get_reauth_entry()
+                path = self.hass.config.path(
+                    f"./skybellgen_{entry.unique_id}.pickle"
                 )
-            else:
-                self._errors["base"] = "auth"
+                if os.path.exists(path):
+                    os.remove(path)
+                return self.async_update_reload_and_abort(
+                    entry, data_updates=user_input
+                )
 
-            return await self._show_config_form(user_input)
-
-        return await self._show_config_form(user_input)
-
-    @staticmethod
-    @callback
-    def async_get_options_flow(config_entry):
-        return SkybellgenOptionsFlowHandler(config_entry)
-
-    async def _show_config_form(self, user_input):  # pylint: disable=unused-argument
-        """Show the configuration form to edit location data."""
+            errors["base"] = error
         return self.async_show_form(
-            step_id="user",
-            data_schema=vol.Schema(
-                {vol.Required(CONF_USERNAME): str, vol.Required(CONF_PASSWORD): str}
-            ),
-            errors=self._errors,
+            step_id="reauth_confirm",
+            data_schema=vol.Schema({vol.Required(CONF_PASSWORD): str}),
+            description_placeholders={CONF_EMAIL: self.reauth_email},
+            errors=errors,
         )
 
-    async def _test_credentials(self, username, password):
-        """Return true if credentials is valid."""
-        try:
-            session = async_create_clientsession(self.hass)
-            client = SkybellgenApiClient(username, password, session)
-            await client.async_get_data()
-            return True
-        except Exception:  # pylint: disable=broad-except
-            pass
-        return False
+    async def async_step_reconfigure(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Handle reconfiguration of the integration."""
+        errors: dict[str, str] = {}
+        if user_input:
+            email = user_input[CONF_EMAIL].lower()
+            password = user_input[CONF_PASSWORD]
 
+            self._async_abort_entries_match({CONF_EMAIL: email})
+            user_id, error = await self._async_validate_user_input(
+                email=email, password=password
+            )
+            if error is None:
+                await self.async_set_unique_id(user_id)
+                self._abort_if_unique_id_mismatch(reason="wrong_account")
+                entry = self._get_reconfigure_entry()
+                path = self.hass.config.path(
+                    f"./skybellgen_{entry.unique_id}.pickle"
+                )
+                if os.path.exists(path):
+                    os.remove(path)
+                return self.async_update_reload_and_abort(
+                    entry, data_updates=user_input
+                )
+            errors["base"] = error
 
-class SkybellgenOptionsFlowHandler(config_entries.OptionsFlow):
-    """Config flow options handler for skybellgen."""
+        # Show the form
+        user_input = user_input or {}
+        return self.async_show_form(
+            step_id="reconfigure",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(
+                        CONF_EMAIL, default=user_input.get(CONF_EMAIL)
+                    ): str,
+                    vol.Required(CONF_PASSWORD): str,
+                }
+            ),
+            errors=errors,
+        )
 
-    def __init__(self, config_entry):
-        """Initialize HACS options flow."""
-        self.config_entry = config_entry
-        self.options = dict(config_entry.options)
+    async def async_step_user(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Handle a flow initiated by the user."""
+        errors = {}
 
-    async def async_step_init(self, user_input=None):  # pylint: disable=unused-argument
-        """Manage the options."""
-        return await self.async_step_user()
-
-    async def async_step_user(self, user_input=None):
-        """Handle a flow initialized by the user."""
         if user_input is not None:
-            self.options.update(user_input)
-            return await self._update_options()
+            email = user_input[CONF_EMAIL].lower()
+            password = user_input[CONF_PASSWORD]
 
+            self._async_abort_entries_match({CONF_EMAIL: email})
+            user_id, error = await self._async_validate_user_input(
+                email=email, password=password
+            )
+            if error is None:
+                await self.async_set_unique_id(user_id)
+                self._abort_if_unique_id_configured()
+                return self.async_create_entry(
+                    title=email,
+                    data={CONF_EMAIL: email, CONF_PASSWORD: password},
+                )
+            errors["base"] = error
+
+        user_input = user_input or {}
         return self.async_show_form(
             step_id="user",
             data_schema=vol.Schema(
                 {
-                    vol.Required(x, default=self.options.get(x, True)): bool
-                    for x in sorted(PLATFORMS)
+                    vol.Required(
+                        CONF_EMAIL, default=user_input.get(CONF_EMAIL)
+                    ): str,
+                    vol.Required(CONF_PASSWORD): str,
                 }
             ),
+            errors=errors,
         )
 
-    async def _update_options(self):
-        """Update config entry options."""
-        return self.async_create_entry(
-            title=self.config_entry.data.get(CONF_USERNAME), data=self.options
-        )
+    async def _async_validate_reauth_input(
+        self, email: str, password: str
+    ) -> tuple:
+        """Validate login credentials for reauthorization flow."""
+        try:
+            skybell = Skybell(
+                username=email,
+                password=password,
+                disable_cache=True,
+                get_devices=False,
+                auto_login=True,
+                session=async_get_clientsession(self.hass),
+            )
+            await skybell.async_initialize()
+        except SkybellAuthenticationException:
+            return None, "invalid_auth"
+        except SkybellException:
+            return None, "cannot_connect"
+        except Exception:
+            _LOGGER.exception("Unexpected exception")
+            return None, "unknown"
+        return skybell.user_id, None
+
+    async def _async_validate_user_input(
+        self, email: str, password: str
+    ) -> tuple:
+        """Validate login credentials for user flow."""
+        try:
+            skybell = Skybell(
+                username=email,
+                password=password,
+                disable_cache=True,
+                get_devices=False,
+                auto_login=False,
+                session=async_get_clientsession(self.hass),
+            )
+            await skybell.async_initialize()
+        except SkybellAuthenticationException:
+            return None, "invalid_auth"
+        except SkybellException:
+            return None, "cannot_connect"
+        except Exception:
+            _LOGGER.exception("Unexpected exception")
+            return None, "unknown"
+        return skybell.user_id, None

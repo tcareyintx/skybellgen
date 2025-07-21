@@ -3,36 +3,36 @@
     "step": {
       "user": {
         "data": {
-          "email": "Email",
-          "password": "Password"
+          "email": "[%key:common::config_flow::data::email%]",
+          "password": "[%key:common::config_flow::data::password%]"
         }
       },
       "reauth_confirm": {
-        "description": "Please update your password for {email}",
-        "title": "Authentication expired for {name}",
+        "description": "[%key:common::config_flow::discription::reauth%]",
+        "title": "[%key:common::config_flow::title::reauth%]",
         "data": {
-          "password": "Password"
+          "password": "[%key:common::config_flow::data::password%]"
         }
       },
       "reconfigure": {
         "description": "Please update your email and password",
-        "title": "Reconfigure the Skybell Hub",
+        "title": "[%key:common::config_flow::title::reconfig%]",
         "data": {
-          "email": "Email",
-          "password": "Password"
+          "email": "[%key:common::config_flow::data::email%]",
+          "password": "[%key:common::config_flow::data::password%]"
         }
       }
     },
     "error": {
-      "invalid_auth": "Invalid authentication",
-      "cannot_connect": "Failed to connect",
-      "unknown": "Unexpected error"
+      "invalid_auth": "[%key:common::config_flow::error::invalid_auth%]",
+      "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]",
+      "unknown": "[%key:common::config_flow::error::unknown%]"
     },
     "abort": {
-      "already_configured": "Account is already configured",
-      "reauth_successful": "Re-authentication was successful",
-      "wrong_account": "Configuration mismatch for email",
-      "reconfigure_successful": "Re-configuration was successful"
+      "already_configured": "[%key:common::config_flow::abort::already_configured_account%]",
+      "reauth_successful": "[%key:common::config_flow::abort::reauth_successful%]",
+      "reconfiguration_successful": "[%key:common::config_flow::abort::reconfiguration_successful%]",
+      "wrong_account": "[%key:common::config_flow::abort::wrong_account%]"
     }
   },
   "exceptions": {

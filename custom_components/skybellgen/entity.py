@@ -1,36 +1,52 @@
-"""SkybellgenEntity class"""
+"""Entity representing a Skybell Gen Doorbell."""
+
+from __future__ import annotations
+
+from aioskybellgen import SkybellDevice
+
+from homeassistant.const import ATTR_CONNECTIONS
+from homeassistant.helpers import device_registry as dr
+from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.entity import EntityDescription
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import ATTRIBUTION
-from .const import DOMAIN
-from .const import NAME
-from .const import VERSION
+from .const import DEFAULT_NAME, DOMAIN
+from .coordinator import SkybellDataUpdateCoordinator
 
 
-class SkybellgenEntity(CoordinatorEntity):
-    def __init__(self, coordinator, config_entry):
+class SkybellEntity(CoordinatorEntity[SkybellDataUpdateCoordinator]):
+    """An HA implementation for Skybell entity."""
+
+    _attr_attribution = "Data provided by Skybell.com"
+    _attr_has_entity_name = True
+
+    def __init__(
+        self,
+        coordinator: SkybellDataUpdateCoordinator,
+        description: EntityDescription,
+    ) -> None:
+        """Initialize a SkyBell entity."""
         super().__init__(coordinator)
-        self.config_entry = config_entry
+        self.entity_description = description
+        self._attr_unique_id = f"{self._device.device_id}_{description.key}"
+        self._attr_device_info = DeviceInfo(
+            identifiers={(DOMAIN, self._device.device_id)},
+            manufacturer=DEFAULT_NAME,
+            model=self._device.type,
+            name=self._device.name.capitalize(),
+            sw_version=self._device.firmware_ver,
+        )
+        if self._device.mac:
+            self._attr_device_info[ATTR_CONNECTIONS] = {
+                (dr.CONNECTION_NETWORK_MAC, self._device.mac)
+            }
 
     @property
-    def unique_id(self):
-        """Return a unique ID to use for this entity."""
-        return self.config_entry.entry_id
+    def _device(self) -> SkybellDevice:
+        """Return the device."""
+        return self.coordinator.device
 
-    @property
-    def device_info(self):
-        return {
-            "identifiers": {(DOMAIN, self.unique_id)},
-            "name": NAME,
-            "model": VERSION,
-            "manufacturer": NAME,
-        }
-
-    @property
-    def device_state_attributes(self):
-        """Return the state attributes."""
-        return {
-            "attribution": ATTRIBUTION,
-            "id": str(self.coordinator.data.get("id")),
-            "integration": DOMAIN,
-        }
+    async def async_added_to_hass(self) -> None:
+        """When entity is added to hass."""
+        await super().async_added_to_hass()
+        self._handle_coordinator_update()

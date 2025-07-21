@@ -1,0 +1,193 @@
+{
+  "entity": {
+    "button": {
+      "device_reboot": {
+        "default": "mdi:restart"
+      }
+    },
+    "select": {
+      "outdoor_chime_volume": {
+        "default": "mdi:knob"
+      },
+      "speaker_volume": {
+        "default": "mdi:knob"
+      },
+      "image_quality": {
+        "default": "mdi:video-check"
+      }
+    },
+    "number": {
+      "motion_sensitivity": {
+        "default": "mdi:video-check"
+      },
+      "hmbd_sensitivity": {
+        "default": "mdi:motion-sensor"
+      },
+      "fd_sensitivity": {
+        "default": "mdi:face-recognition"
+      },
+      "pir_sensitivity": {
+        "default": "mdi:motion-sensor"
+      },
+      "location_lat": {
+        "default": "mdi:latitude"
+      },
+      "location_lon": {
+        "default": "mdi:longitude"
+      }
+    },
+    "text": {
+      "name": {
+        "default": "mdi:text"
+      },
+      "location_place": {
+        "default": "mdi:text"
+      }
+    },
+    "light": {
+      "button_light": {
+        "default": "mdi:lightbulb"
+      }
+    },
+    "camera": {
+      "activity": {
+        "default": "mdi:doorbell-video"
+      },
+      "avatar": {
+        "default": "mdi:camera-image"
+      }
+    },
+    "sensor": {
+      "outdoor_chime_volume": {
+        "default": "mdi:knob"
+      },
+      "speaker_volume": {
+        "default": "mdi:knob"
+      },
+      "image_quality": {
+        "default": "mdi:video-check"
+      },
+      "last_button_event": {
+        "default": "mdi:gesture-tap-button"
+      },
+      "last_motion_event": {
+        "default": "mdi:walk"
+      },
+      "last_seen": {
+        "default": "mdi:bell-check"
+      },
+      "last_connected": {
+        "default": "mdi:bell"
+      },
+      "last_disconnected": {
+        "default": "mdi:bell-off"
+      },
+      "wifi_ssid": {
+        "default": "mdi:wifi"
+      },
+      "wifi_link_quality": {
+        "default": "mdi:signal-variant"
+      },
+      "motion_sensitivity": {
+        "default": "mdi:video-check"
+      },
+      "hmbd_sensitivity": {
+        "default": "mdi:motion-sensor"
+      },
+      "fd_sensitivity": {
+        "default": "mdi:face-recognition"
+      },
+      "pir_sensitivity": {
+        "default": "mdi:motion-sensor"
+      },
+      "location_lat": {
+        "default": "mdi:latitude"
+      },
+      "location_lon": {
+        "default": "mdi:longitude"
+      },
+      "name": {
+        "default": "mdi:text"
+      },
+      "location_place": {
+        "default": "mdi:text"
+      }
+    },
+    "binary_sensor": {
+      "motion_notify": {
+        "default": "mdi:bell-ring"
+      },
+      "motion_record": {
+        "default": "mdi:record-rec"
+      },
+      "fd_notify": {
+        "default": "mdi:bell-ring"
+      },
+      "fd_record": {
+        "default": "mdi:record-rec"
+      },
+      "hbd_notify": {
+        "default": "mdi:bell-ring"
+      },
+      "hbd_record": {
+        "default": "mdi:record-rec"
+      },
+      "motion_detection": {
+        "default": "mdi:motion-sensor"
+      },
+      "debug_motion_detect": {
+        "default": "mdi:motion-sensor"
+      },
+      "button_pressed": {
+        "default": "mdi:doorbell"
+      },
+      "indoor_chime": {
+        "default": "mdi:knob"
+      },
+      "digital_chime": {
+        "default": "mdi:knob"
+      },
+      "outdoor_chime": {
+        "default": "mdi:knob"
+      }
+    },
+    "switch": {
+      "motion_notify": {
+        "default": "mdi:bell-ring"
+      },
+      "motion_record": {
+        "default": "mdi:record-rec"
+      },
+      "fd_notify": {
+        "default": "mdi:bell-ring"
+      },
+      "fd_record": {
+        "default": "mdi:record-rec"
+      },
+      "hbd_notify": {
+        "default": "mdi:bell-ring"
+      },
+      "hbd_record": {
+        "default": "mdi:record-rec"
+      },
+      "motion_detection": {
+        "default": "mdi:motion-sensor"
+      },
+      "debug_motion_detect": {
+        "default": "mdi:motion-sensor"
+      },
+      "button_pressed": {
+        "default": "mdi:doorbell"
+      },
+      "indoor_chime": {
+        "default": "mdi:knob"
+      },
+      "digital_chime": {
+        "default": "mdi:knob"
+      },
+      "outdoor_chime": {
+        "default": "mdi:knob"
+      }
+    }
+  }
+}

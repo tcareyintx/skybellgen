@@ -1,110 +1,96 @@
-"""
-Custom integration to integrate SkybellGen with Home Assistant.
+"""Support for the Skybell Doorbells using the Cloud GEN APIs."""
 
-For more details about this integration, please refer to
-https://github.com/tcareyintx/skybellgen
-"""
+from __future__ import annotations
+
 import asyncio
-import logging
-from datetime import timedelta
+
+from aioskybellgen import Skybell
+from aioskybellgen.exceptions import (
+    SkybellAuthenticationException,
+    SkybellException,
+)
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import Config
+from homeassistant.const import CONF_EMAIL, CONF_PASSWORD, Platform
 from homeassistant.core import HomeAssistant
-from homeassistant.exceptions import ConfigEntryNotReady
+from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
-from homeassistant.helpers.update_coordinator import UpdateFailed
 
-from .api import SkybellgenApiClient
-from .const import CONF_PASSWORD
-from .const import CONF_USERNAME
 from .const import DOMAIN
-from .const import PLATFORMS
-from .const import STARTUP_MESSAGE
+from .coordinator import SkybellDataUpdateCoordinator
 
-SCAN_INTERVAL = timedelta(seconds=30)
+PLATFORMS = [
+    Platform.BINARY_SENSOR,
+    Platform.BUTTON,
+    Platform.CAMERA,
+    Platform.LIGHT,
+    Platform.NUMBER,
+    Platform.SELECT,
+    Platform.SENSOR,
+    Platform.SWITCH,
+    Platform.TEXT,
+]
 
-_LOGGER: logging.Logger = logging.getLogger(__package__)
-
-
-async def async_setup(hass: HomeAssistant, config: Config):
-    """Set up this integration using YAML is not supported."""
-    return True
-
-
-async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
-    """Set up this integration using UI."""
-    if hass.data.get(DOMAIN) is None:
-        hass.data.setdefault(DOMAIN, {})
-        _LOGGER.info(STARTUP_MESSAGE)
-
-    username = entry.data.get(CONF_USERNAME)
-    password = entry.data.get(CONF_PASSWORD)
-
-    session = async_get_clientsession(hass)
-    client = SkybellgenApiClient(username, password, session)
-
-    coordinator = SkybellgenDataUpdateCoordinator(hass, client=client)
-    await coordinator.async_refresh()
-
-    if not coordinator.last_update_success:
-        raise ConfigEntryNotReady
-
-    hass.data[DOMAIN][entry.entry_id] = coordinator
-
-    for platform in PLATFORMS:
-        if entry.options.get(platform, True):
-            coordinator.platforms.append(platform)
-            hass.async_add_job(
-                hass.config_entries.async_forward_entry_setup(entry, platform)
-            )
-
-    entry.add_update_listener(async_reload_entry)
-    return True
+type SkybellConfigEntry = ConfigEntry[SkybellData]
 
 
-class SkybellgenDataUpdateCoordinator(DataUpdateCoordinator):
-    """Class to manage fetching data from the API."""
+class SkybellData:
+    """The Skybell data class for a Hub config entity."""
 
-    def __init__(
-        self,
-        hass: HomeAssistant,
-        client: SkybellgenApiClient,
-    ) -> None:
-        """Initialize."""
-        self.api = client
-        self.platforms = []
-
-        super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=SCAN_INTERVAL)
-
-    async def _async_update_data(self):
-        """Update data via library."""
-        try:
-            return await self.api.async_get_data()
-        except Exception as exception:
-            raise UpdateFailed() from exception
+    api: Skybell
 
 
-async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Handle removal of an entry."""
-    coordinator = hass.data[DOMAIN][entry.entry_id]
-    unloaded = all(
-        await asyncio.gather(
-            *[
-                hass.config_entries.async_forward_entry_unload(entry, platform)
-                for platform in PLATFORMS
-                if platform in coordinator.platforms
-            ]
-        )
+async def async_setup_entry(
+    hass: HomeAssistant, entry: SkybellConfigEntry
+) -> bool:
+    """Set up Skybell from a config entry."""
+    email = entry.data[CONF_EMAIL]
+    password = entry.data[CONF_PASSWORD]
+    # entry.api = None
+    api = Skybell(
+        username=email,
+        password=password,
+        disable_cache=False,
+        get_devices=True,
+        cache_path=hass.config.path(f"./skybellgen_{entry.unique_id}.pickle"),
+        session=async_get_clientsession(hass),
     )
-    if unloaded:
+    try:
+        devices = await api.async_initialize()
+    except SkybellAuthenticationException as ex:
+        await api.async_delete_cache()
+        raise ConfigEntryAuthFailed from ex
+    except SkybellException as ex:
+        await api.async_delete_cache()
+        raise ConfigEntryNotReady(
+            f"Unable to connect to Skybell service: {ex}"
+        ) from ex
+
+    device_coordinators: list[SkybellDataUpdateCoordinator] = [
+        SkybellDataUpdateCoordinator(hass, entry, device) for device in devices
+    ]
+    await asyncio.gather(
+        *[
+            coordinator.async_config_entry_first_refresh()
+            for coordinator in device_coordinators
+        ]
+    )
+    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = device_coordinators
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    entry.api = api
+    return True
+
+
+async def async_unload_entry(
+    hass: HomeAssistant, entry: SkybellConfigEntry
+) -> bool:
+    """Unload a config entry."""
+    if unload_ok := await hass.config_entries.async_unload_platforms(
+        entry, PLATFORMS
+    ):
         hass.data[DOMAIN].pop(entry.entry_id)
+        api = entry.api
+        if api is not None:
+            await api.async_delete_cache()
 
-    return unloaded
-
-
-async def async_reload_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
-    """Reload config entry."""
-    await async_unload_entry(hass, entry)
-    await async_setup_entry(hass, entry)
+    return unload_ok
