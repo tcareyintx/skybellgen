@@ -9,7 +9,6 @@
 
 [![hacs][hacsbadge]][hacs]
 [![Project Maintenance][maintenance-shield]][user_profile]
-[![BuyMeCoffee][buymecoffeebadge]][buymecoffee]
 
 [![Discord][discord-shield]][discord]
 [![Community Forum][forum-shield]][forum]
@@ -72,8 +71,10 @@ If you want to contribute to this please read the [Contribution guidelines](CONT
 ## Credits
 
 This project was generated from [@oncleben31](https://github.com/oncleben31)'s [Home Assistant Custom Component Cookiecutter](https://github.com/oncleben31/cookiecutter-homeassistant-custom-component) template.
-Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [integration_blueprint][integration_blueprint] template
-The project used the Home Assistant core [Skybell component](https://www.home-assistant.io/integrations/skybell/) as the starting point.
+
+Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [integration_blueprint][integration_blueprint] template.
+
+The project used the Home Assistant core [Skybell](https://www.home-assistant.io/integrations/skybell/) core component as the starting point.
 
 ---
 
