@@ -1,13 +1,14 @@
 {
   "domain": "skybellgen",
-  "name": "SkyBellGen",
-  "version": "0.1.0",
+  "name": "SkyBellGen Custom Component",
   "codeowners": ["@tcarey"],
   "config_flow": true,
   "dependencies": ["ffmpeg"],
-  "documentation": "https://github.com/tcareyintx/aioskybellgen",
+  "documentation": "https://github.com/tcareyintx/skybellgen",
   "integration_type": "hub",
+  "issue_tracker": "https://github.com/tcareyintx/skybellgen/issues",
   "iot_class": "cloud_polling",
   "loggers": ["aioskybellgen"],
-  "requirements": ["aioskybellgen==0.1.1"]
+  "requirements": ["aioskybellgen==0.1.1"],
+  "version": "0.1.0"
 }

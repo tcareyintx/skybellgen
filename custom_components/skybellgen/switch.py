@@ -130,7 +130,7 @@ class SkybellSwitch(SkybellEntity, SwitchEntity):
         except SkybellAccessControlException as exc:
             raise ServiceValidationError(
                 translation_domain=DOMAIN,
-                translation_key="invalid permissions",
+                translation_key="invalid_permissions",
                 translation_placeholders={
                     "key": self.entity_description.key,
                 },
@@ -156,7 +156,7 @@ class SkybellSwitch(SkybellEntity, SwitchEntity):
         except SkybellAccessControlException as exc:
             raise ServiceValidationError(
                 translation_domain=DOMAIN,
-                translation_key="invalid permissions",
+                translation_key="invalid_permissions",
                 translation_placeholders={
                     "key": self.entity_description.key,
                 },
