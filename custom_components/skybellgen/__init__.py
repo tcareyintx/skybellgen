@@ -31,7 +31,7 @@ PLATFORMS = [
     Platform.TEXT,
 ]
 
-type SkybellConfigEntry = ConfigEntry[SkybellData]
+type SkybellConfigEntry = ConfigEntry[SkybellData] # fmt: skip
 
 
 class SkybellData:
