@@ -109,9 +109,7 @@ class SkybellSelect(SkybellEntity, SelectEntity):
             ) from exc
 
         try:
-            await self._device.async_set_setting(
-                self.entity_description.key, value
-            )
+            await self._device.async_set_setting(self.entity_description.key, value)
         except SkybellAccessControlException as exc:
             raise ServiceValidationError(
                 translation_domain=DOMAIN,

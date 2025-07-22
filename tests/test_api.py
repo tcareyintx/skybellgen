@@ -1,4 +1,5 @@
 """Tests for SkybellGen api."""
+
 import asyncio
 
 import aiohttp

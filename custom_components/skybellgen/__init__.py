@@ -40,9 +40,7 @@ class SkybellData:
     api: Skybell
 
 
-async def async_setup_entry(
-    hass: HomeAssistant, entry: SkybellConfigEntry
-) -> bool:
+async def async_setup_entry(hass: HomeAssistant, entry: SkybellConfigEntry) -> bool:
     """Set up Skybell from a config entry."""
     email = entry.data[CONF_EMAIL]
     password = entry.data[CONF_PASSWORD]
@@ -62,9 +60,7 @@ async def async_setup_entry(
         raise ConfigEntryAuthFailed from ex
     except SkybellException as ex:
         await api.async_delete_cache()
-        raise ConfigEntryNotReady(
-            f"Unable to connect to Skybell service: {ex}"
-        ) from ex
+        raise ConfigEntryNotReady(f"Unable to connect to Skybell service: {ex}") from ex
 
     device_coordinators: list[SkybellDataUpdateCoordinator] = [
         SkybellDataUpdateCoordinator(hass, entry, device) for device in devices
@@ -81,13 +77,9 @@ async def async_setup_entry(
     return True
 
 
-async def async_unload_entry(
-    hass: HomeAssistant, entry: SkybellConfigEntry
-) -> bool:
+async def async_unload_entry(hass: HomeAssistant, entry: SkybellConfigEntry) -> bool:
     """Unload a config entry."""
-    if (unload_ok := await hass.config_entries.async_unload_platforms(
-        entry, PLATFORMS
-    )):
+    if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         hass.data[DOMAIN].pop(entry.entry_id)
         api = entry.api
         if api is not None:

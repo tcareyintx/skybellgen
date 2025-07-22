@@ -124,9 +124,7 @@ class SkybellSwitch(SkybellEntity, SwitchEntity):
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn on the switch."""
         try:
-            await self._device.async_set_setting(
-                self.entity_description.key, True
-            )
+            await self._device.async_set_setting(self.entity_description.key, True)
         except SkybellAccessControlException as exc:
             raise ServiceValidationError(
                 translation_domain=DOMAIN,
@@ -150,9 +148,7 @@ class SkybellSwitch(SkybellEntity, SwitchEntity):
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn off the switch."""
         try:
-            await self._device.async_set_setting(
-                self.entity_description.key, False
-            )
+            await self._device.async_set_setting(self.entity_description.key, False)
         except SkybellAccessControlException as exc:
             raise ServiceValidationError(
                 translation_domain=DOMAIN,

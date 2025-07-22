@@ -1,4 +1,5 @@
 """Test SkybellGen switch."""
+
 from unittest.mock import call
 from unittest.mock import patch
 

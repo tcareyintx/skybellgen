@@ -43,9 +43,7 @@ async def async_setup_entry(
             if description.key == "avatar":
                 entities.append(SkybellCamera(coordinator, description))
             else:
-                entities.append(
-                    SkybellActivityCamera(coordinator, description)
-                )
+                entities.append(SkybellActivityCamera(coordinator, description))
     async_add_entities(entities)
 
 
