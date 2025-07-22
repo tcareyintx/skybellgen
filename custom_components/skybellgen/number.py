@@ -2,16 +2,9 @@
 
 from __future__ import annotations
 
-from aioskybellgen.exceptions import (
-    SkybellAccessControlException,
-    SkybellException,
-)
+from aioskybellgen.exceptions import SkybellAccessControlException, SkybellException
 from aioskybellgen.helpers import const as CONST
-
-from homeassistant.components.number import (
-    NumberEntity,
-    NumberEntityDescription,
-)
+from homeassistant.components.number import NumberEntity, NumberEntityDescription
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant

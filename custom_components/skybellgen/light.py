@@ -4,12 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from aioskybellgen.exceptions import (
-    SkybellAccessControlException,
-    SkybellException,
-)
+from aioskybellgen.exceptions import SkybellAccessControlException, SkybellException
 from aioskybellgen.helpers import const as CONST
-
 from homeassistant.components.light import (
     ATTR_BRIGHTNESS,
     ATTR_RGB_COLOR,
@@ -91,7 +87,9 @@ class SkybellLight(SkybellEntity, LightEntity):
         # Update the adjusted color
         rgb_value = ""
         if len(current_color) > 0:
-            rgb_value = f"#{current_color[0]:02x}{current_color[1]:02x}{current_color[2]:02x}"
+            rgb_value = (
+                f"#{current_color[0]:02x}{current_color[1]:02x}{current_color[2]:02x}"
+            )
         try:
             await self._device.async_set_setting(CONST.LED_COLOR, rgb_value)
         except SkybellAccessControlException as exc:
@@ -155,9 +153,7 @@ class SkybellLight(SkybellEntity, LightEntity):
             return super().rgb_color
 
         hex_color = self._device.led_color
-        int_array = [
-            int(hex_color[i : i + 2], 16) for i in range(1, len(hex_color), 2)
-        ]
+        int_array = [int(hex_color[i : i + 2], 16) for i in range(1, len(hex_color), 2)]
         return tuple(int_array)
 
     @property

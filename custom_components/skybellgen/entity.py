@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from aioskybellgen import SkybellDevice
-
 from homeassistant.const import ATTR_CONNECTIONS
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.device_registry import DeviceInfo

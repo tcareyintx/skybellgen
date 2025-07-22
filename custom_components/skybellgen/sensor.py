@@ -8,7 +8,6 @@ from datetime import datetime
 
 from aioskybellgen import SkybellDevice
 from aioskybellgen.helpers import const as CONST
-
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,

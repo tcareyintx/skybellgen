@@ -5,11 +5,7 @@ from __future__ import annotations
 import asyncio
 
 from aioskybellgen import Skybell
-from aioskybellgen.exceptions import (
-    SkybellAuthenticationException,
-    SkybellException,
-)
-
+from aioskybellgen.exceptions import SkybellAuthenticationException, SkybellException
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_EMAIL, CONF_PASSWORD, Platform
 from homeassistant.core import HomeAssistant
@@ -31,7 +27,7 @@ PLATFORMS = [
     Platform.TEXT,
 ]
 
-type SkybellConfigEntry = ConfigEntry[SkybellData]
+type SkybellConfigEntry = ConfigEntry[SkybellData]  # flake8: noqa: E999
 
 
 class SkybellData:
@@ -40,9 +36,7 @@ class SkybellData:
     api: Skybell
 
 
-async def async_setup_entry(
-    hass: HomeAssistant, entry: SkybellConfigEntry
-) -> bool:
+async def async_setup_entry(hass: HomeAssistant, entry: SkybellConfigEntry) -> bool:
     """Set up Skybell from a config entry."""
     email = entry.data[CONF_EMAIL]
     password = entry.data[CONF_PASSWORD]
@@ -62,9 +56,7 @@ async def async_setup_entry(
         raise ConfigEntryAuthFailed from ex
     except SkybellException as ex:
         await api.async_delete_cache()
-        raise ConfigEntryNotReady(
-            f"Unable to connect to Skybell service: {ex}"
-        ) from ex
+        raise ConfigEntryNotReady(f"Unable to connect to Skybell service: {ex}") from ex
 
     device_coordinators: list[SkybellDataUpdateCoordinator] = [
         SkybellDataUpdateCoordinator(hass, entry, device) for device in devices
@@ -81,13 +73,9 @@ async def async_setup_entry(
     return True
 
 
-async def async_unload_entry(
-    hass: HomeAssistant, entry: SkybellConfigEntry
-) -> bool:
+async def async_unload_entry(hass: HomeAssistant, entry: SkybellConfigEntry) -> bool:
     """Unload a config entry."""
-    if (unload_ok := await hass.config_entries.async_unload_platforms(
-        entry, PLATFORMS
-    )):
+    if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         hass.data[DOMAIN].pop(entry.entry_id)
         api = entry.api
         if api is not None:

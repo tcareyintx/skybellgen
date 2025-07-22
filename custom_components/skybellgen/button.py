@@ -2,12 +2,8 @@
 
 from __future__ import annotations
 
-from aioskybellgen.exceptions import (
-    SkybellAccessControlException,
-    SkybellException,
-)
+from aioskybellgen.exceptions import SkybellAccessControlException, SkybellException
 from aioskybellgen.helpers import const as CONST
-
 from homeassistant.components.button import (
     ButtonDeviceClass,
     ButtonEntity,

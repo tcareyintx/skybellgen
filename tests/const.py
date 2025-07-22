@@ -1,8 +1,7 @@
 """Constants for SkybellGen tests."""
+
 from custom_components.skybellgen.const import (
     CONF_PASSWORD,
-)
-from custom_components.skybellgen.const import (
     CONF_USERNAME,
 )
 

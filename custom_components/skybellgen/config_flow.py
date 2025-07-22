@@ -8,15 +8,11 @@ import os
 from typing import Any
 
 from aioskybellgen import Skybell
-from aioskybellgen.exceptions import (
-    SkybellAuthenticationException,
-    SkybellException,
-)
-import voluptuous as vol
-
+from aioskybellgen.exceptions import SkybellAuthenticationException, SkybellException
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 from homeassistant.const import CONF_EMAIL, CONF_PASSWORD
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+import voluptuous as vol
 
 from .const import DOMAIN
 
@@ -47,9 +43,7 @@ class SkybellFlowHandler(ConfigFlow, domain=DOMAIN):
             )
             if error is None:
                 entry = self._get_reauth_entry()
-                path = self.hass.config.path(
-                    f"./skybellgen_{entry.unique_id}.pickle"
-                )
+                path = self.hass.config.path(f"./skybellgen_{entry.unique_id}.pickle")
                 if os.path.exists(path):
                     os.remove(path)
                 return self.async_update_reload_and_abort(
@@ -81,9 +75,7 @@ class SkybellFlowHandler(ConfigFlow, domain=DOMAIN):
                 await self.async_set_unique_id(user_id)
                 self._abort_if_unique_id_mismatch(reason="wrong_account")
                 entry = self._get_reconfigure_entry()
-                path = self.hass.config.path(
-                    f"./skybellgen_{entry.unique_id}.pickle"
-                )
+                path = self.hass.config.path(f"./skybellgen_{entry.unique_id}.pickle")
                 if os.path.exists(path):
                     os.remove(path)
                 return self.async_update_reload_and_abort(
@@ -97,9 +89,7 @@ class SkybellFlowHandler(ConfigFlow, domain=DOMAIN):
             step_id="reconfigure",
             data_schema=vol.Schema(
                 {
-                    vol.Required(
-                        CONF_EMAIL, default=user_input.get(CONF_EMAIL)
-                    ): str,
+                    vol.Required(CONF_EMAIL, default=user_input.get(CONF_EMAIL)): str,
                     vol.Required(CONF_PASSWORD): str,
                 }
             ),
@@ -134,18 +124,14 @@ class SkybellFlowHandler(ConfigFlow, domain=DOMAIN):
             step_id="user",
             data_schema=vol.Schema(
                 {
-                    vol.Required(
-                        CONF_EMAIL, default=user_input.get(CONF_EMAIL)
-                    ): str,
+                    vol.Required(CONF_EMAIL, default=user_input.get(CONF_EMAIL)): str,
                     vol.Required(CONF_PASSWORD): str,
                 }
             ),
             errors=errors,
         )
 
-    async def _async_validate_reauth_input(
-        self, email: str, password: str
-    ) -> tuple:
+    async def _async_validate_reauth_input(self, email: str, password: str) -> tuple:
         """Validate login credentials for reauthorization flow."""
         try:
             skybell = Skybell(
@@ -166,9 +152,7 @@ class SkybellFlowHandler(ConfigFlow, domain=DOMAIN):
             return None, "unknown"
         return skybell.user_id, None
 
-    async def _async_validate_user_input(
-        self, email: str, password: str
-    ) -> tuple:
+    async def _async_validate_user_input(self, email: str, password: str) -> tuple:
         """Validate login credentials for user flow."""
         try:
             skybell = Skybell(

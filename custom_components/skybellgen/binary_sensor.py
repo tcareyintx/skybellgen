@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from aioskybellgen.helpers import const as CONST
-
 from homeassistant.components.binary_sensor import (
     BinarySensorEntity,
     BinarySensorEntityDescription,

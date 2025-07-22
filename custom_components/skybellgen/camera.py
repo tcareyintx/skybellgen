@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from aiohttp import web
 from haffmpeg.camera import CameraMjpeg
-
 from homeassistant.components.camera import Camera, CameraEntityDescription
 from homeassistant.components.ffmpeg import get_ffmpeg_manager
 from homeassistant.config_entries import ConfigEntry
@@ -43,9 +42,7 @@ async def async_setup_entry(
             if description.key == "avatar":
                 entities.append(SkybellCamera(coordinator, description))
             else:
-                entities.append(
-                    SkybellActivityCamera(coordinator, description)
-                )
+                entities.append(SkybellActivityCamera(coordinator, description))
     async_add_entities(entities)
 
 

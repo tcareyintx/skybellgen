@@ -2,16 +2,9 @@
 
 from __future__ import annotations
 
-from aioskybellgen.exceptions import (
-    SkybellAccessControlException,
-    SkybellException,
-)
+from aioskybellgen.exceptions import SkybellAccessControlException, SkybellException
 from aioskybellgen.helpers import const as CONST
-
-from homeassistant.components.select import (
-    SelectEntity,
-    SelectEntityDescription,
-)
+from homeassistant.components.select import SelectEntity, SelectEntityDescription
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
@@ -109,9 +102,7 @@ class SkybellSelect(SkybellEntity, SelectEntity):
             ) from exc
 
         try:
-            await self._device.async_set_setting(
-                self.entity_description.key, value
-            )
+            await self._device.async_set_setting(self.entity_description.key, value)
         except SkybellAccessControlException as exc:
             raise ServiceValidationError(
                 translation_domain=DOMAIN,
