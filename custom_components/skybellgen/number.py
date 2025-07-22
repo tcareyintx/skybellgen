@@ -7,7 +7,6 @@ from aioskybellgen.exceptions import (
     SkybellException,
 )
 from aioskybellgen.helpers import const as CONST
-
 from homeassistant.components.number import (
     NumberEntity,
     NumberEntityDescription,
@@ -23,6 +22,7 @@ from homeassistant.helpers.entity_platform import (
 from .const import DOMAIN, TENTH_PERCENT_TYPES
 from .coordinator import SkybellDataUpdateCoordinator
 from .entity import SkybellEntity
+
 
 SENTSITIVTY_ADJ = [10, 50, 100]
 USE_MOTION_VALUE = [CONST.MOTION_HMBD_SENSITIVITY, CONST.MOTION_FD_SENSITIVITY]

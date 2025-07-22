@@ -2,14 +2,11 @@
 
 from __future__ import annotations
 
-from typing import Any, cast
-
 from aioskybellgen.exceptions import (
     SkybellAccessControlException,
     SkybellException,
 )
 from aioskybellgen.helpers import const as CONST
-
 from homeassistant.components.switch import (
     SwitchEntity,
     SwitchEntityDescription,
@@ -21,10 +18,12 @@ from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers.entity_platform import (
     AddConfigEntryEntitiesCallback,
 )
+from typing import Any, cast
 
 from .const import BASIC_MOTION_GET_FUNCTION, DOMAIN
 from .coordinator import SkybellDataUpdateCoordinator
 from .entity import SkybellEntity
+
 
 SWITCH_TYPES: tuple[SwitchEntityDescription, ...] = (
     SwitchEntityDescription(

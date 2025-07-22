@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from aioskybellgen.helpers import const as CONST
-
 from homeassistant.components.binary_sensor import (
     BinarySensorEntity,
     BinarySensorEntityDescription,
@@ -18,6 +17,7 @@ from homeassistant.helpers.entity_platform import (
 from .const import BASIC_MOTION_GET_FUNCTION, DOMAIN
 from .coordinator import SkybellDataUpdateCoordinator
 from .entity import SkybellEntity
+
 
 BINARY_SENSOR_TYPES: tuple[BinarySensorEntityDescription, ...] = (
     BinarySensorEntityDescription(

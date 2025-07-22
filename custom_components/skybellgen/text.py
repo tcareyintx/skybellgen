@@ -7,7 +7,6 @@ from aioskybellgen.exceptions import (
     SkybellException,
 )
 from aioskybellgen.helpers import const as CONST
-
 from homeassistant.components.text import (
     TextEntity,
     TextEntityDescription,
@@ -24,6 +23,7 @@ from homeassistant.helpers.entity_platform import (
 from .const import DOMAIN
 from .coordinator import SkybellDataUpdateCoordinator
 from .entity import SkybellEntity
+
 
 TEXT_TYPES: tuple[TextEntityDescription, ...] = (
     TextEntityDescription(

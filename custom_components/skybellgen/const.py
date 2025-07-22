@@ -1,8 +1,5 @@
 """Constants for the Skybell Gen Doorbell."""
 
-import logging
-from typing import Final
-
 from aioskybellgen.helpers.const import (
     BASIC_MOTION_FD_NOTIFY,
     BASIC_MOTION_FD_RECORD,
@@ -18,6 +15,9 @@ from aioskybellgen.helpers.const import (
     OUTDOOR_CHIME_VOLUME,
     SPEAKER_VOLUME,
 )
+import logging
+from typing import Final
+
 
 DEFAULT_NAME = "SkyBellGen"
 DOMAIN: Final = "skybellgen"

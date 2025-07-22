@@ -1,8 +1,5 @@
 """Test SkybellGen switch."""
 
-from unittest.mock import call
-from unittest.mock import patch
-
 from custom_components.skybellgen import (
     async_setup_entry,
 )
@@ -19,6 +16,8 @@ from homeassistant.components.switch import SERVICE_TURN_OFF
 from homeassistant.components.switch import SERVICE_TURN_ON
 from homeassistant.const import ATTR_ENTITY_ID
 from pytest_homeassistant_custom_component.common import MockConfigEntry
+from unittest.mock import call
+from unittest.mock import patch
 
 from .const import MOCK_CONFIG
 

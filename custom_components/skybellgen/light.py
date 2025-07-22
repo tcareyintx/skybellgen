@@ -2,14 +2,11 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from aioskybellgen.exceptions import (
     SkybellAccessControlException,
     SkybellException,
 )
 from aioskybellgen.helpers import const as CONST
-
 from homeassistant.components.light import (
     ATTR_BRIGHTNESS,
     ATTR_RGB_COLOR,
@@ -24,10 +21,12 @@ from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers.entity_platform import (
     AddConfigEntryEntitiesCallback,
 )
+from typing import Any
 
 from .const import DEFAULT_BRIGHTNESS, DEFAULT_LED_COLOR, DOMAIN
 from .coordinator import SkybellDataUpdateCoordinator
 from .entity import SkybellEntity
+
 
 LIGHT_TYPES: tuple[LightEntityDescription, ...] = (
     LightEntityDescription(

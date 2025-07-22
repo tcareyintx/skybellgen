@@ -2,13 +2,11 @@
 
 from __future__ import annotations
 
+from aioskybellgen import SkybellDevice
+from aioskybellgen.helpers import const as CONST
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime
-
-from aioskybellgen import SkybellDevice
-from aioskybellgen.helpers import const as CONST
-
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,

@@ -7,7 +7,6 @@ from aioskybellgen.exceptions import (
     SkybellException,
 )
 from aioskybellgen.helpers import const as CONST
-
 from homeassistant.components.button import (
     ButtonDeviceClass,
     ButtonEntity,
@@ -24,6 +23,7 @@ from homeassistant.helpers.entity_platform import (
 from .const import DOMAIN
 from .coordinator import SkybellDataUpdateCoordinator
 from .entity import SkybellEntity
+
 
 BUTTON_TYPES: tuple[ButtonEntityDescription, ...] = (
     ButtonEntityDescription(
