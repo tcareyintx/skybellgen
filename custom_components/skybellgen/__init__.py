@@ -31,7 +31,7 @@ PLATFORMS = [
     Platform.TEXT,
 ]
 
-type SkybellConfigEntry = ConfigEntry[SkybellData] # fmt: skip
+type SkybellConfigEntry = ConfigEntry[SkybellData] # flake8: noqa: E999
 
 
 class SkybellData:
