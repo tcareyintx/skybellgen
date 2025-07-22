@@ -1,16 +1,14 @@
 """Switch support for the Skybell Gen Doorbell."""
-
 from __future__ import annotations
 
-from aioskybellgen.exceptions import (
-    SkybellAccessControlException,
-    SkybellException,
-)
+from typing import Any
+from typing import cast
+
+from aioskybellgen.exceptions import SkybellAccessControlException
+from aioskybellgen.exceptions import SkybellException
 from aioskybellgen.helpers import const as CONST
-from homeassistant.components.switch import (
-    SwitchEntity,
-    SwitchEntityDescription,
-)
+from homeassistant.components.switch import SwitchEntity
+from homeassistant.components.switch import SwitchEntityDescription
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
@@ -18,9 +16,9 @@ from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers.entity_platform import (
     AddConfigEntryEntitiesCallback,
 )
-from typing import Any, cast
 
-from .const import BASIC_MOTION_GET_FUNCTION, DOMAIN
+from .const import BASIC_MOTION_GET_FUNCTION
+from .const import DOMAIN
 from .coordinator import SkybellDataUpdateCoordinator
 from .entity import SkybellEntity
 

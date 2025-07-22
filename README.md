@@ -14,17 +14,17 @@
 [![Discord][discord-shield]][discord]
 [![Community Forum][forum-shield]][forum]
 
-| Platform        | Description                                                               |
-| --------------- | ------------------------------------------------------------------------- |
-| `binary_sensor` | Show info from SkybellGen API for switch and light actuators.             |
-| `button`        | Trigger actions  like reboot doorbell using the SkybellGen API.           |
-| `camera`        | Show images and videos of activities.                                     |
-| `light`         | Actuator for SkybellGen API led lights.                                   |
-| `number`        | Actuator for SkybellGen API entities that input numeric values.           |
-| `select`        | Actuator for SkybellGen API entities that input enumerated values.        |
-| `sensor`        | Show info from SkybellGen API actuators.                                  |
-| `switch`        | Actuator for SkybellGen API entities that input binary values.            |
-| `text`          | Actuator for SkybellGen API entities that input text values.              |
+| Platform        | Description                                                        |
+| --------------- | ------------------------------------------------------------------ |
+| `binary_sensor` | Show info from SkybellGen API for switch and light actuators.      |
+| `button`        | Trigger actions like reboot doorbell using the SkybellGen API.     |
+| `camera`        | Show images and videos of activities.                              |
+| `light`         | Actuator for SkybellGen API led lights.                            |
+| `number`        | Actuator for SkybellGen API entities that input numeric values.    |
+| `select`        | Actuator for SkybellGen API entities that input enumerated values. |
+| `sensor`        | Show info from SkybellGen API actuators.                           |
+| `switch`        | Actuator for SkybellGen API entities that input binary values.     |
+| `text`          | Actuator for SkybellGen API entities that input text values.       |
 
 ![Skybell](skybell.jpg)
 

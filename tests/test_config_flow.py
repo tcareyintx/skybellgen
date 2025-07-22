@@ -1,5 +1,7 @@
 """Test SkybellGen config flow."""
+from unittest.mock import patch
 
+import pytest
 from custom_components.skybellgen.const import (
     BINARY_SENSOR,
 )
@@ -17,9 +19,7 @@ from custom_components.skybellgen.const import (
 )
 from homeassistant import config_entries
 from homeassistant import data_entry_flow
-import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
-from unittest.mock import patch
 
 from .const import MOCK_CONFIG
 

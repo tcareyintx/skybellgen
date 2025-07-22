@@ -1,10 +1,10 @@
 """Camera support for the Skybell Gen Doorbell."""
-
 from __future__ import annotations
 
 from aiohttp import web
 from haffmpeg.camera import CameraMjpeg
-from homeassistant.components.camera import Camera, CameraEntityDescription
+from homeassistant.components.camera import Camera
+from homeassistant.components.camera import CameraEntityDescription
 from homeassistant.components.ffmpeg import get_ffmpeg_manager
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant

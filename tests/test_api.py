@@ -1,7 +1,7 @@
 """Tests for SkybellGen api."""
+import asyncio
 
 import aiohttp
-import asyncio
 from custom_components.skybellgen.api import (
     SkybellgenApiClient,
 )

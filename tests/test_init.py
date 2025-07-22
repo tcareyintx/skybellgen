@@ -1,8 +1,5 @@
 """Test SkybellGen setup process."""
-
-from custom_components.skybellgen import (
-    SkybellgenDataUpdateCoordinator,
-)
+import pytest
 from custom_components.skybellgen import (
     async_reload_entry,
 )
@@ -12,11 +9,13 @@ from custom_components.skybellgen import (
 from custom_components.skybellgen import (
     async_unload_entry,
 )
+from custom_components.skybellgen import (
+    SkybellgenDataUpdateCoordinator,
+)
 from custom_components.skybellgen.const import (
     DOMAIN,
 )
 from homeassistant.exceptions import ConfigEntryNotReady
-import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from .const import MOCK_CONFIG

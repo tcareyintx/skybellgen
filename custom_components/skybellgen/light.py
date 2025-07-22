@@ -1,19 +1,16 @@
 """Light/LED support for the Skybell Gen Doorbell."""
-
 from __future__ import annotations
 
-from aioskybellgen.exceptions import (
-    SkybellAccessControlException,
-    SkybellException,
-)
+from typing import Any
+
+from aioskybellgen.exceptions import SkybellAccessControlException
+from aioskybellgen.exceptions import SkybellException
 from aioskybellgen.helpers import const as CONST
-from homeassistant.components.light import (
-    ATTR_BRIGHTNESS,
-    ATTR_RGB_COLOR,
-    ColorMode,
-    LightEntity,
-    LightEntityDescription,
-)
+from homeassistant.components.light import ATTR_BRIGHTNESS
+from homeassistant.components.light import ATTR_RGB_COLOR
+from homeassistant.components.light import ColorMode
+from homeassistant.components.light import LightEntity
+from homeassistant.components.light import LightEntityDescription
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
@@ -21,9 +18,10 @@ from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers.entity_platform import (
     AddConfigEntryEntitiesCallback,
 )
-from typing import Any
 
-from .const import DEFAULT_BRIGHTNESS, DEFAULT_LED_COLOR, DOMAIN
+from .const import DEFAULT_BRIGHTNESS
+from .const import DEFAULT_LED_COLOR
+from .const import DOMAIN
 from .coordinator import SkybellDataUpdateCoordinator
 from .entity import SkybellEntity
 

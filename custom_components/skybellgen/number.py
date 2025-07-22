@@ -1,16 +1,11 @@
 """Number support for the Skybell Gen Doorbell."""
-
 from __future__ import annotations
 
-from aioskybellgen.exceptions import (
-    SkybellAccessControlException,
-    SkybellException,
-)
+from aioskybellgen.exceptions import SkybellAccessControlException
+from aioskybellgen.exceptions import SkybellException
 from aioskybellgen.helpers import const as CONST
-from homeassistant.components.number import (
-    NumberEntity,
-    NumberEntityDescription,
-)
+from homeassistant.components.number import NumberEntity
+from homeassistant.components.number import NumberEntityDescription
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
@@ -19,7 +14,8 @@ from homeassistant.helpers.entity_platform import (
     AddConfigEntryEntitiesCallback,
 )
 
-from .const import DOMAIN, TENTH_PERCENT_TYPES
+from .const import DOMAIN
+from .const import TENTH_PERCENT_TYPES
 from .coordinator import SkybellDataUpdateCoordinator
 from .entity import SkybellEntity
 

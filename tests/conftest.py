@@ -1,7 +1,7 @@
 """Global fixtures for SkybellGen integration."""
+from unittest.mock import patch
 
 import pytest
-from unittest.mock import patch
 
 
 pytest_plugins = "pytest_homeassistant_custom_component"
