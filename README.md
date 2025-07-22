@@ -14,18 +14,19 @@
 [![Discord][discord-shield]][discord]
 [![Community Forum][forum-shield]][forum]
 
-**TO BE REMOVED: If you need help, as a developer, to use this custom component tempalte,
-please look at the [User Guide in the Cookiecutter documentation](https://cookiecutter-homeassistant-custom-component.readthedocs.io/en/stable/quickstart.html)**
-
-**This component will set up the following platforms.**
-
 | Platform        | Description                                                               |
 | --------------- | ------------------------------------------------------------------------- |
-| `binary_sensor` | Show something `True` or `False`.                                         |
-| `sensor`        | Show info from SkybellGen API. |
-| `switch`        | Switch something `True` or `False`.                                       |
+| `binary_sensor` | Show info from SkybellGen API for switch and light actuators.             |
+| `button`        | Trigger actions  like reboot doorbell using the SkybellGen API.           |
+| `camera`        | Show images and videos of activities.                                     |
+| `light`         | Actuator for SkybellGen API led lights.                                   |
+| `number`        | Actuator for SkybellGen API entities that input numeric values.           |
+| `select`        | Actuator for SkybellGen API entities that input enumerated values.        |
+| `sensor`        | Show info from SkybellGen API actuators.                                  |
+| `switch`        | Actuator for SkybellGen API entities that input binary values.            |
+| `text`          | Actuator for SkybellGen API entities that input text values.              |
 
-![example][exampleimg]
+![Skybell](skybell.jpg)
 
 ## Installation
 
@@ -41,20 +42,23 @@ Using your HA configuration directory (folder) as a starting point you should no
 
 ```text
 custom_components/skybellgen/translations/en.json
-custom_components/skybellgen/translations/fr.json
-custom_components/skybellgen/translations/nb.json
-custom_components/skybellgen/translations/sensor.en.json
-custom_components/skybellgen/translations/sensor.fr.json
-custom_components/skybellgen/translations/sensor.nb.json
-custom_components/skybellgen/translations/sensor.nb.json
 custom_components/skybellgen/__init__.py
-custom_components/skybellgen/api.py
 custom_components/skybellgen/binary_sensor.py
+custom_components/skybellgen/button.py
+custom_components/skybellgen/camera.py
 custom_components/skybellgen/config_flow.py
 custom_components/skybellgen/const.py
+custom_components/skybellgen/coordinator.py
+custom_components/skybellgen/entity.py
+custom_components/skybellgen/icons.json
+custom_components/skybellgen/light.py
 custom_components/skybellgen/manifest.json
+custom_components/skybellgen/number.py
+custom_components/skybellgen/select.py
 custom_components/skybellgen/sensor.py
+custom_components/skybellgen/strings.json
 custom_components/skybellgen/switch.py
+custom_components/skybellgen/text.py
 ```
 
 ## Configuration is done in the UI
@@ -68,16 +72,14 @@ If you want to contribute to this please read the [Contribution guidelines](CONT
 ## Credits
 
 This project was generated from [@oncleben31](https://github.com/oncleben31)'s [Home Assistant Custom Component Cookiecutter](https://github.com/oncleben31/cookiecutter-homeassistant-custom-component) template.
-
 Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [integration_blueprint][integration_blueprint] template
+The project used the Home Assistant core [Skybell component](https://www.home-assistant.io/integrations/skybell/) as the starting point.
 
 ---
 
 [integration_blueprint]: https://github.com/custom-components/integration_blueprint
 [black]: https://github.com/psf/black
 [black-shield]: https://img.shields.io/badge/code%20style-black-000000.svg?style=for-the-badge
-[buymecoffee]: https://www.buymeacoffee.com/tcareyintx
-[buymecoffeebadge]: https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg?style=for-the-badge
 [commits-shield]: https://img.shields.io/github/commit-activity/y/tcareyintx/skybellgen.svg?style=for-the-badge
 [commits]: https://github.com/tcareyintx/skybellgen/commits/main
 [hacs]: https://hacs.xyz

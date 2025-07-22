@@ -11,6 +11,7 @@ repos:
       - id: black
         name: black
         entry: black
+        language_version: python3.13.5
         language: system
         types: [python]
         require_serial: true
