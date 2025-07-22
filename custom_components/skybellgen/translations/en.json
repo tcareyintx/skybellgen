@@ -48,7 +48,7 @@
     "no_option_for_key": {
       "message": "Internal error: The field {key} option list does not have an entry/index for {option}"
     },
-    "invalid permissions": {
+    "invalid_permissions": {
       "message": "Entity {key} is read-only when the device is shared"
     },
     "reboot_failed": {
