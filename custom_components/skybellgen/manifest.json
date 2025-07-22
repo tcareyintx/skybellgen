@@ -6,9 +6,9 @@
   "dependencies": ["ffmpeg"],
   "documentation": "https://github.com/tcareyintx/skybellgen",
   "integration_type": "hub",
-  "issue_tracker": "https://github.com/tcareyintx/skybellgen/issues",
   "iot_class": "cloud_polling",
-  "loggers": ["aioskybellgen"],
+  "issue_tracker": "https://github.com/tcareyintx/skybellgen/issues",
+  "loggers": ["skybellgen"],
   "requirements": ["aioskybellgen==0.1.1"],
   "version": "0.1.0"
 }
