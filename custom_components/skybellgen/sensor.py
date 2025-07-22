@@ -1,4 +1,5 @@
 """Sensor support for Skybell Gen  Doorbells."""
+
 from __future__ import annotations
 
 from collections.abc import Callable
@@ -7,9 +8,11 @@ from datetime import datetime
 
 from aioskybellgen import SkybellDevice
 from aioskybellgen.helpers import const as CONST
-from homeassistant.components.sensor import SensorDeviceClass
-from homeassistant.components.sensor import SensorEntity
-from homeassistant.components.sensor import SensorEntityDescription
+from homeassistant.components.sensor import (
+    SensorDeviceClass,
+    SensorEntity,
+    SensorEntityDescription,
+)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
@@ -18,8 +21,7 @@ from homeassistant.helpers.entity_platform import (
 )
 from homeassistant.helpers.typing import StateType
 
-from .entity import DOMAIN
-from .entity import SkybellEntity
+from .entity import DOMAIN, SkybellEntity
 
 
 @dataclass(frozen=True, kw_only=True)

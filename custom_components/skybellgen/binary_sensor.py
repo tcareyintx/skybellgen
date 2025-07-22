@@ -1,22 +1,22 @@
 """Binary sensor support for the Skybell Gen Doorbell."""
+
 from __future__ import annotations
 
 from aioskybellgen.helpers import const as CONST
-from homeassistant.components.binary_sensor import BinarySensorEntity
-from homeassistant.components.binary_sensor import BinarySensorEntityDescription
+from homeassistant.components.binary_sensor import (
+    BinarySensorEntity,
+    BinarySensorEntityDescription,
+)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EntityCategory
-from homeassistant.core import callback
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import (
     AddConfigEntryEntitiesCallback,
 )
 
-from .const import BASIC_MOTION_GET_FUNCTION
-from .const import DOMAIN
+from .const import BASIC_MOTION_GET_FUNCTION, DOMAIN
 from .coordinator import SkybellDataUpdateCoordinator
 from .entity import SkybellEntity
-
 
 BINARY_SENSOR_TYPES: tuple[BinarySensorEntityDescription, ...] = (
     BinarySensorEntityDescription(

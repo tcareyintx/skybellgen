@@ -1,10 +1,10 @@
 """Camera support for the Skybell Gen Doorbell."""
+
 from __future__ import annotations
 
 from aiohttp import web
 from haffmpeg.camera import CameraMjpeg
-from homeassistant.components.camera import Camera
-from homeassistant.components.camera import CameraEntityDescription
+from homeassistant.components.camera import Camera, CameraEntityDescription
 from homeassistant.components.ffmpeg import get_ffmpeg_manager
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -17,7 +17,6 @@ from homeassistant.helpers.entity_platform import (
 from .const import DOMAIN
 from .coordinator import SkybellDataUpdateCoordinator
 from .entity import SkybellEntity
-
 
 CAMERA_TYPES: tuple[CameraEntityDescription, ...] = (
     CameraEntityDescription(

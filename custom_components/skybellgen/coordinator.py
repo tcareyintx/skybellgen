@@ -1,17 +1,15 @@
 """Data update coordinator for the Skybell Gen integration."""
-from datetime import datetime
-from datetime import timedelta
+
+from datetime import datetime, timedelta
 
 from aioskybellgen import SkybellDevice
 from aioskybellgen.exceptions import SkybellException
 from aioskybellgen.helpers.const import REFRESH_CYCLE
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
-from homeassistant.helpers.update_coordinator import UpdateFailed
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .const import DOMAIN
-from .const import LOGGER
+from .const import DOMAIN, LOGGER
 
 
 class SkybellDataUpdateCoordinator(DataUpdateCoordinator[None]):

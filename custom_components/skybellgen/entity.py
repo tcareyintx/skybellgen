@@ -1,4 +1,5 @@
 """Entity representing a Skybell Gen Doorbell."""
+
 from __future__ import annotations
 
 from aioskybellgen import SkybellDevice
@@ -8,8 +9,7 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity import EntityDescription
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DEFAULT_NAME
-from .const import DOMAIN
+from .const import DEFAULT_NAME, DOMAIN
 from .coordinator import SkybellDataUpdateCoordinator
 
 

@@ -1,11 +1,13 @@
 """Tests for SkybellGen api."""
+
 import asyncio
 
 import aiohttp
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
+
 from custom_components.skybellgen.api import (
     SkybellgenApiClient,
 )
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 
 async def test_api(hass, aioclient_mock, caplog):
