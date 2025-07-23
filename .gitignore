@@ -7,3 +7,4 @@ venv
 /.project
 /.pydevproject
 /.mypy_cache/
+/.pytest_cache/
