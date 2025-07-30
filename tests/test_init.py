@@ -6,7 +6,6 @@ from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.skybellgen import (
     SkybellDataUpdateCoordinator,
-    async_reload_entry,
     async_setup_entry,
     async_unload_entry,
 )
@@ -22,26 +21,22 @@ from .const import MOCK_CONFIG
 # Home Assistant using the pytest_homeassistant_custom_component plugin.
 # Assertions allow you to verify that the return value of whatever is on the left
 # side of the assertion matches with the right side.
-async def test_setup_unload_and_reload_entry(hass, bypass_get_data):
+async def test_setup_and_unload_entry(hass, bypass_initialize, bypass_first_refresh, bypass_forward_setup):
     """Test entry setup and unload."""
     # Create a mock entry so we don't have to go through config flow
     config_entry = MockConfigEntry(domain=DOMAIN, data=MOCK_CONFIG, entry_id="test")
 
     # Set up the entry and assert that the values set during setup are where we expect
-    # them to be. Because we have patched the SkybellDataUpdateCoordinator.async_get_data
-    # call, no code from custom_components/skybellgen actually runs.
+    # them to be.
+    # Because we have patched the following calls:
+    #    Skybell.async_initialize
+    #    Skybell.async_refresh_session (DataCoordinator)
+    #    SkybellDevice.async_async_update(refresh=True, get_devices=True) (DataCoordinator)
+    # No APIs to the Skybell Cloud (aioskybellgen) actually runs.
     assert await async_setup_entry(hass, config_entry)
     assert DOMAIN in hass.data and config_entry.entry_id in hass.data[DOMAIN]
-    assert isinstance(
-        hass.data[DOMAIN][config_entry.entry_id], SkybellDataUpdateCoordinator
-    )
-
-    # Reload the entry and assert that the data from above is still there
-    assert await async_reload_entry(hass, config_entry) is None
-    assert DOMAIN in hass.data and config_entry.entry_id in hass.data[DOMAIN]
-    assert isinstance(
-        hass.data[DOMAIN][config_entry.entry_id], SkybellDataUpdateCoordinator
-    )
+    dc = hass.data[DOMAIN][config_entry.entry_id]
+    assert isinstance(dc[0], SkybellDataUpdateCoordinator)
 
     # Unload the entry and verify that the data has been removed
     assert await async_unload_entry(hass, config_entry)

@@ -6,13 +6,12 @@ from homeassistant import config_entries, data_entry_flow
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.skybellgen.const import (
-    BINARY_SENSOR,
+from custom_components.skybellgen import (
     DOMAIN,
-    PLATFORMS,
-    SENSOR,
-    SWITCH,
+    PLATFORMS
 )
+from homeassistant.const import Platform
+
 
 from .const import MOCK_CONFIG
 
@@ -102,7 +101,7 @@ async def test_options_flow(hass):
     # Enter some fake data into the form
     result = await hass.config_entries.options.async_configure(
         result["flow_id"],
-        user_input={platform: platform != SENSOR for platform in PLATFORMS},
+        user_input={platform: platform != Platform.SENSOR for platform in PLATFORMS},
     )
 
     # Verify that the flow finishes
@@ -110,4 +109,4 @@ async def test_options_flow(hass):
     assert result["title"] == "test_username"
 
     # Verify that the options were updated
-    assert entry.options == {BINARY_SENSOR: True, SENSOR: False, SWITCH: True}
+    assert entry.options == {Platform.BINARY_SENSOR: True, Plarform.SENSOR: False, Platform.SWITCH: True}

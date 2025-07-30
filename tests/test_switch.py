@@ -3,7 +3,7 @@
 from unittest.mock import call, patch
 
 from homeassistant.components.switch import SERVICE_TURN_OFF, SERVICE_TURN_ON
-from homeassistant.const import ATTR_ENTITY_ID
+from homeassistant.const import ATTR_ENTITY_ID, Platform
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.skybellgen import (
@@ -12,10 +12,11 @@ from custom_components.skybellgen import (
 from custom_components.skybellgen.const import (
     DEFAULT_NAME,
     DOMAIN,
-    SWITCH,
 )
 
 from .const import MOCK_CONFIG
+
+SWITCH = Platform.SWITCH
 
 
 async def test_switch_services(hass):

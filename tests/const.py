@@ -1,8 +1,8 @@
 """Constants for SkybellGen tests."""
 
-from custom_components.skybellgen.const import (
+from homeassistant.const import (
     CONF_PASSWORD,
-    CONF_USERNAME,
+    CONF_EMAIL,
 )
 
-MOCK_CONFIG = {CONF_USERNAME: "test_username", CONF_PASSWORD: "test_password"}
+MOCK_CONFIG = {CONF_EMAIL: "test_email", CONF_PASSWORD: "test_password"}
