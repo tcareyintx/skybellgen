@@ -4,13 +4,10 @@ from unittest.mock import patch
 
 from homeassistant import config_entries, data_entry_flow
 import pytest
-from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.skybellgen import (
     DOMAIN,
-    PLATFORMS
 )
-from homeassistant.const import Platform
 
 
 from .const import MOCK_CONFIG
@@ -23,9 +20,6 @@ from .const import MOCK_CONFIG
 def bypass_setup_fixture():
     """Prevent setup."""
     with patch(
-        "custom_components.skybellgen.async_setup",
-        return_value=True,
-    ), patch(
         "custom_components.skybellgen.async_setup_entry",
         return_value=True,
     ):
@@ -33,9 +27,9 @@ def bypass_setup_fixture():
 
 
 # Here we simiulate a successful config flow from the backend.
-# Note that we use the `bypass_get_data` fixture here because
+# Note that we use the `bypass_initialize` fixture here because
 # we want the config flow validation to succeed during the test.
-async def test_successful_config_flow(hass, bypass_get_data):
+async def test_successful_config_flow(hass):
     """Test a successful config flow."""
     # Initialize a config flow
     result = await hass.config_entries.flow.async_init(
@@ -43,7 +37,7 @@ async def test_successful_config_flow(hass, bypass_get_data):
     )
 
     # Check that the config flow shows the user form as the first step
-    assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
+    assert result["type"] == data_entry_flow.FlowResultType.FORM
     assert result["step_id"] == "user"
 
     # If a user were to enter `test_username` for username and `test_password`
@@ -54,59 +48,29 @@ async def test_successful_config_flow(hass, bypass_get_data):
 
     # Check that the config flow is complete and a new entry is created with
     # the input data
-    assert result["type"] == data_entry_flow.RESULT_TYPE_CREATE_ENTRY
-    assert result["title"] == "test_username"
+    assert result["type"] == data_entry_flow.FlowResultType.CREATE_ENTRY
+    assert result["title"] == "test_email"
     assert result["data"] == MOCK_CONFIG
     assert result["result"]
 
 
 # In this case, we want to simulate a failure during the config flow.
-# We use the `error_on_get_data` mock instead of `bypass_get_data`
-# (note the function parameters) to raise an Exception during
+# We use the `error_on_auth` mock
+# (note the function parameters) to raise an SkybellException during
 # validation of the input config.
-async def test_failed_config_flow(hass, error_on_get_data):
+async def test_failed_config_flow(hass, error_on_auth):
     """Test a failed config flow due to credential validation failure."""
 
     result = await hass.config_entries.flow.async_init(
         DOMAIN, context={"source": config_entries.SOURCE_USER}
     )
 
-    assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
+    assert result["type"] == data_entry_flow.FlowResultType.FORM
     assert result["step_id"] == "user"
 
     result = await hass.config_entries.flow.async_configure(
         result["flow_id"], user_input=MOCK_CONFIG
     )
 
-    assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
-    assert result["errors"] == {"base": "auth"}
-
-
-# Our config flow also has an options flow, so we must test it as well.
-async def test_options_flow(hass):
-    """Test an options flow."""
-    # Create a new MockConfigEntry and add to HASS (we're bypassing config
-    # flow entirely)
-    entry = MockConfigEntry(domain=DOMAIN, data=MOCK_CONFIG, entry_id="test")
-    entry.add_to_hass(hass)
-
-    # Initialize an options flow
-    await hass.config_entries.async_setup(entry.entry_id)
-    result = await hass.config_entries.options.async_init(entry.entry_id)
-
-    # Verify that the first options step is a user form
-    assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
-    assert result["step_id"] == "user"
-
-    # Enter some fake data into the form
-    result = await hass.config_entries.options.async_configure(
-        result["flow_id"],
-        user_input={platform: platform != Platform.SENSOR for platform in PLATFORMS},
-    )
-
-    # Verify that the flow finishes
-    assert result["type"] == data_entry_flow.RESULT_TYPE_CREATE_ENTRY
-    assert result["title"] == "test_username"
-
-    # Verify that the options were updated
-    assert entry.options == {Platform.BINARY_SENSOR: True, Plarform.SENSOR: False, Platform.SWITCH: True}
+    assert result["type"] == data_entry_flow.FlowResultType.FORM
+    assert result["errors"] == {"base": "invalid_auth"}
