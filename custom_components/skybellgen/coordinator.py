@@ -35,8 +35,9 @@ class SkybellDataUpdateCoordinator(DataUpdateCoordinator[None]):
 
     async def _async_update_data(self) -> None:
         """Fetch data from API endpoint."""
-        # Check if we should refresh the tokens for the session
-        if datetime.now() > self.device.skybell.session_refresh_timestamp:
+        # Check if we should refresh the tokens for the ses
+        ts = self.device.skybell.session_refresh_timestamp
+        if (ts is None or (datetime.now() > ts)):
             try:
                 await self.device.skybell.async_refresh_session()
             except SkybellException as exc:

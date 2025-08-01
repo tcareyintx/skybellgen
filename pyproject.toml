@@ -3,7 +3,23 @@
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 console_output_style = "count"
-addopts = "-qq --cov=custom_components.skybellgen --cov-report html"
+addopts = "-qq"
 testpaths = [
     "tests",
 ]
+
+[tool.coverage.report]
+omit = [
+    "custom_components/skybellgen/camera.py",
+]
+show_missing = true
+fail_under = 100
+
+[tool.coverage.run]
+branch = false
+source = [
+    "custom_components/skybellgen",
+]
+
+[tool.coverage.html]
+directory = "htmlcov"

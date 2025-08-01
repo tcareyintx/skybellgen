@@ -6,7 +6,7 @@ import asyncio
 
 from aioskybellgen import Skybell
 from aioskybellgen.exceptions import SkybellAuthenticationException, SkybellException
-from homeassistant.config_entries import ConfigEntry
+from homeassistant.config_entries import ConfigEntry, ConfigEntryState
 from homeassistant.const import CONF_EMAIL, CONF_PASSWORD, Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
@@ -27,13 +27,14 @@ PLATFORMS = [
     Platform.TEXT,
 ]
 
-type SkybellConfigEntry = ConfigEntry[SkybellData]  # flake8: noqa: E999
-
 
 class SkybellData:
     """The Skybell data class for a Hub config entity."""
 
     api: Skybell
+
+
+type SkybellConfigEntry = ConfigEntry[SkybellData]  # flake8: noqa: E999
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: SkybellConfigEntry) -> bool:
@@ -75,6 +76,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: SkybellConfigEntry) -> b
 
 async def async_unload_entry(hass: HomeAssistant, entry: SkybellConfigEntry) -> bool:
     """Unload a config entry."""
+    if entry.state != ConfigEntryState.LOADED:
+        return True
+
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         hass.data[DOMAIN].pop(entry.entry_id)
         api = entry.api
