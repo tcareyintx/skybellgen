@@ -12,14 +12,13 @@ from homeassistant.const import Platform, STATE_ON, ATTR_ENTITY_ID
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.exceptions import ServiceValidationError
 import homeassistant.helpers.entity_registry as er
-from homeassistant.helpers.update_coordinator import UpdateFailed
 
 from .conftest import async_init_integration
 
 SWITCH = Platform.SWITCH
 
 
-async def test_switch(hass, remove_platforms):
+async def test_switch(hass, remove_platforms, bypass_initialize):
     """Test switch services."""
     # Create a mock entry so we don't have to go through config flow
     config_entry = await async_init_integration(hass)
@@ -44,7 +43,7 @@ async def test_switch(hass, remove_platforms):
     )
 
 
-async def test_switch_exc(hass, remove_platforms, error_set_setting_exc):
+async def test_switch_exc(hass, remove_platforms, bypass_initialize, error_set_setting_exc):
     """Test switch services with Skybell exception."""
     # Create a mock entry so we don't have to go through config flow
     config_entry = await async_init_integration(hass)
@@ -71,7 +70,7 @@ async def test_switch_exc(hass, remove_platforms, error_set_setting_exc):
         )
 
 
-async def test_switch_acl(hass, remove_platforms, error_set_setting_acl):
+async def test_switch_acl(hass, remove_platforms, bypass_initialize, error_set_setting_acl):
     """Test switch services with ACL exception."""
     # Create a mock entry so we don't have to go through config flow
     config_entry = await async_init_integration(hass)
@@ -98,7 +97,7 @@ async def test_switch_acl(hass, remove_platforms, error_set_setting_acl):
         )
 
 
-async def test_coord_exc(hass, remove_platforms, error_update_exc):
+async def test_coord_exc(hass, remove_platforms, bypass_initialize, error_update_exc):
     """Test coordinator async update Skybell exception."""
     # Create a mock entry so we don't have to go through config flow
     config_entry = await async_init_integration(hass)

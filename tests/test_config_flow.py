@@ -29,7 +29,7 @@ def bypass_setup_fixture():
 # Here we simiulate a successful config flow from the backend.
 # Note that we use the `bypass_initialize` fixture here because
 # we want the config flow validation to succeed during the test.
-async def test_successful_config_flow(hass):
+async def test_successful_config_flow(hass, bypass_initialize):
     """Test a successful config flow."""
     # Initialize a config flow
     result = await hass.config_entries.flow.async_init(
@@ -58,7 +58,7 @@ async def test_successful_config_flow(hass):
 # We use the `error_on_auth` mock
 # (note the function parameters) to raise an SkybellException during
 # validation of the input config.
-async def test_failed_config_flow(hass, error_on_auth):
+async def test_failed_config_flow(hass, bypass_initialize, error_on_auth):
     """Test a failed config flow due to credential validation failure."""
 
     result = await hass.config_entries.flow.async_init(

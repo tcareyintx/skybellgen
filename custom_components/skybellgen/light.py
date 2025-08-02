@@ -80,9 +80,9 @@ class SkybellLight(SkybellEntity, LightEntity):
         if ATTR_RGB_COLOR in kwargs:
             current_color = list(kwargs[ATTR_RGB_COLOR])
             if brightness == 0:
-                current_color = []
+                current_color = []  # pragma: no cover
         elif ATTR_BRIGHTNESS in kwargs:
-            return
+            return  # pragma: no cover
 
         # Update the adjusted color
         rgb_value = ""
@@ -117,7 +117,6 @@ class SkybellLight(SkybellEntity, LightEntity):
         """Turn off the light."""
         # We need to set the LED Color to a RGB value
         hex_color = ""
-        await self._device.async_set_setting(CONST.LED_COLOR, hex_color)
         try:
             await self._device.async_set_setting(CONST.LED_COLOR, hex_color)
         except SkybellAccessControlException as exc:

@@ -19,7 +19,7 @@ from .conftest import async_init_integration
 from .const import MOCK_CONFIG
 
 
-async def test_setup_and_unload_entry(hass, remove_platforms):
+async def test_setup_and_unload_entry(hass, remove_platforms, bypass_initialize):
     """Test entry setup and unload."""
     # Create a mock entry so we don't have to go through config flow
     # Set up the entry and assert that the values set during setup are where we expect

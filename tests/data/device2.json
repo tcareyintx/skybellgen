@@ -73,7 +73,7 @@
 		"image_aspect": "Wide",
 		"image_quality": 0,
 		"indoor_chime": true,
-		"led_color": "",
+		"led_color": "#00FF00",
 		"led_control": "Normal",
 		"modes": [
 		],

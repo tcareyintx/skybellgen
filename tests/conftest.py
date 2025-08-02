@@ -70,7 +70,7 @@ def bypass_dependency_check_fixture():
 
 
 # This fixture, when used, will result in calls to async_initialize to return a MOCKED device.
-@pytest.fixture(name="bypass_initialize", autouse=True)
+@pytest.fixture(name="bypass_initialize")
 def bypass_initialize_fixture():
     """Skip calls to get data from API."""
     with patch("custom_components.skybellgen.Skybell.async_initialize") as init_method:
@@ -83,8 +83,25 @@ def bypass_initialize_fixture():
         init_method.return_value.append(device)
         yield
 
+# This fixture, when used, will result in calls to async_initialize to return a MOCKED device.
+
+
+@pytest.fixture(name="bypass_initialize2")
+def bypass_initialize2_fixture():
+    """Skip calls to get data from API."""
+    with patch("custom_components.skybellgen.Skybell.async_initialize") as init_method:
+        basepath = path.dirname(__file__)
+        filepath = path.abspath(path.join(basepath, "data/device2.json"))
+        with open(filepath, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+        device = SkybellDevice(device_json=data, skybell=None)
+        init_method.return_value = []
+        init_method.return_value.append(device)
+        yield
 
 # This fixture, when used, will result in calls to async_refresh_skybell_session.
+
+
 @pytest.fixture(name="bypass_refresh_session", autouse=True)
 def bypass_refresh_session_fixture():
     """Skip calls to refresh session from API."""

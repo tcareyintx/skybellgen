@@ -17,7 +17,7 @@ from .conftest import async_init_integration
 BUTTON = Platform.BUTTON
 
 
-async def test_button(hass, remove_platforms):
+async def test_button(hass, remove_platforms, bypass_initialize):
     """Test button services."""
     # Create a mock entry so we don't have to go through config flow
     config_entry = await async_init_integration(hass)
@@ -34,7 +34,7 @@ async def test_button(hass, remove_platforms):
     )
 
 
-async def test_switch_exc(hass, remove_platforms, error_reboot_exc):
+async def test_switch_exc(hass, remove_platforms, bypass_initialize, error_reboot_exc):
     """Test button services with Skybell exception."""
     # Create a mock entry so we don't have to go through config flow
     config_entry = await async_init_integration(hass)
@@ -51,7 +51,7 @@ async def test_switch_exc(hass, remove_platforms, error_reboot_exc):
         )
 
 
-async def test_switch_acl(hass, remove_platforms, error_reboot_acl):
+async def test_switch_acl(hass, remove_platforms, bypass_initialize, error_reboot_acl):
     """Test button services with ACL exception."""
     # Create a mock entry so we don't have to go through config flow
     config_entry = await async_init_integration(hass)
