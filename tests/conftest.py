@@ -5,11 +5,14 @@ from os import path
 from unittest.mock import patch
 
 import pytest
-from aioskybellgen import SkybellDevice
+from aioskybellgen import Skybell, SkybellDevice
 from aioskybellgen.exceptions import (
+    SkybellAccessControlException,
     SkybellAuthenticationException,
     SkybellException,
 )
+
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
@@ -17,7 +20,7 @@ from custom_components.skybellgen.const import (
     DOMAIN,
 )
 
-from .const import MOCK_CONFIG, USER_ID, MOCK_PLATFORMS
+from .const import MOCK_CONFIG, USERNAME, PASSWORD, USER_ID, MOCK_PLATFORMS
 
 
 @pytest.fixture(autouse=True)
@@ -81,11 +84,11 @@ def bypass_initialize_fixture():
         yield
 
 
-# This fixture, when used, will result in calls to async_refresh_session.
+# This fixture, when used, will result in calls to async_refresh_skybell_session.
 @pytest.fixture(name="bypass_refresh_session", autouse=True)
 def bypass_refresh_session_fixture():
     """Skip calls to refresh session from API."""
-    with patch("custom_components.skybellgen.Skybell.async_refresh_session"):
+    with patch("custom_components.skybellgen.coordinator.SkybellDataUpdateCoordinator._async_refresh_skybell_session"):
         yield
 
 
@@ -133,7 +136,7 @@ def error_auth_fixture():
         yield
 
 
-# Monkey patch the Platform to remove platforms that cant be tested.
+# Patch the Platform to remove platforms that cant be tested.
 @pytest.fixture(name="remove_platforms")
 def remove_camera_platform_fixture():
     """Remove the platforms that cannot be tested from the SkybellGen integration."""
@@ -141,7 +144,122 @@ def remove_camera_platform_fixture():
         yield
 
 
+# Bypass the device async_set_setting.
+@pytest.fixture(name="bypass_set_settings", autouse=True)
+def bypass_set_settings_fixture():
+    """Bypass the call to set settings the SkybellGen integration."""
+    with patch("custom_components.skybellgen.coordinator.SkybellDevice.async_set_setting"):
+        yield
+
+
+# In this fixture, we are forcing calls to async_set_setting to raise a SkybellException.
+# This is useful for exception handling.
+@pytest.fixture(name="error_set_setting_exc")
+def error_set_setting_exc_fixture():
+    """Simulate error from the API."""
+    with patch(
+        "custom_components.skybellgen.coordinator.SkybellDevice.async_set_setting",
+        side_effect=SkybellException,
+    ):
+        yield
+
+
+# In this fixture, we are forcing calls to async_set_setting to raise a SkybellSCLException.
+# This is useful for exception handling.
+@pytest.fixture(name="error_set_setting_acl")
+def error_set_setting_acl_fixture():
+    """Simulate error from the API."""
+    with patch(
+        "custom_components.skybellgen.coordinator.SkybellDevice.async_set_setting",
+        side_effect=SkybellAccessControlException,
+    ):
+        yield
+
+
+# Bypass the device async_set_setting.
+@pytest.fixture(name="bypass_device_reboot", autouse=True)
+def bypass_device_reboot_fixture():
+    """Bypass the call to set settings the SkybellGen integration."""
+    with patch("custom_components.skybellgen.coordinator.SkybellDevice.async_reboot_device"):
+        yield
+
+
+# In this fixture, we are forcing calls to async_reboot_device to raise a SkybellException.
+# This is useful for exception handling.
+@pytest.fixture(name="error_reboot_exc")
+def error_reboot_exc_fixture():
+    """Simulate error from the API."""
+    with patch(
+        "custom_components.skybellgen.coordinator.SkybellDevice.async_reboot_device",
+        side_effect=SkybellException,
+    ):
+        yield
+
+
+# In this fixture, we are forcing calls to async_reboot_device to raise a SkybellACLException.
+# This is useful for exception handling.
+@pytest.fixture(name="error_reboot_acl")
+def error_reboot_acl_fixture():
+    """Simulate error from the API."""
+    with patch(
+        "custom_components.skybellgen.coordinator.SkybellDevice.async_reboot_device",
+        side_effect=SkybellAccessControlException,
+    ):
+        yield
+
+
+# Bypass the device async_update.
+@pytest.fixture(name="bypass_device_update", autouse=True)
+def bypass_device_update_fixture():
+    """Bypass the call to update the SkybellGen device."""
+    with patch("custom_components.skybellgen.coordinator.SkybellDevice.async_update"):
+        yield
+
+
+# Issue Skybell exception for async_update.
+@pytest.fixture(name="error_update_exc")
+def error_update_exc_fixture():
+    """Issue a SkybellException when called."""
+    with patch("custom_components.skybellgen.coordinator.SkybellDevice.async_update",
+               side_effect=SkybellException,):
+        yield
+
+
+async def create_skybell_device(hass) -> SkybellDevice:
+    """Create SkybellDevice object."""
+    basepath = path.dirname(__file__)
+    filepath = path.abspath(path.join(basepath, "data/device.json"))
+    with open(filepath, 'r', encoding='utf-8') as file:
+        data = json.load(file)
+    skybell_device = SkybellDevice(device_json=data, skybell=None)
+    return skybell_device
+
+
+async def create_skybell(hass) -> Skybell:
+    """Create Skybell object."""
+    skybell = Skybell(
+        username=USERNAME,
+        password=PASSWORD,
+        get_devices=True,
+        session=async_get_clientsession(hass),
+    )
+    skybell_device = create_skybell_device(hass)
+    skybell_device.skybell = skybell
+    skybell._devices[skybell_device.device_id] = skybell_device
+    skybell.user_id = USER_ID
+    return skybell
+
+
+async def mock_skybell(hass):
+    """Mock Skybell object."""
+    return patch(
+        "custom_components.skybellgen.Skybell",
+        return_value=await create_skybell(hass),
+    )
+
 # This function is used to create a mock config entry for the SkybellGen integration.
+
+
 def create_entry(hass) -> MockConfigEntry:
     """Create fixture for adding config entry in Home Assistant."""
     entry = MockConfigEntry(domain=DOMAIN, entry_id=USER_ID, unique_id=USER_ID, data=MOCK_CONFIG)

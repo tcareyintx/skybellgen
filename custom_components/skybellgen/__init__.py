@@ -76,9 +76,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: SkybellConfigEntry) -> b
 
 async def async_unload_entry(hass: HomeAssistant, entry: SkybellConfigEntry) -> bool:
     """Unload a config entry."""
-    if entry.state != ConfigEntryState.LOADED:
-        return True
-
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         hass.data[DOMAIN].pop(entry.entry_id)
         api = entry.api

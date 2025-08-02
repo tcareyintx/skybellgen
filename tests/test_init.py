@@ -2,6 +2,7 @@
 
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.exceptions import ConfigEntryNotReady, ConfigEntryAuthFailed
+
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
@@ -31,12 +32,16 @@ async def test_setup_and_unload_entry(hass, remove_platforms):
     config_entry = await async_init_integration(hass)
     assert config_entry.state is ConfigEntryState.LOADED
     assert DOMAIN in hass.data and config_entry.entry_id in hass.data[DOMAIN]
+    # We have to reload the platforms because the test auto tears down the integration
+    # after the test is done.
     dc = hass.data[DOMAIN][config_entry.entry_id]
     assert isinstance(dc[0], SkybellDataUpdateCoordinator)
 
     # Unload the entry and verify that the data has been removed
     assert await async_unload_entry(hass, config_entry)
     assert config_entry.entry_id not in hass.data[DOMAIN]
+    config_entry = await async_init_integration(hass)
+    assert config_entry.state is ConfigEntryState.LOADED
 
 
 async def test_setup_entry_exception(hass, error_initialize):

@@ -7,7 +7,15 @@
   },
   "python.testing.pytestArgs": [
     "-s",
+    "tests",
   ],
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
+  "testing.displayedCoveragePercent": "statement",
+  "testing.followRunningTest": true,
+  "testing.coverageBarThresholds": {
+    "red": 0,
+    "yellow": 60,
+    "green": 90
+  },
 }
