@@ -143,7 +143,7 @@ class SkybellNumber(SkybellEntity, NumberEntity):
         if self.entity_description.key in TENTH_PERCENT_TYPES:
             # Check for values 0,1,2 adjust for low medium high
             if value >= 0 and value <= len(SENTSITIVTY_ADJ):
-                value = SENTSITIVTY_ADJ[value]
+                value = SENTSITIVTY_ADJ[value] * 10
             elif (
                 self.entity_description.key in USE_MOTION_VALUE
                 and value == CONST.USE_MOTION_SENSITIVITY

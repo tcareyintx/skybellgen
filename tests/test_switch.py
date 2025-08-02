@@ -17,6 +17,8 @@ from .conftest import async_init_integration
 
 SWITCH = Platform.SWITCH
 
+TEST_ENTITY = "switch.frontdoor_detect_motion"
+
 
 async def test_switch(hass, remove_platforms, bypass_initialize):
     """Test switch services."""
@@ -26,7 +28,7 @@ async def test_switch(hass, remove_platforms, bypass_initialize):
 
     # Get a switch entity for detecting motion (set to on)
     entity_registry = er.async_get(hass)
-    entity_id = "switch.frontdoor_detect_motion"
+    entity_id = TEST_ENTITY
     assert entity_registry.async_get(entity_id) is not None
 
     # Turn off the switch
@@ -51,7 +53,7 @@ async def test_switch_exc(hass, remove_platforms, bypass_initialize, error_set_s
 
     # Get a switch entity for detecting motion (set to on)
     entity_registry = er.async_get(hass)
-    entity_id = "switch.frontdoor_detect_motion"
+    entity_id = TEST_ENTITY
     assert entity_registry.async_get(entity_id) is not None
 
     # Turn off the switch
@@ -78,7 +80,7 @@ async def test_switch_acl(hass, remove_platforms, bypass_initialize, error_set_s
 
     # Get a switch entity for detecting motion (set to on)
     entity_registry = er.async_get(hass)
-    entity_id = "switch.frontdoor_detect_motion"
+    entity_id = TEST_ENTITY
     assert entity_registry.async_get(entity_id) is not None
 
     # Turn off the switch
@@ -105,7 +107,7 @@ async def test_coord_exc(hass, remove_platforms, bypass_initialize, error_update
 
     # Get a switch entity for detecting motion (set to on)
     entity_registry = er.async_get(hass)
-    entity_id = "switch.frontdoor_detect_motion"
+    entity_id = TEST_ENTITY
     assert entity_registry.async_get(entity_id) is not None
 
     # Turn off the switch

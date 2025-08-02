@@ -16,6 +16,8 @@ from .conftest import async_init_integration
 
 BUTTON = Platform.BUTTON
 
+TEST_ENTITY = "button.frontdoor_reboot_doorbell"
+
 
 async def test_button(hass, remove_platforms, bypass_initialize):
     """Test button services."""
@@ -25,7 +27,7 @@ async def test_button(hass, remove_platforms, bypass_initialize):
 
     # Get an entity
     entity_registry = er.async_get(hass)
-    entity_id = "button.frontdoor_reboot_doorbell"
+    entity_id = TEST_ENTITY
     assert entity_registry.async_get(entity_id) is not None
 
     # Press the button
@@ -42,7 +44,7 @@ async def test_switch_exc(hass, remove_platforms, bypass_initialize, error_reboo
 
     # Get an entity
     entity_registry = er.async_get(hass)
-    entity_id = "button.frontdoor_reboot_doorbell"
+    entity_id = TEST_ENTITY
     assert entity_registry.async_get(entity_id) is not None
 
     with pytest.raises(ServiceValidationError):
@@ -59,7 +61,7 @@ async def test_switch_acl(hass, remove_platforms, bypass_initialize, error_reboo
 
     # Get an entity
     entity_registry = er.async_get(hass)
-    entity_id = "button.frontdoor_reboot_doorbell"
+    entity_id = TEST_ENTITY
     assert entity_registry.async_get(entity_id) is not None
 
     with pytest.raises(ServiceValidationError):
