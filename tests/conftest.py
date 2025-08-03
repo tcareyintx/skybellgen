@@ -83,9 +83,8 @@ def bypass_initialize_fixture():
         init_method.return_value.append(device)
         yield
 
+
 # This fixture, when used, will result in calls to async_initialize to return a MOCKED device.
-
-
 @pytest.fixture(name="bypass_initialize2")
 def bypass_initialize2_fixture():
     """Skip calls to get data from API."""
@@ -99,9 +98,23 @@ def bypass_initialize2_fixture():
         init_method.return_value.append(device)
         yield
 
+
+# This fixture, when used, will result in calls to async_initialize to return a MOCKED device.
+@pytest.fixture(name="bypass_initialize3")
+def bypass_initialize3_fixture():
+    """Skip calls to get data from API."""
+    with patch("custom_components.skybellgen.Skybell.async_initialize") as init_method:
+        basepath = path.dirname(__file__)
+        filepath = path.abspath(path.join(basepath, "data/device3.json"))
+        with open(filepath, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+        device = SkybellDevice(device_json=data, skybell=None)
+        init_method.return_value = []
+        init_method.return_value.append(device)
+        yield
+
+
 # This fixture, when used, will result in calls to async_refresh_skybell_session.
-
-
 @pytest.fixture(name="bypass_refresh_session", autouse=True)
 def bypass_refresh_session_fixture():
     """Skip calls to refresh session from API."""
@@ -141,14 +154,14 @@ def error_initialize_auth_fixture():
         yield
 
 
-# In this fixture, we are forcing calls to async_initialize to raise an AuthenticationException.
+# In this fixture, we are forcing calls to async_initialize to raise an SkybellException.
 # This is useful for exception handling.
-@pytest.fixture(name="error_on_auth")
-def error_auth_fixture():
+@pytest.fixture(name="error_initialize_exception")
+def error_initialize_exception_fixture():
     """Simulate error when authenticating from the API."""
     with patch(
         "custom_components.skybellgen.Skybell.async_initialize",
-        side_effect=SkybellAuthenticationException,
+        side_effect=Exception,
     ):
         yield
 
@@ -242,41 +255,7 @@ def error_update_exc_fixture():
         yield
 
 
-async def create_skybell_device(hass) -> SkybellDevice:
-    """Create SkybellDevice object."""
-    basepath = path.dirname(__file__)
-    filepath = path.abspath(path.join(basepath, "data/device.json"))
-    with open(filepath, 'r', encoding='utf-8') as file:
-        data = json.load(file)
-    skybell_device = SkybellDevice(device_json=data, skybell=None)
-    return skybell_device
-
-
-async def create_skybell(hass) -> Skybell:
-    """Create Skybell object."""
-    skybell = Skybell(
-        username=USERNAME,
-        password=PASSWORD,
-        get_devices=True,
-        session=async_get_clientsession(hass),
-    )
-    skybell_device = create_skybell_device(hass)
-    skybell_device.skybell = skybell
-    skybell._devices[skybell_device.device_id] = skybell_device
-    skybell.user_id = USER_ID
-    return skybell
-
-
-async def mock_skybell(hass):
-    """Mock Skybell object."""
-    return patch(
-        "custom_components.skybellgen.Skybell",
-        return_value=await create_skybell(hass),
-    )
-
 # This function is used to create a mock config entry for the SkybellGen integration.
-
-
 def create_entry(hass) -> MockConfigEntry:
     """Create fixture for adding config entry in Home Assistant."""
     entry = MockConfigEntry(domain=DOMAIN, entry_id=USER_ID, unique_id=USER_ID, data=MOCK_CONFIG)
