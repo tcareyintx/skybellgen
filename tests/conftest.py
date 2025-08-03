@@ -5,14 +5,12 @@ from os import path
 from unittest.mock import patch
 
 import pytest
-from aioskybellgen import Skybell, SkybellDevice
+from aioskybellgen import SkybellDevice
 from aioskybellgen.exceptions import (
     SkybellAccessControlException,
     SkybellAuthenticationException,
     SkybellException,
 )
-
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
@@ -20,7 +18,7 @@ from custom_components.skybellgen.const import (
     DOMAIN,
 )
 
-from .const import MOCK_CONFIG, USERNAME, PASSWORD, USER_ID, MOCK_PLATFORMS
+from .const import MOCK_CONFIG, USER_ID, MOCK_PLATFORMS
 
 
 @pytest.fixture(autouse=True)

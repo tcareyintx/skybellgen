@@ -6,7 +6,7 @@ import asyncio
 
 from aioskybellgen import Skybell
 from aioskybellgen.exceptions import SkybellAuthenticationException, SkybellException
-from homeassistant.config_entries import ConfigEntry, ConfigEntryState
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_EMAIL, CONF_PASSWORD, Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady

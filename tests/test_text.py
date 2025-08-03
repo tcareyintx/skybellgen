@@ -2,8 +2,6 @@
 
 import pytest
 
-from aioskybellgen.helpers import const as CONST
-
 from homeassistant.components.text import (
     DOMAIN as TEXT_DOMAIN,
     SERVICE_SET_VALUE,
