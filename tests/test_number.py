@@ -20,10 +20,10 @@ from .conftest import async_init_integration
 NUMBER = Platform.NUMBER
 
 TEST_ENTITIES = [
-    ["number.frontdoor_facial_dection_sensitivity", "53.4", 50.0],
+    ["number.frontdoor_facial_detection_sensitivity", "53.4", 50.0],
     ["number.frontdoor_location_latitude", "1.0", 1.0],
     ["number.frontdoor_location_longitude", "-1.0", 1.0],
-    ["number.frontdoor_human_dection_sensitivity", "50.0", 1],
+    ["number.frontdoor_human_detection_sensitivity", "50.0", 1],
 ]
 
 
