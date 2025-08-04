@@ -6,7 +6,7 @@ import pytest
 from homeassistant.components.select import (
     DOMAIN as SELECT_DOMAIN,
     SERVICE_SELECT_OPTION,
-    ATTR_OPTION
+    ATTR_OPTION,
 )
 
 from homeassistant.const import Platform, ATTR_ENTITY_ID
@@ -21,7 +21,7 @@ SELECT = Platform.SELECT
 TEST_ENTITIES = [
     ["select.frontdoor_outdoor_chime_volume", "High", "Low"],
     ["select.frontdoor_speaker_volume", "Medium", "Low"],
-    ["select.frontdoor_image_quality", "Low", "High"]
+    ["select.frontdoor_image_quality", "Low", "High"],
 ]
 
 
@@ -53,7 +53,9 @@ async def test_select_service(hass, remove_platforms, bypass_initialize):
         )
 
 
-async def test_select_exc(hass, remove_platforms, bypass_initialize, error_set_setting_exc):
+async def test_select_exc(
+    hass, remove_platforms, bypass_initialize, error_set_setting_exc
+):
     """Test services with Skybell exception."""
     # Create a mock entry so we don't have to go through config flow
     config_entry = await async_init_integration(hass)
@@ -79,7 +81,9 @@ async def test_select_exc(hass, remove_platforms, bypass_initialize, error_set_s
         )
 
 
-async def test_select_acl(hass, remove_platforms, bypass_initialize, error_set_setting_acl):
+async def test_select_acl(
+    hass, remove_platforms, bypass_initialize, error_set_setting_acl
+):
     """Test switch services with ACL exception."""
     # Create a mock entry so we don't have to go through config flow
     config_entry = await async_init_integration(hass)
@@ -118,7 +122,9 @@ async def test_select_no_option_for_key(hass, remove_platforms, bypass_initializ
 
     # Assert the state
     state = hass.states.get(entity_id)
-    assert state is None  # The state should not be set since the image quality is not valid from device.json3
+    assert (
+        state is None
+    )  # The state should not be set since the image quality is not valid from device.json3
 
     attr = {
         ATTR_ENTITY_ID: entity_id,

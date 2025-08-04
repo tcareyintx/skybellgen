@@ -4,6 +4,7 @@ pythonenv*
 .coverage
 venv
 .venv
+vlint
 /.project
 /.pydevproject
 /.mypy_cache/

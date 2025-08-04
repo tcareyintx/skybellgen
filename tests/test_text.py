@@ -5,7 +5,7 @@ import pytest
 from homeassistant.components.text import (
     DOMAIN as TEXT_DOMAIN,
     SERVICE_SET_VALUE,
-    ATTR_VALUE
+    ATTR_VALUE,
 )
 
 from homeassistant.const import Platform, ATTR_ENTITY_ID
@@ -50,7 +50,9 @@ async def test_text_service(hass, remove_platforms, bypass_initialize):
         )
 
 
-async def test_text_exc(hass, remove_platforms, bypass_initialize, error_set_setting_exc):
+async def test_text_exc(
+    hass, remove_platforms, bypass_initialize, error_set_setting_exc
+):
     """Test services with Skybell exception."""
     # Create a mock entry so we don't have to go through config flow
     config_entry = await async_init_integration(hass)
@@ -76,7 +78,9 @@ async def test_text_exc(hass, remove_platforms, bypass_initialize, error_set_set
         )
 
 
-async def test_text_acl(hass, remove_platforms, bypass_initialize, error_set_setting_acl):
+async def test_text_acl(
+    hass, remove_platforms, bypass_initialize, error_set_setting_acl
+):
     """Test switch services with ACL exception."""
     # Create a mock entry so we don't have to go through config flow
     config_entry = await async_init_integration(hass)

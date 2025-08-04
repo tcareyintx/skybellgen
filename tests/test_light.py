@@ -42,13 +42,8 @@ async def test_light_off(hass, remove_platforms, bypass_initialize):
 
     # Turn on
     rgb = (0, 255, 0)
-    attrs = {
-        ATTR_ENTITY_ID: entity_id,
-        ATTR_RGB_COLOR: rgb
-    }
-    await hass.services.async_call(
-        LIGHT_DOMAIN, SERVICE_TURN_ON, attrs, blocking=True
-    )
+    attrs = {ATTR_ENTITY_ID: entity_id, ATTR_RGB_COLOR: rgb}
+    await hass.services.async_call(LIGHT_DOMAIN, SERVICE_TURN_ON, attrs, blocking=True)
 
 
 async def test_light_on(hass, remove_platforms, bypass_initialize2):
@@ -72,16 +67,13 @@ async def test_light_on(hass, remove_platforms, bypass_initialize2):
 
     # Turn on
     rgb = (0, 255, 0)
-    attrs = {
-        ATTR_ENTITY_ID: entity_id,
-        ATTR_RGB_COLOR: rgb
-    }
-    await hass.services.async_call(
-        LIGHT_DOMAIN, SERVICE_TURN_ON, attrs, blocking=True
-    )
+    attrs = {ATTR_ENTITY_ID: entity_id, ATTR_RGB_COLOR: rgb}
+    await hass.services.async_call(LIGHT_DOMAIN, SERVICE_TURN_ON, attrs, blocking=True)
 
 
-async def test_light_exc(hass, remove_platforms, bypass_initialize, error_set_setting_exc):
+async def test_light_exc(
+    hass, remove_platforms, bypass_initialize, error_set_setting_exc
+):
     """Test services with Skybell exception."""
     # Create a mock entry so we don't have to go through config flow
     config_entry = await async_init_integration(hass)
@@ -108,7 +100,9 @@ async def test_light_exc(hass, remove_platforms, bypass_initialize, error_set_se
         )
 
 
-async def test_switch_acl(hass, remove_platforms, bypass_initialize, error_set_setting_acl):
+async def test_switch_acl(
+    hass, remove_platforms, bypass_initialize, error_set_setting_acl
+):
     """Test switch services with ACL exception."""
     # Create a mock entry so we don't have to go through config flow
     config_entry = await async_init_integration(hass)

@@ -38,7 +38,7 @@ class SkybellDataUpdateCoordinator(DataUpdateCoordinator[None]):
         # If the session refresh timestamp is not None and the current time is greater
         # than the session refresh timestamp, we need to refresh the session.
         ts = self.device.skybell.session_refresh_timestamp
-        if (ts is not None and (datetime.now() > ts)):
+        if ts is not None and (datetime.now() > ts):
             try:
                 await self.device.skybell.async_refresh_session()
             except SkybellException as exc:

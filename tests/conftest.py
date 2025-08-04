@@ -53,8 +53,9 @@ def skip_notifications_fixture():
 def bypass_first_refresh_fixture():
     """Skip calls refresh the configuration entry."""
     with patch(
-        "homeassistant.helpers.update_coordinator.DataUpdateCoordinator." +
-            "async_config_entry_first_refresh"):
+        "homeassistant.helpers.update_coordinator.DataUpdateCoordinator."
+        + "async_config_entry_first_refresh"
+    ):
         yield
 
 
@@ -74,7 +75,7 @@ def bypass_initialize_fixture():
     with patch("custom_components.skybellgen.Skybell.async_initialize") as init_method:
         basepath = path.dirname(__file__)
         filepath = path.abspath(path.join(basepath, "data/device.json"))
-        with open(filepath, 'r', encoding='utf-8') as file:
+        with open(filepath, "r", encoding="utf-8") as file:
             data = json.load(file)
         device = SkybellDevice(device_json=data, skybell=None)
         init_method.return_value = []
@@ -89,7 +90,7 @@ def bypass_initialize2_fixture():
     with patch("custom_components.skybellgen.Skybell.async_initialize") as init_method:
         basepath = path.dirname(__file__)
         filepath = path.abspath(path.join(basepath, "data/device2.json"))
-        with open(filepath, 'r', encoding='utf-8') as file:
+        with open(filepath, "r", encoding="utf-8") as file:
             data = json.load(file)
         device = SkybellDevice(device_json=data, skybell=None)
         init_method.return_value = []
@@ -104,7 +105,7 @@ def bypass_initialize3_fixture():
     with patch("custom_components.skybellgen.Skybell.async_initialize") as init_method:
         basepath = path.dirname(__file__)
         filepath = path.abspath(path.join(basepath, "data/device3.json"))
-        with open(filepath, 'r', encoding='utf-8') as file:
+        with open(filepath, "r", encoding="utf-8") as file:
             data = json.load(file)
         device = SkybellDevice(device_json=data, skybell=None)
         init_method.return_value = []
@@ -116,7 +117,9 @@ def bypass_initialize3_fixture():
 @pytest.fixture(name="bypass_refresh_session", autouse=True)
 def bypass_refresh_session_fixture():
     """Skip calls to refresh session from API."""
-    with patch("custom_components.skybellgen.coordinator.SkybellDataUpdateCoordinator._async_refresh_skybell_session"):
+    with patch(
+        "custom_components.skybellgen.coordinator.SkybellDataUpdateCoordinator._async_refresh_skybell_session"
+    ):
         yield
 
 
@@ -176,7 +179,9 @@ def remove_camera_platform_fixture():
 @pytest.fixture(name="bypass_set_settings", autouse=True)
 def bypass_set_settings_fixture():
     """Bypass the call to set settings the SkybellGen integration."""
-    with patch("custom_components.skybellgen.coordinator.SkybellDevice.async_set_setting"):
+    with patch(
+        "custom_components.skybellgen.coordinator.SkybellDevice.async_set_setting"
+    ):
         yield
 
 
@@ -208,7 +213,9 @@ def error_set_setting_acl_fixture():
 @pytest.fixture(name="bypass_device_reboot", autouse=True)
 def bypass_device_reboot_fixture():
     """Bypass the call to set settings the SkybellGen integration."""
-    with patch("custom_components.skybellgen.coordinator.SkybellDevice.async_reboot_device"):
+    with patch(
+        "custom_components.skybellgen.coordinator.SkybellDevice.async_reboot_device"
+    ):
         yield
 
 
@@ -248,15 +255,19 @@ def bypass_device_update_fixture():
 @pytest.fixture(name="error_update_exc")
 def error_update_exc_fixture():
     """Issue a SkybellException when called."""
-    with patch("custom_components.skybellgen.coordinator.SkybellDevice.async_update",
-               side_effect=SkybellException,):
+    with patch(
+        "custom_components.skybellgen.coordinator.SkybellDevice.async_update",
+        side_effect=SkybellException,
+    ):
         yield
 
 
 # This function is used to create a mock config entry for the SkybellGen integration.
 def create_entry(hass) -> MockConfigEntry:
     """Create fixture for adding config entry in Home Assistant."""
-    entry = MockConfigEntry(domain=DOMAIN, entry_id=USER_ID, unique_id=USER_ID, data=MOCK_CONFIG)
+    entry = MockConfigEntry(
+        domain=DOMAIN, entry_id=USER_ID, unique_id=USER_ID, data=MOCK_CONFIG
+    )
     entry.add_to_hass(hass)
     return entry
 

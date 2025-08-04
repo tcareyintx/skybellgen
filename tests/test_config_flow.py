@@ -103,9 +103,8 @@ async def test_flow_user_already_configured(hass) -> None:
 
 
 async def test_flow_user_cannot_connect(
-        hass,
-        bypass_initialize,
-        error_initialize) -> None:
+    hass, bypass_initialize, error_initialize
+) -> None:
     """Test user initialized flow with unreachable server."""
     result = await hass.config_entries.flow.async_init(
         DOMAIN, context={"source": config_entries.SOURCE_USER}, data=MOCK_CONFIG
@@ -115,7 +114,9 @@ async def test_flow_user_cannot_connect(
     assert result["errors"] == {"base": "cannot_connect"}
 
 
-async def test_flow_user_unknown(hass, bypass_initialize, error_initialize_exception) -> None:
+async def test_flow_user_unknown(
+    hass, bypass_initialize, error_initialize_exception
+) -> None:
     """Test user initialized flow with unreachable server."""
     result = await hass.config_entries.flow.async_init(
         DOMAIN, context={"source": config_entries.SOURCE_USER}, data=MOCK_CONFIG
@@ -173,7 +174,9 @@ async def test_step_reauth_recover(hass, bypass_initialize) -> None:
     assert result["reason"] == "reauth_successful"
 
 
-async def test_step_reauth_skybell_exception(hass, bypass_initialize, error_initialize) -> None:
+async def test_step_reauth_skybell_exception(
+    hass, bypass_initialize, error_initialize
+) -> None:
     """Test the reauth flow fails for Skybell exception."""
     entry = MockConfigEntry(domain=DOMAIN, unique_id=USER_ID, data=MOCK_CONFIG)
     entry.add_to_hass(hass)
@@ -192,7 +195,9 @@ async def test_step_reauth_skybell_exception(hass, bypass_initialize, error_init
     assert result["errors"] == {"base": "cannot_connect"}
 
 
-async def test_step_reauth_exception(hass, bypass_initialize, error_initialize_exception) -> None:
+async def test_step_reauth_exception(
+    hass, bypass_initialize, error_initialize_exception
+) -> None:
     """Test the reauth flow fails for Skybell exception."""
     entry = MockConfigEntry(domain=DOMAIN, unique_id=USER_ID, data=MOCK_CONFIG)
     entry.add_to_hass(hass)
@@ -229,15 +234,16 @@ async def test_step_reconfigure(hass, bypass_initialize) -> None:
         mock.return_value = USER_ID
         result = await hass.config_entries.flow.async_configure(
             result["flow_id"],
-            user_input={CONF_EMAIL: USERNAME,
-                        CONF_PASSWORD: PASSWORD},
+            user_input={CONF_EMAIL: USERNAME, CONF_PASSWORD: PASSWORD},
         )
 
     assert result["type"] is data_entry_flow.FlowResultType.ABORT
     assert result["reason"] == "reconfigure_successful"
 
 
-async def test_step_reconfigure_auth_failure(hass, bypass_initialize, error_initialize_auth) -> None:
+async def test_step_reconfigure_auth_failure(
+    hass, bypass_initialize, error_initialize_auth
+) -> None:
     """Test the confirm flow succeeds."""
     entry = MockConfigEntry(domain=DOMAIN, unique_id=USER_ID, data=MOCK_CONFIG)
     entry.add_to_hass(hass)
@@ -255,8 +261,7 @@ async def test_step_reconfigure_auth_failure(hass, bypass_initialize, error_init
         mock.return_value = USER_ID
         result = await hass.config_entries.flow.async_configure(
             result["flow_id"],
-            user_input={CONF_EMAIL: USERNAME,
-                        CONF_PASSWORD: PASSWORD},
+            user_input={CONF_EMAIL: USERNAME, CONF_PASSWORD: PASSWORD},
         )
 
     assert result["type"] is data_entry_flow.FlowResultType.FORM
