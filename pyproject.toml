@@ -23,3 +23,11 @@ source = [
 
 [tool.coverage.html]
 directory = "htmlcov"
+
+[tool.pylint.messages_control]
+disable = [
+    "abstract-method",
+    :overridden-final",
+    "broad-except",
+    "unexpected-keyword-arg",
+]
