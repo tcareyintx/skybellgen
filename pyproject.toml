@@ -27,7 +27,7 @@ directory = "htmlcov"
 [tool.pylint.messages_control]
 disable = [
     "abstract-method",
-    :overridden-final",
+    "overridden-final",
     "broad-except",
     "unexpected-keyword-arg",
 ]
