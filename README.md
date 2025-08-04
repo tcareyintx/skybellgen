@@ -13,6 +13,14 @@
 [![Discord][discord-shield]][discord]
 [![Community Forum][forum-shield]][forum]
 
+## Description
+![Skybell](skybell.png)
+
+The **SkybellGen** integration {% term integration %} is used to integrate with doorbell
+devices from [Skybell](https://skybell.com/). The access to the doorbell is via the 
+[SkybellGen communication driver](https://pypi.org/project/aioskybellgen/) that implements the [Skybell
+cloud API](https://api.skybell.network/docs/). The integration provides support for the platforms listed below.
+
 | Platform        | Description                                                        |
 | --------------- | ------------------------------------------------------------------ |
 | `binary_sensor` | Show info from SkybellGen API for switch and light actuators.      |
@@ -25,7 +33,12 @@
 | `switch`        | Actuator for SkybellGen API entities that input binary values.     |
 | `text`          | Actuator for SkybellGen API entities that input text values.       |
 
-![Skybell](skybell.jpg)
+## Prerequisites
+
+1. Open the app store and install the **Skybell** app.
+2. [Create an account](https://support.skybell.com/hc/en-us/articles/36672108421645-Account-Creation-and-Verification).  
+You will use the username(email) and password to connect to the Cloud API.
+3. Follow the app instructions to discover the Skybell devices.
 
 ## Installation
 
@@ -60,7 +73,23 @@ custom_components/skybellgen/switch.py
 custom_components/skybellgen/text.py
 ```
 
+## Removing the integration
+
+This integration follows standard integration removal via the UI.
+1. Go to Settings > Devices & Services
+2. Click on the SkybellGen integration that you loaded
+3. Click Delete
+
 ## Configuration is done in the UI
+This integration uses the HA configuration flow to setup the SkybellGen hub.
+
+{% configuration_basic %}
+email:
+  description: Your email that you used when setting up the account on the Skybell app.
+password:
+  description: Your password that you used when setting up the account on the Skybell app.  
+  If you change your password you can use the reconfigure or re-authentication options of the integration configuration flow.
+{% endconfiguration_basic %}
 
 <!---->
 
