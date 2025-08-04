@@ -1,18 +1,16 @@
 """Test SkybellGen light."""
 
-import pytest
-
 from homeassistant.components.light import (
+    ATTR_RGB_COLOR,
     DOMAIN as LIGHT_DOMAIN,
     SERVICE_TURN_OFF,
     SERVICE_TURN_ON,
-    ATTR_RGB_COLOR,
 )
-
-from homeassistant.const import Platform, STATE_OFF, STATE_ON, ATTR_ENTITY_ID
 from homeassistant.config_entries import ConfigEntryState
+from homeassistant.const import ATTR_ENTITY_ID, STATE_OFF, STATE_ON, Platform
 from homeassistant.exceptions import ServiceValidationError
 import homeassistant.helpers.entity_registry as er
+import pytest
 
 from .conftest import async_init_integration
 

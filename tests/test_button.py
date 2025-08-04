@@ -1,16 +1,11 @@
 """Test SkybellGen switch."""
 
-import pytest
-
-from homeassistant.components.button import (
-    DOMAIN as BUTTON_DOMAIN,
-    SERVICE_PRESS,
-)
-
-from homeassistant.const import Platform, ATTR_ENTITY_ID
+from homeassistant.components.button import DOMAIN as BUTTON_DOMAIN, SERVICE_PRESS
 from homeassistant.config_entries import ConfigEntryState
+from homeassistant.const import ATTR_ENTITY_ID, Platform
 from homeassistant.exceptions import ServiceValidationError
 import homeassistant.helpers.entity_registry as er
+import pytest
 
 from .conftest import async_init_integration
 

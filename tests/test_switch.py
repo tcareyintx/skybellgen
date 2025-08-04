@@ -1,17 +1,15 @@
 """Test SkybellGen switch."""
 
-import pytest
-
 from homeassistant.components.switch import (
     DOMAIN as SWITCH_DOMAIN,
     SERVICE_TURN_OFF,
     SERVICE_TURN_ON,
 )
-
-from homeassistant.const import Platform, STATE_ON, ATTR_ENTITY_ID
 from homeassistant.config_entries import ConfigEntryState
+from homeassistant.const import ATTR_ENTITY_ID, STATE_ON, Platform
 from homeassistant.exceptions import ServiceValidationError
 import homeassistant.helpers.entity_registry as er
+import pytest
 
 from .conftest import async_init_integration
 

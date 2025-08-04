@@ -1,18 +1,15 @@
 """Test SkybellGen select."""
 
-import pytest
-
-
 from homeassistant.components.select import (
+    ATTR_OPTION,
     DOMAIN as SELECT_DOMAIN,
     SERVICE_SELECT_OPTION,
-    ATTR_OPTION,
 )
-
-from homeassistant.const import Platform, ATTR_ENTITY_ID
 from homeassistant.config_entries import ConfigEntryState
+from homeassistant.const import ATTR_ENTITY_ID, Platform
 from homeassistant.exceptions import ServiceValidationError
 import homeassistant.helpers.entity_registry as er
+import pytest
 
 from .conftest import async_init_integration
 

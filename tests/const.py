@@ -1,10 +1,6 @@
 """Constants for SkybellGen tests."""
 
-from homeassistant.const import (
-    CONF_PASSWORD,
-    CONF_EMAIL,
-    Platform,
-)
+from homeassistant.const import CONF_EMAIL, CONF_PASSWORD, Platform
 
 USERNAME = "test_email"
 PASSWORD = "test_password"

@@ -4,21 +4,18 @@ import json
 from os import path
 from unittest.mock import patch
 
-import pytest
 from aioskybellgen import SkybellDevice
 from aioskybellgen.exceptions import (
     SkybellAccessControlException,
     SkybellAuthenticationException,
     SkybellException,
 )
-
+import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.skybellgen.const import (
-    DOMAIN,
-)
+from custom_components.skybellgen.const import DOMAIN
 
-from .const import MOCK_CONFIG, USER_ID, MOCK_PLATFORMS
+from .const import MOCK_CONFIG, MOCK_PLATFORMS, USER_ID
 
 
 @pytest.fixture(autouse=True)

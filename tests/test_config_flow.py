@@ -1,26 +1,17 @@
 """Test SkybellGen config flow."""
 
-from unittest.mock import patch, PropertyMock
+from unittest.mock import PropertyMock, patch
 
+from aioskybellgen import Skybell
+from aioskybellgen.exceptions import SkybellAuthenticationException
 from homeassistant import config_entries, data_entry_flow
-from homeassistant.const import (
-    CONF_EMAIL,
-    CONF_PASSWORD,
-)
-
+from homeassistant.const import CONF_EMAIL, CONF_PASSWORD
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from aioskybellgen.exceptions import (
-    SkybellAuthenticationException,
-)
-from aioskybellgen import Skybell
+from custom_components.skybellgen import DOMAIN
 
-from custom_components.skybellgen import (
-    DOMAIN,
-)
-
-from .const import MOCK_CONFIG, USER_ID, USERNAME, PASSWORD
+from .const import MOCK_CONFIG, PASSWORD, USER_ID, USERNAME
 
 
 # This fixture bypasses the actual setup of the integration
