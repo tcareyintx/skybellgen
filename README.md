@@ -16,10 +16,10 @@
 ## Description
 ![Skybell](skybell.png)
 
-The **SkybellGen** integration {% term integration %} is used to integrate with doorbell
-devices from [Skybell](https://skybell.com/). The access to the doorbell is via the 
-[SkybellGen communication driver](https://pypi.org/project/aioskybellgen/) that implements the [Skybell
-cloud API](https://api.skybell.network/docs/). The integration provides support for the platforms listed below.
+The **SkybellGen** integration is used to integrate with doorbell devices from [Skybell](https://skybell.com/).  
+The access to the doorbell is via the [SkybellGen communication driver](https://pypi.org/project/aioskybellgen/) 
+that implements the [Skybell cloud API](https://api.skybell.network/docs/).  
+The integration provides support for the platforms listed below.
 
 | Platform        | Description                                                        |
 | --------------- | ------------------------------------------------------------------ |
@@ -82,14 +82,11 @@ This integration follows standard integration removal via the UI.
 
 ## Configuration is done in the UI
 This integration uses the HA configuration flow to setup the SkybellGen hub.
-
-{% configuration_basic %}
 email:
   description: Your email that you used when setting up the account on the Skybell app.
 password:
   description: Your password that you used when setting up the account on the Skybell app.  
   If you change your password you can use the reconfigure or re-authentication options of the integration configuration flow.
-{% endconfiguration_basic %}
 
 <!---->
 

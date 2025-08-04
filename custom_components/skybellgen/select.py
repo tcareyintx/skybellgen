@@ -148,5 +148,5 @@ class SkybellSelect(SkybellEntity, SelectEntity):
                 },
             ) from exc
 
-        self._attr_current_option = value
+        self.current_option = value
         super()._handle_coordinator_update()

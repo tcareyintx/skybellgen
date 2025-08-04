@@ -166,5 +166,5 @@ class SkybellSwitch(SkybellEntity, SwitchEntity):
         """Return true if entity is on."""
         key = self.entity_description.key
         if key in BASIC_MOTION_GET_FUNCTION:
-            key = BASIC_MOTION_GET_FUNCTION[key]
+            key = BASIC_MOTION_GET_FUNCTION.get(key)
         return cast(bool, getattr(self._device, key))
