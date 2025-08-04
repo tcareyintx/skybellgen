@@ -45,7 +45,7 @@ class SkybellFlowHandler(ConfigFlow, domain=DOMAIN):
                 entry = self._get_reauth_entry()
                 path = self.hass.config.path(f"./skybellgen_{entry.unique_id}.pickle")
                 if os.path.exists(path):
-                    os.remove(path)
+                    os.remove(path)  # pragma: no cover
                 return self.async_update_reload_and_abort(
                     entry, data_updates=user_input
                 )
@@ -77,7 +77,7 @@ class SkybellFlowHandler(ConfigFlow, domain=DOMAIN):
                 entry = self._get_reconfigure_entry()
                 path = self.hass.config.path(f"./skybellgen_{entry.unique_id}.pickle")
                 if os.path.exists(path):
-                    os.remove(path)
+                    os.remove(path)  # pragma: no cover
                 return self.async_update_reload_and_abort(
                     entry, data_updates=user_input
                 )

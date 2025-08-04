@@ -9,9 +9,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ServiceValidationError
-from homeassistant.helpers.entity_platform import (
-    AddConfigEntryEntitiesCallback,
-)
+from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .const import DOMAIN, IMAGE_OPTIONS, VOLUME_OPTIONS
 from .coordinator import SkybellDataUpdateCoordinator
@@ -82,7 +80,7 @@ class SkybellSelect(SkybellEntity, SelectEntity):
             array_options = IMAGE_OPTIONS
 
         if array_options is None:
-            raise ServiceValidationError(
+            raise ServiceValidationError(  # pragma: no cover
                 translation_domain=DOMAIN,
                 translation_key="no_options_list_for_key",
                 translation_placeholders={
@@ -91,7 +89,7 @@ class SkybellSelect(SkybellEntity, SelectEntity):
             )
         try:
             value = array_options.index(option)
-        except ValueError as exc:
+        except (IndexError, ValueError) as exc:
             raise ServiceValidationError(
                 translation_domain=DOMAIN,
                 translation_key="no_option_for_key",
@@ -131,7 +129,7 @@ class SkybellSelect(SkybellEntity, SelectEntity):
             array_options = IMAGE_OPTIONS
 
         if array_options is None:
-            raise ServiceValidationError(
+            raise ServiceValidationError(  # pragma: no cover
                 translation_domain=DOMAIN,
                 translation_key="no_options_list_for_key",
                 translation_placeholders={
@@ -140,7 +138,7 @@ class SkybellSelect(SkybellEntity, SelectEntity):
             )
         try:
             value = array_options[index]
-        except ValueError as exc:
+        except (IndexError, ValueError) as exc:
             raise ServiceValidationError(
                 translation_domain=DOMAIN,
                 translation_key="no_option_for_key",

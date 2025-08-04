@@ -1,8 +1,42 @@
 {
   "python.linting.pylintEnabled": true,
   "python.linting.enabled": true,
+  "python.formatting.provider": "black",
+  "isort.args": [
+    "--profile",
+    "black",
+    "--multi_line_output=3",
+    "--trailing-comma",
+    "--force-grid-wrap=0",
+    "--use-parentheses",
+    "--line-length=88",
+    "--indent",
+    "    ",
+    "--force-sort-within-sections",
+    "--sections=FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER",
+    "--default-section=THIRDPARTY",
+    "--known-first-party=custom_components.skybellgen,tests",
+    "--combine-as-imports"
+  ],
   "python.pythonPath": "venv/bin/python",
   "files.associations": {
     "*.yaml": "home-assistant"
-  }
+  },
+  "python.testing.pytestArgs": ["-s", "tests"],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true,
+  "testing.displayedCoveragePercent": "statement",
+  "testing.followRunningTest": true,
+  "testing.coverageBarThresholds": {
+    "red": 0,
+    "yellow": 60,
+    "green": 90
+  },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "ms-python.black-formatter",
+  "files.trimTrailingWhitespace": true,
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "editor.formatOnType": true
 }

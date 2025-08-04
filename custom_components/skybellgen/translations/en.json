@@ -83,10 +83,10 @@
         "name": "Motion sensitivity"
       },
       "hmbd_sensitivity": {
-        "name": "Human dection sensitivity"
+        "name": "Human detection sensitivity"
       },
       "fd_sensitivity": {
-        "name": "Facial dection sensitivity"
+        "name": "Facial detection sensitivity"
       },
       "pir_sensitivity": {
         "name": "Infrared sensitivity"

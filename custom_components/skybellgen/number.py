@@ -9,9 +9,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ServiceValidationError
-from homeassistant.helpers.entity_platform import (
-    AddConfigEntryEntitiesCallback,
-)
+from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .const import DOMAIN, TENTH_PERCENT_TYPES
 from .coordinator import SkybellDataUpdateCoordinator
@@ -25,48 +23,48 @@ NUMBER_TYPES: tuple[NumberEntityDescription, ...] = (
         key=CONST.MOTION_SENSITIVITY,
         translation_key=CONST.MOTION_SENSITIVITY,
         entity_category=EntityCategory.CONFIG,
-        min_value=0,
-        max_value=1000,
+        native_min_value=0,
+        native_max_value=1000,
         native_step=0.1,
     ),
     NumberEntityDescription(
         key=CONST.MOTION_HMBD_SENSITIVITY,
         translation_key=CONST.MOTION_HMBD_SENSITIVITY,
         entity_category=EntityCategory.CONFIG,
-        min_value=0,
-        max_value=100,
+        native_min_value=0,
+        native_max_value=100,
         native_step=0.1,
     ),
     NumberEntityDescription(
         key=CONST.MOTION_FD_SENSITIVITY,
         translation_key=CONST.MOTION_FD_SENSITIVITY,
         entity_category=EntityCategory.CONFIG,
-        min_value=0,
-        max_value=100,
+        native_min_value=0,
+        native_max_value=100,
         native_step=0.1,
     ),
     NumberEntityDescription(
         key=CONST.MOTION_PIR_SENSITIVITY,
         translation_key=CONST.MOTION_PIR_SENSITIVITY,
         entity_category=EntityCategory.CONFIG,
-        min_value=0,
-        max_value=100,
+        native_min_value=0,
+        native_max_value=100,
         native_step=0.1,
     ),
     NumberEntityDescription(
         key="location_lat",
         translation_key="location_lat",
         entity_category=EntityCategory.CONFIG,
-        min_value=-90.0,
-        max_value=90.0,
+        native_min_value=-90.0,
+        native_max_value=90.0,
         native_step=0.00001,
     ),
     NumberEntityDescription(
         key="location_lon",
         translation_key="location_lon",
         entity_category=EntityCategory.CONFIG,
-        min_value=-180.0,
-        max_value=180.0,
+        native_min_value=-180.0,
+        native_max_value=180.0,
         native_step=0.00001,
     ),
 )
@@ -143,7 +141,7 @@ class SkybellNumber(SkybellEntity, NumberEntity):
         if self.entity_description.key in TENTH_PERCENT_TYPES:
             # Check for values 0,1,2 adjust for low medium high
             if value >= 0 and value <= len(SENTSITIVTY_ADJ):
-                value = SENTSITIVTY_ADJ[value]
+                value = SENTSITIVTY_ADJ[value] * 10
             elif (
                 self.entity_description.key in USE_MOTION_VALUE
                 and value == CONST.USE_MOTION_SENSITIVITY

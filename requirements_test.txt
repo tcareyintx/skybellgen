@@ -1,2 +1,4 @@
 -r requirements_dev.txt
 pytest-homeassistant-custom-component
+aioskybellgen
+ha-ffmpeg

@@ -1,0 +1,308 @@
+{
+  "account_id": "123-123-123",
+  "basic_motion": {
+    "fd_notify": true,
+    "fd_record": true,
+    "hbd_notify": true,
+    "hbd_record": true,
+    "motion_notify": true,
+    "motion_record": true
+  },
+  "client_id": "123-456-789-123",
+  "created_at": "2020-10-20T14:35:00.745Z",
+  "device_id": "012345670123456789abcdef",
+  "device_settings": {
+    "ESSID": "SSID",
+    "MAC_address": "AA:BB:CC:DD:EE:FF",
+    "OTA_signature": null,
+    "OTA_type": null,
+    "OTA_version": null,
+    "firmware_major_release": 1,
+    "firmware_minor_release": 7,
+    "firmware_patch": 21,
+    "firmware_version": "1.7.21",
+    "hardware_version": "1",
+    "model_rev": "SB_SLIM2_0001",
+    "serial_number": "ASERIALNUM"
+  },
+  "doorlock_id": null,
+  "firmware": "1.7.21",
+  "hardware": "1: SB_SLIM2_0001",
+  "invite_token": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+  "last_connected": "2020-10-21T14:35:00.745Z",
+  "last_disconnected": "2020-10-20T14:35:00.745Z",
+  "last_event": "1751758135229",
+  "location_id": null,
+  "manufactured": null,
+  "name": "FrontDoor",
+  "rapidsos": null,
+  "serial": "ASERIALNUM",
+  "settings": {
+    "account_id": "123-123-123",
+    "audio_alarm_enabled": false,
+    "audio_cmd_enabled": false,
+    "aws_region": "",
+    "basic_motion": {
+      "fd_notify": true,
+      "fd_record": true,
+      "hbd_notify": true,
+      "hbd_record": true,
+      "motion_notify": true,
+      "motion_record": true
+    },
+    "button_notifications": true,
+    "button_pressed": true,
+    "checkin_missed": {},
+    "checkin_warning": {},
+    "chime_file": "",
+    "chime_file_motion": "",
+    "chime_mode": false,
+    "co_alarm": {},
+    "debug_motion_detect": true,
+    "device_id": "012345670123456789abcdef",
+    "device_name": "FrontDoor",
+    "digital_chime": false,
+    "event_duration": 30,
+    "fd_sensitivity": 4294967295,
+    "force_turn": false,
+    "fr_sensitivity": 500,
+    "hmbd_sensitivity": 1,
+    "image_aspect": "Wide",
+    "image_quality": 5,
+    "indoor_chime": true,
+    "led_color": "",
+    "led_control": "Normal",
+    "modes": [],
+    "motion_chime": false,
+    "motion_chime_color": "#00FFFF",
+    "motion_chime_volume": 2,
+    "motion_detection": true,
+    "motion_notifications": true,
+    "motion_sensitivity": 534,
+    "motion_zone_config": {
+      "threshold": 1,
+      "x": 8,
+      "y": 5,
+      "zones": [
+        [
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          }
+        ],
+        [
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          }
+        ],
+        [
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          }
+        ],
+        [
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          }
+        ],
+        [
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          },
+          {
+            "ignore": false,
+            "sensitivity": 90
+          }
+        ]
+      ]
+    },
+    "outdoor_chime": true,
+    "outdoor_chime_color": "#ffffff",
+    "outdoor_chime_volume": 2,
+    "pir_light_duration": 10,
+    "pir_light_level": 100,
+    "pir_light_trigger": true,
+    "pir_sensitivity": 524,
+    "selected_mode_id": 0,
+    "simple_cv_mode": false,
+    "smoke_alarm": {},
+    "sos_alarm": {},
+    "speaker_volume": 1,
+    "stream_disable_motion": true,
+    "telemetry_freq": 60,
+    "time_zone": "CST6CDT,M3.2.0,M11.1.0",
+    "time_zone_info": {
+      "mapLat": 1.0,
+      "mapLong": -1.0,
+      "place": "Anywhere"
+    },
+    "tones": {
+      "button": {
+        "file": "1950s_mechanical_doorbell.wav",
+        "last_updated": "2025-06-25T18: 28: 10.390999+00: 00"
+      },
+      "motion": {
+        "file": "357_unholster.wav",
+        "last_updated": "2025-06-25T16: 57: 48.118Z"
+      },
+      "test": null
+    },
+    "using_rules": false,
+    "video_datetime": true,
+    "video_rotation": 0
+  },
+  "telemetry": {
+    "essid": "SSID",
+    "ip_address": "192.168.250.3",
+    "last_seen": "2022-10-20T14:35:00.745Z",
+    "link_quality": "98/100",
+    "signal_level": "-54"
+  },
+  "tones": {
+    "button": null,
+    "motion": null,
+    "test": null
+  },
+  "updated_at": "2021-10-20T14:35:00.745Z",
+  "using_rules": false
+}

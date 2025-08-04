@@ -27,13 +27,14 @@ PLATFORMS = [
     Platform.TEXT,
 ]
 
-type SkybellConfigEntry = ConfigEntry[SkybellData]  # flake8: noqa: E999
-
 
 class SkybellData:
     """The Skybell data class for a Hub config entity."""
 
     api: Skybell
+
+
+type SkybellConfigEntry = ConfigEntry[SkybellData]  # flake8: noqa: E999
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: SkybellConfigEntry) -> bool:

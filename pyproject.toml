@@ -1,0 +1,33 @@
+# pyproject.toml
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+console_output_style = "count"
+addopts = "-qq"
+testpaths = [
+    "tests",
+]
+
+[tool.coverage.report]
+omit = [
+    "custom_components/skybellgen/camera.py",
+]
+show_missing = true
+fail_under = 100
+
+[tool.coverage.run]
+branch = false
+source = [
+    "custom_components/skybellgen",
+]
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+[tool.pylint.messages_control]
+disable = [
+    "abstract-method",
+    "overridden-final",
+    "broad-except",
+    "unexpected-keyword-arg",
+]
