@@ -12,21 +12,17 @@
     "--line-length=88",
     "--indent",
     "    ",
-    "--not-skip=__init__.py",
     "--force-sort-within-sections",
-    "--sections=FUTURE,STDLIB,INBETWEENS,THIRDPARTY,FIRSTPARTY,LOCALFOLDER",
+    "--sections=FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER",
     "--default-section=THIRDPARTY",
     "--known-first-party=custom_components.skybellgen,tests",
-    "--combine-as-imports",
+    "--combine-as-imports"
   ],
   "python.pythonPath": "venv/bin/python",
   "files.associations": {
     "*.yaml": "home-assistant"
   },
-  "python.testing.pytestArgs": [
-    "-s",
-    "tests",
-  ],
+  "python.testing.pytestArgs": ["-s","tests"],
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
   "testing.displayedCoveragePercent": "statement",
@@ -40,7 +36,7 @@
   "editor.defaultFormatter": "ms-python.black-formatter",
   "files.trimTrailingWhitespace": true,
   "[python]": {
-    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.defaultFormatter": "ms-python.black-formatter"
   },
-  "editor.formatOnType": true,
+  "editor.formatOnType": true
 }
