@@ -22,7 +22,7 @@
   "files.associations": {
     "*.yaml": "home-assistant"
   },
-  "python.testing.pytestArgs": ["-s","tests"],
+  "python.testing.pytestArgs": ["-s", "tests"],
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
   "testing.displayedCoveragePercent": "statement",
