@@ -14,6 +14,7 @@
 [![Community Forum][forum-shield]][forum]
 
 ## Description
+
 ![Skybell](skybell.png)
 
 The **SkybellGen** integration is used to integrate with doorbell devices from [Skybell](https://skybell.com/).
@@ -37,7 +38,7 @@ The integration provides support for the platforms listed below.
 
 1. Open the app store and install the **Skybell** app.
 2. [Create an account](https://support.skybell.com/hc/en-us/articles/36672108421645-Account-Creation-and-Verification).
-You will use the username(email) and password to connect to the Cloud API.
+   You will use the username(email) and password to connect to the Cloud API.
 3. Follow the app instructions to discover the Skybell devices.
 
 ## Installation
@@ -81,12 +82,15 @@ This integration follows standard integration removal via the UI.
 3. Click Delete
 
 ## Configuration is done in the UI
+
 This integration uses the HA configuration flow to setup the SkybellGen hub.
 
 email:
+
 - description: Your email that you used when setting up the account on the Skybell app.
 
 password:
+
 - description: Your password that you used when setting up the account on the Skybell app. If you
   change your password you can use the reconfigure or re-authentication options of the integration configuration flow.
 
