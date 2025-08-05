@@ -15,10 +15,9 @@
         }
       },
       "reconfigure": {
-        "description": "Please update your email and password",
-        "title": "[%key:common::config_flow::title::reconfig%]",
+        "description": "Please update your password for {email}",
+        "title": "[Reconfigure the SkybellGen Hub]",
         "data": {
-          "email": "[%key:common::config_flow::data::email%]",
           "password": "[%key:common::config_flow::data::password%]"
         }
       }

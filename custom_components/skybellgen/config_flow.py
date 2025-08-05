@@ -8,7 +8,10 @@ import os
 from typing import Any
 
 from aioskybellgen import Skybell
-from aioskybellgen.exceptions import SkybellAuthenticationException, SkybellException
+from aioskybellgen.exceptions import (
+    SkybellAuthenticationException,
+    SkybellException,
+)
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 from homeassistant.const import CONF_EMAIL, CONF_PASSWORD
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
@@ -38,8 +41,8 @@ class SkybellFlowHandler(ConfigFlow, domain=DOMAIN):
         errors = {}
         if user_input:
             password = user_input[CONF_PASSWORD]
-            _, error = await self._async_validate_reauth_input(
-                email=self.reauth_email, password=password
+            _, error = await self._async_validate_user(
+                email=self.reauth_email, password=password, auto_login=True
             )
             if error is None:
                 entry = self._get_reauth_entry()
@@ -63,12 +66,13 @@ class SkybellFlowHandler(ConfigFlow, domain=DOMAIN):
     ) -> ConfigFlowResult:
         """Handle reconfiguration of the integration."""
         errors: dict[str, str] = {}
+        entry = self._get_reconfigure_entry()
+        email = entry.data.get(CONF_EMAIL, "").lower()
         if user_input:
-            email = user_input[CONF_EMAIL].lower()
             password = user_input[CONF_PASSWORD]
 
             self._async_abort_entries_match({CONF_EMAIL: email})
-            user_id, error = await self._async_validate_user_input(
+            user_id, error = await self._async_validate_user(
                 email=email, password=password
             )
             if error is None:
@@ -87,9 +91,9 @@ class SkybellFlowHandler(ConfigFlow, domain=DOMAIN):
         user_input = user_input or {}
         return self.async_show_form(
             step_id="reconfigure",
+            description_placeholders={CONF_EMAIL: email},
             data_schema=vol.Schema(
                 {
-                    vol.Required(CONF_EMAIL, default=user_input.get(CONF_EMAIL)): str,
                     vol.Required(CONF_PASSWORD): str,
                 }
             ),
@@ -107,7 +111,7 @@ class SkybellFlowHandler(ConfigFlow, domain=DOMAIN):
             password = user_input[CONF_PASSWORD]
 
             self._async_abort_entries_match({CONF_EMAIL: email})
-            user_id, error = await self._async_validate_user_input(
+            user_id, error = await self._async_validate_user(
                 email=email, password=password
             )
             if error is None:
@@ -131,28 +135,9 @@ class SkybellFlowHandler(ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
-    async def _async_validate_reauth_input(self, email: str, password: str) -> tuple:
-        """Validate login credentials for reauthorization flow."""
-        try:
-            skybell = Skybell(
-                username=email,
-                password=password,
-                disable_cache=True,
-                get_devices=False,
-                auto_login=True,
-                session=async_get_clientsession(self.hass),
-            )
-            await skybell.async_initialize()
-        except SkybellAuthenticationException:
-            return None, "invalid_auth"
-        except SkybellException:
-            return None, "cannot_connect"
-        except Exception:
-            _LOGGER.exception("Unexpected exception")
-            return None, "unknown"
-        return skybell.user_id, None
-
-    async def _async_validate_user_input(self, email: str, password: str) -> tuple:
+    async def _async_validate_user(
+        self, email: str, password: str, auto_login: bool = False
+    ) -> tuple:
         """Validate login credentials for user flow."""
         try:
             skybell = Skybell(
@@ -160,7 +145,7 @@ class SkybellFlowHandler(ConfigFlow, domain=DOMAIN):
                 password=password,
                 disable_cache=True,
                 get_devices=False,
-                auto_login=False,
+                auto_login=auto_login,
                 session=async_get_clientsession(self.hass),
             )
             await skybell.async_initialize()

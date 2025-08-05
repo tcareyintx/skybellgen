@@ -225,7 +225,7 @@ async def test_step_reconfigure(hass, bypass_initialize) -> None:
         mock.return_value = USER_ID
         result = await hass.config_entries.flow.async_configure(
             result["flow_id"],
-            user_input={CONF_EMAIL: USERNAME, CONF_PASSWORD: PASSWORD},
+            user_input={CONF_PASSWORD: PASSWORD},
         )
 
     assert result["type"] is data_entry_flow.FlowResultType.ABORT
@@ -252,7 +252,7 @@ async def test_step_reconfigure_auth_failure(
         mock.return_value = USER_ID
         result = await hass.config_entries.flow.async_configure(
             result["flow_id"],
-            user_input={CONF_EMAIL: USERNAME, CONF_PASSWORD: PASSWORD},
+            user_input={CONF_PASSWORD: PASSWORD},
         )
 
     assert result["type"] is data_entry_flow.FlowResultType.FORM

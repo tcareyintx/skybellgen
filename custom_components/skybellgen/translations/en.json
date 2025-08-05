@@ -15,8 +15,8 @@
         }
       },
       "reconfigure": {
-        "description": "Please update your email and password",
-        "title": "Reconfigure the Skybell Hub",
+        "description": "Please update your password for {email}",
+        "title": "Reconfigure the SkybellGen Hub",
         "data": {
           "email": "Email",
           "password": "Password"
