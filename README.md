@@ -88,7 +88,7 @@ email:
 
 password:
 - description: Your password that you used when setting up the account on the Skybell app. If you
-change your password you can use the reconfigure or re-authentication options of the integration configuration flow.
+  change your password you can use the reconfigure or re-authentication options of the integration configuration flow.
 
 <!---->
 
