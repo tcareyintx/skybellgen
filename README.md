@@ -77,6 +77,7 @@ custom_components/skybellgen/text.py
 ## Removing the integration
 
 This integration follows standard integration removal via the UI.
+
 1. Go to Settings > Devices & Services
 2. Click on the SkybellGen integration that you loaded
 3. Click Delete
