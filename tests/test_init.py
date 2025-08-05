@@ -5,12 +5,9 @@ from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.skybellgen import (
-    SkybellDataUpdateCoordinator,
-    async_setup_entry,
-    async_unload_entry,
-)
+from custom_components.skybellgen import async_setup_entry, async_unload_entry
 from custom_components.skybellgen.const import DOMAIN
+from custom_components.skybellgen.coordinator import SkybellDataUpdateCoordinator
 
 from .conftest import async_init_integration
 from .const import MOCK_CONFIG
