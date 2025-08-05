@@ -84,11 +84,11 @@ This integration follows standard integration removal via the UI.
 This integration uses the HA configuration flow to setup the SkybellGen hub.
 
 email:
-  description: Your email that you used when setting up the account on the Skybell app.
+- description: Your email that you used when setting up the account on the Skybell app.
 
 password:
-  description: Your password that you used when setting up the account on the Skybell app. If you
-  change your password you can use the reconfigure or re-authentication options of the integration configuration flow.
+- description: Your password that you used when setting up the account on the Skybell app. If you
+change your password you can use the reconfigure or re-authentication options of the integration configuration flow.
 
 <!---->
 
