@@ -11,12 +11,9 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from .const import DOMAIN, TENTH_PERCENT_TYPES
+from .const import DOMAIN, SENTSITIVTY_ADJ, TENTH_PERCENT_TYPES, USE_MOTION_VALUE
 from .coordinator import SkybellDataUpdateCoordinator
 from .entity import SkybellEntity
-
-SENTSITIVTY_ADJ = [10, 50, 100]
-USE_MOTION_VALUE = [CONST.MOTION_HMBD_SENSITIVITY, CONST.MOTION_FD_SENSITIVITY]
 
 NUMBER_TYPES: tuple[NumberEntityDescription, ...] = (
     NumberEntityDescription(
@@ -68,6 +65,9 @@ NUMBER_TYPES: tuple[NumberEntityDescription, ...] = (
         native_step=0.00001,
     ),
 )
+
+# Calls to the communications driver should be serialized
+PARALLEL_UPDATES = 1
 
 
 async def async_setup_entry(

@@ -31,8 +31,8 @@ async def test_button(hass, remove_platforms, bypass_initialize):
     )
 
 
-async def test_switch_exc(hass, remove_platforms, bypass_initialize, error_reboot_exc):
-    """Test button services with Skybell exception."""
+async def test_button_exc(hass, remove_platforms, bypass_initialize, error_reboot_exc):
+    """Test services with Skybell exception."""
     # Create a mock entry so we don't have to go through config flow
     config_entry = await async_init_integration(hass)
     assert config_entry.state is ConfigEntryState.LOADED
@@ -48,8 +48,8 @@ async def test_switch_exc(hass, remove_platforms, bypass_initialize, error_reboo
         )
 
 
-async def test_switch_acl(hass, remove_platforms, bypass_initialize, error_reboot_acl):
-    """Test button services with ACL exception."""
+async def test_button_acl(hass, remove_platforms, bypass_initialize, error_reboot_acl):
+    """Test services with ACL exception."""
     # Create a mock entry so we don't have to go through config flow
     config_entry = await async_init_integration(hass)
     assert config_entry.state is ConfigEntryState.LOADED

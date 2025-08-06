@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+from dataclasses import dataclass
 
 from aioskybellgen import Skybell
 from aioskybellgen.exceptions import SkybellAuthenticationException, SkybellException
@@ -13,7 +14,6 @@ from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .const import DOMAIN
-from .coordinator import SkybellDataUpdateCoordinator
 
 PLATFORMS = [
     Platform.BINARY_SENSOR,
@@ -27,11 +27,15 @@ PLATFORMS = [
     Platform.TEXT,
 ]
 
+# Calls to the communications driver should be serialized
+PARALLEL_UPDATES = 1
 
+
+@dataclass
 class SkybellData:
     """The Skybell data class for a Hub config entity."""
 
-    api: Skybell
+    api: Skybell = None
 
 
 type SkybellConfigEntry = ConfigEntry[SkybellData]  # flake8: noqa: E999
@@ -39,9 +43,12 @@ type SkybellConfigEntry = ConfigEntry[SkybellData]  # flake8: noqa: E999
 
 async def async_setup_entry(hass: HomeAssistant, entry: SkybellConfigEntry) -> bool:
     """Set up Skybell from a config entry."""
+    from .coordinator import (  # pylint: disable=import-outside-toplevel, cyclic-import
+        SkybellDataUpdateCoordinator,
+    )
+
     email = entry.data[CONF_EMAIL]
     password = entry.data[CONF_PASSWORD]
-    # entry.api = None
     api = Skybell(
         username=email,
         password=password,
@@ -59,6 +66,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: SkybellConfigEntry) -> b
         await api.async_delete_cache()
         raise ConfigEntryNotReady(f"Unable to connect to Skybell service: {ex}") from ex
 
+    entry.runtime_data = SkybellData(api=api)
     device_coordinators: list[SkybellDataUpdateCoordinator] = [
         SkybellDataUpdateCoordinator(hass, entry, device) for device in devices
     ]
@@ -70,7 +78,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: SkybellConfigEntry) -> b
     )
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = device_coordinators
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
-    entry.api = api
     return True
 
 
@@ -78,7 +85,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: SkybellConfigEntry) -> 
     """Unload a config entry."""
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         hass.data[DOMAIN].pop(entry.entry_id)
-        api = entry.api
+        api = entry.runtime_data.api
         if api is not None:
             await api.async_delete_cache()
 

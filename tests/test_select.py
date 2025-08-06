@@ -81,7 +81,7 @@ async def test_select_exc(
 async def test_select_acl(
     hass, remove_platforms, bypass_initialize, error_set_setting_acl
 ):
-    """Test switch services with ACL exception."""
+    """Test service with ACL exception."""
     # Create a mock entry so we don't have to go through config flow
     config_entry = await async_init_integration(hass)
     assert config_entry.state is ConfigEntryState.LOADED
@@ -107,7 +107,7 @@ async def test_select_acl(
 
 
 async def test_select_no_option_for_key(hass, remove_platforms, bypass_initialize3):
-    """Test switch services with ACL exception."""
+    """Test select services with no option for key."""
     # Create a mock entry so we don't have to go through config flow
     config_entry = await async_init_integration(hass)
     assert config_entry.state is ConfigEntryState.LOADED

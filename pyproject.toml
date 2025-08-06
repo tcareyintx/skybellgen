@@ -24,10 +24,23 @@ source = [
 [tool.coverage.html]
 directory = "htmlcov"
 
+[tool.pylint.MAIN]
+init-hook = """
+try: import pylint_venv
+except ImportError: pass
+else: pylint_venv.inithook()
+"""
+
 [tool.pylint.messages_control]
 disable = [
     "abstract-method",
-    "overridden-final",
+    "attribute-defined-outside-init",
     "broad-except",
+    "chained-comparison",
+    "duplicate-code",
+    "import-error",
+    "overridden-final-method",
+    "too-few-public-methods",
     "unexpected-keyword-arg",
+    "unused-argument",
 ]

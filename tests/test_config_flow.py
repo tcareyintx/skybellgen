@@ -5,13 +5,13 @@ from unittest.mock import PropertyMock, patch
 from aioskybellgen import Skybell
 from aioskybellgen.exceptions import SkybellAuthenticationException
 from homeassistant import config_entries, data_entry_flow
-from homeassistant.const import CONF_EMAIL, CONF_PASSWORD
+from homeassistant.const import CONF_PASSWORD
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.skybellgen import DOMAIN
 
-from .const import MOCK_CONFIG, PASSWORD, USER_ID, USERNAME
+from .const import MOCK_CONFIG, PASSWORD, USER_ID
 
 
 # This fixture bypasses the actual setup of the integration
@@ -225,7 +225,7 @@ async def test_step_reconfigure(hass, bypass_initialize) -> None:
         mock.return_value = USER_ID
         result = await hass.config_entries.flow.async_configure(
             result["flow_id"],
-            user_input={CONF_EMAIL: USERNAME, CONF_PASSWORD: PASSWORD},
+            user_input={CONF_PASSWORD: PASSWORD},
         )
 
     assert result["type"] is data_entry_flow.FlowResultType.ABORT
@@ -252,7 +252,7 @@ async def test_step_reconfigure_auth_failure(
         mock.return_value = USER_ID
         result = await hass.config_entries.flow.async_configure(
             result["flow_id"],
-            user_input={CONF_EMAIL: USERNAME, CONF_PASSWORD: PASSWORD},
+            user_input={CONF_PASSWORD: PASSWORD},
         )
 
     assert result["type"] is data_entry_flow.FlowResultType.FORM

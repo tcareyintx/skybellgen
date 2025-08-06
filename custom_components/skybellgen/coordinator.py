@@ -1,32 +1,36 @@
 """Data update coordinator for the Skybell Gen integration."""
 
 from datetime import datetime, timedelta
+import logging
 
 from aioskybellgen import SkybellDevice
 from aioskybellgen.exceptions import SkybellException
 from aioskybellgen.helpers.const import REFRESH_CYCLE
-from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .const import DOMAIN, LOGGER
+from . import SkybellConfigEntry
+from .const import DOMAIN
+
+# Coordinator is used to centralize the data updates
+PARALLEL_UPDATES = 0
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class SkybellDataUpdateCoordinator(DataUpdateCoordinator[None]):
     """Data update coordinator for the Skybell integration."""
 
-    config_entry: ConfigEntry
-
     def __init__(
         self,
         hass: HomeAssistant,
-        config_entry: ConfigEntry,
+        config_entry: SkybellConfigEntry,
         device: SkybellDevice,
     ) -> None:
         """Initialize the coordinator."""
         super().__init__(
             hass=hass,
-            logger=LOGGER,
+            logger=_LOGGER,
             config_entry=config_entry,
             name=device.name,
             update_interval=timedelta(seconds=REFRESH_CYCLE),
@@ -35,12 +39,17 @@ class SkybellDataUpdateCoordinator(DataUpdateCoordinator[None]):
 
     async def _async_refresh_skybell_session(self) -> None:  # pragma: no cover
         """Refresh the Skybell session if needed."""
+        api = self.config_entry.runtime_data.api
+        if api is None:
+            _LOGGER.warning("SkybellGen API isn't setup, cannot refresh session")
+            return
         # If the session refresh timestamp is not None and the current time is greater
         # than the session refresh timestamp, we need to refresh the session.
         ts = self.device.skybell.session_refresh_timestamp
         if ts is not None and (datetime.now() > ts):
             try:
                 await self.device.skybell.async_refresh_session()
+                _LOGGER.debug("Succesfull refresh session for %s", self.device.name)
             except SkybellException as exc:
                 raise UpdateFailed(
                     translation_domain=DOMAIN,
@@ -58,6 +67,7 @@ class SkybellDataUpdateCoordinator(DataUpdateCoordinator[None]):
         # Update the device
         try:
             await self.device.async_update(refresh=True, get_devices=True)
+            _LOGGER.debug("Succesfull update for %s", self.device.name)
         except SkybellException as exc:
             raise UpdateFailed(
                 translation_domain=DOMAIN,

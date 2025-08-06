@@ -1,6 +1,5 @@
 """Constants for the Skybell Gen Doorbell."""
 
-import logging
 from typing import Final
 
 from aioskybellgen.helpers.const import (
@@ -58,6 +57,19 @@ TENTH_PERCENT_TYPES = [
     MOTION_FD_SENSITIVITY,
 ]
 
+SENTSITIVTY_ADJ = [10, 50, 100]
+
+USE_MOTION_VALUE = [MOTION_HMBD_SENSITIVITY, MOTION_FD_SENSITIVITY]
+
+VOLUME_FIELDS = [
+    OUTDOOR_CHIME_VOLUME,
+    SPEAKER_VOLUME,
+]
+
+IMAGE_FIELDS = [
+    IMAGE_QUALITY,
+]
+
 VOLUME_OPTIONS = ["Low", "Medium", "High"]
 
 IMAGE_OPTIONS = ["Low", "Medium", "High", "Highest"]
@@ -70,5 +82,3 @@ BASIC_MOTION_GET_FUNCTION = {
     BASIC_MOTION_RECORD: "basic_motion_record",
     BASIC_MOTION_NOTIFY: "basic_motion_notify",
 }
-
-LOGGER = logging.getLogger(__package__)
