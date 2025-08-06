@@ -101,7 +101,7 @@ async def test_light_exc(
 async def test_light_acl(
     hass, remove_platforms, bypass_initialize, error_set_setting_acl
 ):
-    """Test light services with ACL exception."""
+    """Test services with ACL exception."""
     # Create a mock entry so we don't have to go through config flow
     config_entry = await async_init_integration(hass)
     assert config_entry.state is ConfigEntryState.LOADED

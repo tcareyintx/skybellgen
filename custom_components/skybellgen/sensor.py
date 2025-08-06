@@ -16,9 +16,19 @@ from homeassistant.components.sensor import (
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.typing import StateType
 
+from .const import (
+    IMAGE_FIELDS,
+    IMAGE_OPTIONS,
+    SENTSITIVTY_ADJ,
+    TENTH_PERCENT_TYPES,
+    USE_MOTION_VALUE,
+    VOLUME_FIELDS,
+    VOLUME_OPTIONS,
+)
 from .entity import DOMAIN, SkybellEntity
 
 
@@ -176,4 +186,41 @@ class SkybellSensor(SkybellEntity, SensorEntity):
     @property
     def native_value(self) -> StateType | datetime:
         """Return the state of the sensor."""
-        return self.entity_description.value_fn(self._device)
+        value = self.entity_description.value_fn(self._device)
+
+        # Check the fields with select options
+        array_options = None
+        if self.entity_description.key in VOLUME_FIELDS:
+            array_options = VOLUME_OPTIONS
+        elif self.entity_description.key in IMAGE_FIELDS:
+            array_options = IMAGE_OPTIONS
+
+        if array_options is not None:
+            index = value
+            try:
+                value = array_options[index]
+            except (IndexError, ValueError) as exc:
+                raise ServiceValidationError(
+                    translation_domain=DOMAIN,
+                    translation_key="no_option_for_key",
+                    translation_placeholders={
+                        "key": self.entity_description.key,
+                        "option": index,
+                    },
+                ) from exc
+
+        # Check the fields with number adjustments
+        if self.entity_description.key in TENTH_PERCENT_TYPES:
+            # Check for values 0,1,2 adjust for low medium high
+            if value >= 0 and value <= len(SENTSITIVTY_ADJ):
+                value = SENTSITIVTY_ADJ[value] * 10
+            elif (
+                self.entity_description.key in USE_MOTION_VALUE
+                and value == CONST.USE_MOTION_SENSITIVITY
+            ):
+                value_fn = getattr(self._device, CONST.MOTION_SENSITIVITY)
+                value = value_fn
+            # Set the value returned by the function
+            value = float(value / 10)
+
+        return value

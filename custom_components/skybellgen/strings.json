@@ -150,19 +150,19 @@
         "name": "Speaker volume"
       },
       "image_quality": {
-        "name": "Video resolution"
+        "name": "Image quality"
       },
       "motion_sensitivity": {
-        "name": "Motion detection sensistivity"
+        "name": "Motion detection sensitivity"
       },
       "hmbd_sensitivity": {
-        "name": "Human body detection sensistivity"
+        "name": "Human detection sensitivity"
       },
       "fd_sensitivity": {
-        "name": "Facial detection sensistivity"
+        "name": "Facial detection sensitivity"
       },
       "pir_sensitivity": {
-        "name": "Infrared detection sensistivity"
+        "name": "Infrared detection sensitivity"
       },
       "location_lat": {
         "name": "Location latitude"

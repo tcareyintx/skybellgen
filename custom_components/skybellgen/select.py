@@ -11,12 +11,9 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from .const import DOMAIN, IMAGE_OPTIONS, VOLUME_OPTIONS
+from .const import DOMAIN, IMAGE_FIELDS, IMAGE_OPTIONS, VOLUME_FIELDS, VOLUME_OPTIONS
 from .coordinator import SkybellDataUpdateCoordinator
 from .entity import SkybellEntity
-
-VOLUME_FIELDS = [CONST.OUTDOOR_CHIME_VOLUME, CONST.SPEAKER_VOLUME]
-IMAGE_FIELDS = [CONST.IMAGE_QUALITY]
 
 SELECT_TYPES: tuple[SelectEntityDescription, ...] = (
     SelectEntityDescription(
