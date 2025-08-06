@@ -18,6 +18,9 @@ from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
+# Calls to the communications driver should be serialized
+PARALLEL_UPDATES = 1
+
 
 class SkybellFlowHandler(ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Skybell."""

@@ -34,6 +34,9 @@ TEXT_TYPES: tuple[TextEntityDescription, ...] = (
     ),
 )
 
+# Calls to the communications driver should be serialized
+PARALLEL_UPDATES = 1
+
 
 async def async_setup_entry(
     hass: HomeAssistant,

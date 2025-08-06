@@ -27,6 +27,9 @@ PLATFORMS = [
     Platform.TEXT,
 ]
 
+# Calls to the communications driver should be serialized
+PARALLEL_UPDATES = 1
+
 
 @dataclass
 class SkybellData:
