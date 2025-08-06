@@ -145,7 +145,7 @@ The project used the Home Assistant core [Skybell](https://www.home-assistant.io
 [commits]: https://github.com/tcareyintx/skybellgen/commits/main
 [hacs]: https://hacs.xyz/
 [hacs-repo]: https://github.com/hacs/integration
-[hacs-badge]: https://my.home-assistant.io/badges/hacs_repository.svg
+[hacsbadge]: https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge
 [hacs-open]: https://my.home-assistant.io/redirect/hacs_repository/?owner=tcareyintx&repository=SkybellGen&category=integration
 [releases]: https://github.com/tcareyintx/skybellgen/releases
 [config-flow-start]: https://my.home-assistant.io/redirect/config_flow_start/?domain=smartcar
