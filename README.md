@@ -43,13 +43,26 @@ The integration provides support for the platforms listed below.
 
 ## Installation
 
+### HACS
+
+Installation through [HACS][hacs] is the preferred installation method.
+
+[![Open the SkybellGen integration in HACS][hacs-badge]][hacs-open]
+
+1. Click the button above or go to HACS &rarr; Integrations &rarr; search for
+   "SkybellGen" &rarr; select it.
+1. Press _DOWNLOAD_.
+1. Select the version (it will auto select the latest) &rarr; press _DOWNLOAD_.
+1. Restart Home Assistant then continue to [the setup section](#setup).
+
+### Manual Installation
+
 1. Using the tool of choice open the directory (folder) for your HA configuration (where you find `configuration.yaml`).
 2. If you do not have a `custom_components` directory (folder) there, you need to create it.
 3. In the `custom_components` directory (folder) create a new folder called `skybellgen`.
 4. Download _all_ the files from the `custom_components/skybellgen/` directory (folder) in this repository.
 5. Place the files you downloaded in the new directory (folder) you created.
-6. Restart Home Assistant
-7. In the HA UI go to "Configuration" -> "Integrations" click "+" and search for "SkybellGen"
+6. Restart Home Assistant then continue to [the setup section](#setup).
 
 Using your HA configuration directory (folder) as a starting point you should now also have this:
 
@@ -82,7 +95,21 @@ This integration follows standard integration removal via the UI.
 2. Click on the SkybellGen integration that you loaded
 3. Click Delete
 
-## Configuration is done in the UI
+## Setup
+
+Configuration is done via the Home Assistant UI after installation.
+
+1. Navigate to "Settings" &rarr; "Devices & Services"
+1. Click "+ Add Integration"
+1. Search for and select &rarr; "Smartcar"
+
+Or you can use the My Home Assistant Button below.
+
+[![Add Integration](https://my.home-assistant.io/badges/config_flow_start.svg)][config-flow-start]
+
+Follow the instructions to configure the integration.
+
+## Configuration flow
 
 This integration uses the HA configuration flow to setup the SkybellGen hub.
 
