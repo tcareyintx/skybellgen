@@ -22,13 +22,10 @@ _LOGGER = logging.getLogger(__name__)
 class SkybellFlowHandler(ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Skybell."""
 
-    reauth_email: str
-
     async def async_step_reauth(
         self, entry_data: Mapping[str, Any]
     ) -> ConfigFlowResult:
         """Handle a reauthorization flow request."""
-        self.reauth_email = entry_data[CONF_EMAIL]
         return await self.async_step_reauth_confirm()
 
     async def async_step_reauth_confirm(
@@ -36,10 +33,12 @@ class SkybellFlowHandler(ConfigFlow, domain=DOMAIN):
     ) -> ConfigFlowResult:
         """Handle user's reauth credentials."""
         errors = {}
+        entry = self._get_reauth_entry()
+        reauth_email = entry.data.get(CONF_EMAIL, "").lower()
         if user_input:
             password = user_input[CONF_PASSWORD]
             _, error = await self._async_validate_user(
-                email=self.reauth_email, password=password, auto_login=True
+                email=reauth_email, password=password, auto_login=True
             )
             if error is None:
                 entry = self._get_reauth_entry()
@@ -54,7 +53,7 @@ class SkybellFlowHandler(ConfigFlow, domain=DOMAIN):
         return self.async_show_form(
             step_id="reauth_confirm",
             data_schema=vol.Schema({vol.Required(CONF_PASSWORD): str}),
-            description_placeholders={CONF_EMAIL: self.reauth_email},
+            description_placeholders={CONF_EMAIL: reauth_email},
             errors=errors,
         )
 

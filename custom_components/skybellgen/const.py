@@ -1,6 +1,5 @@
 """Constants for the Skybell Gen Doorbell."""
 
-import logging
 from typing import Final
 
 from aioskybellgen.helpers.const import (
@@ -83,5 +82,3 @@ BASIC_MOTION_GET_FUNCTION = {
     BASIC_MOTION_RECORD: "basic_motion_record",
     BASIC_MOTION_NOTIFY: "basic_motion_notify",
 }
-
-LOGGER = logging.getLogger(__package__)
