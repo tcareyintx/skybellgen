@@ -133,7 +133,7 @@ class SkybellSwitch(SkybellEntity, SwitchEntity):
                 translation_key="invalid_setting",
                 translation_placeholders={
                     "key": self.entity_description.key,
-                    "value": True,
+                    "value": str(True),
                 },
             ) from exc
         # To stop bouncing issue a refresh
@@ -157,7 +157,7 @@ class SkybellSwitch(SkybellEntity, SwitchEntity):
                 translation_key="invalid_setting",
                 translation_placeholders={
                     "key": self.entity_description.key,
-                    "value": False,
+                    "value":str( False),
                 },
             ) from exc
 
@@ -169,5 +169,5 @@ class SkybellSwitch(SkybellEntity, SwitchEntity):
         """Return true if entity is on."""
         key = self.entity_description.key
         if key in BASIC_MOTION_GET_FUNCTION:
-            key = BASIC_MOTION_GET_FUNCTION.get(key)
+            key = BASIC_MOTION_GET_FUNCTION[key]
         return cast(bool, getattr(self._device, key))

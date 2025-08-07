@@ -129,7 +129,7 @@ class SkybellNumber(SkybellEntity, NumberEntity):
                 translation_key="motion_invalid_setting",
                 translation_placeholders={
                     "key": key,
-                    "value": value,
+                    "value": str(value),
                 },
             ) from exc
 

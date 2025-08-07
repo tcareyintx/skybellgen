@@ -35,7 +35,7 @@ PARALLEL_UPDATES = 1
 class SkybellData:
     """The Skybell data class for a Hub config entity."""
 
-    api: Skybell = None
+    api: Skybell | None = None
 
 
 type SkybellConfigEntry = ConfigEntry[SkybellData]  # flake8: noqa: E999

@@ -82,6 +82,6 @@ class SkybellButton(SkybellEntity, ButtonEntity):
                     translation_key="reboot_failed",
                     translation_placeholders={
                         "key": self.entity_description.key,
-                        "error": exc,
+                        "error": str(exc),
                     },
                 ) from exc

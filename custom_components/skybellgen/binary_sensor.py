@@ -108,7 +108,7 @@ class SkybellBinarySensor(SkybellEntity, BinarySensorEntity):
     def _handle_coordinator_update(self) -> None:
         key = self.entity_description.key
         if key in BASIC_MOTION_GET_FUNCTION:
-            key = BASIC_MOTION_GET_FUNCTION.get(key)
+            key = BASIC_MOTION_GET_FUNCTION[key]
         value_fn = getattr(self._device, key)
         self._attr_is_on = bool(value_fn)
         super()._handle_coordinator_update()

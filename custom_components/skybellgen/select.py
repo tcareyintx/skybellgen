@@ -71,7 +71,7 @@ class SkybellSelect(SkybellEntity, SelectEntity):
         """Initialize a entity for a Skybell device."""
         super().__init__(coordinator, description)
 
-    async def async_handle_select_option(self, option: str) -> None:
+    async def async_select_option(self, option: str) -> None:
         """Set the value of the option."""
         array_options = None
         if self.entity_description.key in VOLUME_FIELDS:
@@ -115,7 +115,7 @@ class SkybellSelect(SkybellEntity, SelectEntity):
                 translation_key="invalid_setting",
                 translation_placeholders={
                     "key": self.entity_description.key,
-                    "value": value,
+                    "value": str(value),
                 },
             ) from exc
 

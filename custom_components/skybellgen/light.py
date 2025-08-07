@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import cast, Any
 
 from aioskybellgen.exceptions import SkybellAccessControlException, SkybellException
 from aioskybellgen.helpers import const as CONST
@@ -74,20 +74,18 @@ class SkybellLight(SkybellEntity, LightEntity):
         brightness = self.brightness
         current_color = self.rgb_color
         if current_color is None:
-            current_color = DEFAULT_LED_COLOR
-        else:
-            current_color = list(current_color)
+            current_color =  cast(tuple, DEFAULT_LED_COLOR)
 
         if ATTR_RGB_COLOR in kwargs:
-            current_color = list(kwargs[ATTR_RGB_COLOR])
+            current_color = kwargs[ATTR_RGB_COLOR]
             if brightness == 0:
-                current_color = []  # pragma: no cover
+                current_color = None  # pragma: no cover
         elif ATTR_BRIGHTNESS in kwargs:
             return  # pragma: no cover
 
         # Update the adjusted color
         rgb_value = ""
-        if len(current_color) > 0:
+        if current_color is not None:
             rgb_value = (
                 f"#{current_color[0]:02x}{current_color[1]:02x}{current_color[2]:02x}"
             )
@@ -154,7 +152,7 @@ class SkybellLight(SkybellEntity, LightEntity):
 
         hex_color = self._device.led_color
         int_array = [int(hex_color[i : i + 2], 16) for i in range(1, len(hex_color), 2)]
-        return tuple(int_array)
+        return cast (tuple, int_array)
 
     @property
     def brightness(self) -> int | None:
