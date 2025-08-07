@@ -7,7 +7,7 @@
 [![pre-commit][pre-commit-shield]][pre-commit]
 [![Black][black-shield]][black]
 
-[![hacs][hacsbadge]][hacs]
+[![hacs][hacs-badge]][hacs]
 [![Project Maintenance][maintenance-shield]][user_profile]
 
 [![Discord][discord-shield]][discord]
@@ -133,28 +133,30 @@ The SkybellGen integration provides actuators to configure attributes of the Sky
 ## Supported devices
 
 The following devices are known to be supported by the SkybellGen integration:
+
 - SkyBell SlimLine II - Model number: SB_SLIM2_0001
 
 ## Unsupported devices
 
 The following devices are not supported by the integration:
+
 - Devices that have not been migrated to the Skybell Genv5 API and associated Skybell app.
 
 ## Supported functionality
+
 The SkybellGen integration provides support for the platforms listed below.
 
-| Platform        | Description                                                        |
-| --------------- | ------------------------------------------------------------------ |
-| `binary_sensor` | Show info from switch and light actuators                          |
-| `button`        | Trigger actions like reboot doorbell                               |
-| `camera`        | Show images and videos of activities                               |
-| `light`         | Actuator for the doorbell's led.                                   |
-| `number`        | Actuator for entities that input numeric values.                   |
-| `select`        | Actuator for entities that input enumerated values.                |
-| `sensor`        | Show info from actuators and diagnostic sensors.                   |
-| `switch`        | Actuator for entities that input binary values.                    |
-| `text`          | Actuator for entities that input text values.                      |
-
+| Platform        | Description                                         |
+| --------------- | --------------------------------------------------- |
+| `binary_sensor` | Show info from switch and light actuators           |
+| `button`        | Trigger actions like reboot doorbell                |
+| `camera`        | Show images and videos of activities                |
+| `light`         | Actuator for the doorbell's led.                    |
+| `number`        | Actuator for entities that input numeric values.    |
+| `select`        | Actuator for entities that input enumerated values. |
+| `sensor`        | Show info from actuators and diagnostic sensors.    |
+| `switch`        | Actuator for entities that input binary values.     |
+| `text`          | Actuator for entities that input text values.       |
 
 ### Entities
 
@@ -172,6 +174,7 @@ Sensors for corresponding entities in Light and Switch entities. These sensors c
 #### Camera
 
 - **Last activity**
+
   - **Description**: The last recorded activity such as a livestream, button press or motion detection event.
 
 - **Snapshot**
@@ -186,22 +189,27 @@ Sensors for corresponding entities in Light and Switch entities. These sensors c
 #### Numbers
 
 - **Motion sensitivity**
+
   - **Description**: The sensitivity used by the doorbell's camera to determine if there is motion detected.
   - **Remarks**: Values are expressed as percentages between .3 and 100.0 percent.
 
 - **Human detection sensitivity**
+
   - **Description**: The sensitivity used by the doorbell's camera to determine if there is a human body is detected.
   - **Remarks**: Values are expressed as percentages between .3 and 100.0 percent.
 
 - **Facial detection sensitivity**
+
   - **Description**: The sensitivity used by the doorbell's camera to determine if there is a human face detected.
   - **Remarks**: Values are expressed as percentages between .3 and 100.0 percent.
 
 - **Infrared sensitivity**
+
   - **Description**: The infrared radiation (heat) sensitivity used by the doorbell's camera to determine if there is motion detected.
   - **Remarks**: Values are expressed as percentages between .3 and 100.0 percent.
 
 - **Location latitude**
+
   - **Description**: The latitude coordinate for where the doorbell is located.
 
 - **Location longitude**
@@ -210,10 +218,12 @@ Sensors for corresponding entities in Light and Switch entities. These sensors c
 #### Selects
 
 - **Outdoor chime volume**
+
   - **Description**: When the outdoor chime is enabled, the volume of the outdoor chime.
   - **Options**: Low, Medium, High
 
 - **Speaker volume**
+
   - **Description**: When using a livestream vent, the volume of the audio speaker.
   - **Options**: Low, Medium, High
 
@@ -224,36 +234,47 @@ Sensors for corresponding entities in Light and Switch entities. These sensors c
 #### Switches
 
 - **Detect button pressed**
+
   - **Description**: When enabled, notifications are emitted with the doorbell button is pressed.
 
 - **Detect motion**
+
   - **Description**: Motion detection is enabled or disabled.
 
 - **Detect motion - debug**
+
   - **Description**: When motion detection is enabled, a box is drawn around the detected person or face when is enabled.
 
 - **Notify on motion detection event**
+
   - **Description**: Wnen motion detection is enabled, determines if notifications are emitted.
 
 - **Record on motion detection event**
+
   - **Description**: Wnen motion detection is enabled, determines if video is recorded.
 
 - **Notify on human body detection event**
+
   - **Description**: Wnen motion detection is enabled, determines if notifications are emitted.
 
 - **Record on human body detection event**
+
   - **Description**: Wnen motion detection is enabled, determines if video is recorded.
 
 - **Notify on facial detection event**
+
   - **Description**: Wnen motion detection is enabled, determines if notifications are emitted.
 
 - **Record on facial detection event**
+
   - **Description**: Wnen motion detection is enabled, determines if video is recorded.
 
 - **Indoor chime**
+
   - **Description**: Wnen enabled, the indoor mechanical chime will be used.
 
 - **Indoor digital chime**
+
   - **Description**: Wnen enabled, the indoor digital chime will be used.
   - **Remarks**: Not this entity should be off if the Indoor chime is enabled.
 
@@ -265,27 +286,34 @@ Sensors for corresponding entities in Light and Switch entities. These sensors c
 Sensors for corresponding entities in Number, Select and Text entities. These sensors can be used when the doorbell is shared and the user has "read-only" privileges and are considered diagnostic sensors. Additionally:
 
 - **Last button event**
+
   - **Description**: The timestamp of the last recorded doorbell button pressed event.
 
 - **Last motion event**
+
   - **Description**: The timestamp of the last recorded doorbell motion event.
 
 - **Last livestream event**
+
   - **Description**: The timestamp of the last recorded doorbell livestream event.
 
 - **Last seen**
+
   - **Description**: The last time the doorbell has checked in with the Skybell cloud.
   - **Remarks**: Diagnostics, disabled by default
 
 - **Last connected**
+
   - **Description**: The timestamp of the last recorded doorbell connection event.
   - **Remarks**: Diagnostics, disabled by default
 
 - **Last disconnected**
+
   - **Description**: The timestamp of the last recorded doorbell disconnection event.
   - **Remarks**: Diagnostics, disabled by default
 
 - **Wi-Fi SSID**
+
   - **Description**: The SSID that the doorbell's of the Access Point to which the doorbell is connected.
   - **Remarks**: Diagnostics, disabled by default
 
@@ -296,12 +324,12 @@ Sensors for corresponding entities in Number, Select and Text entities. These se
 #### Texts
 
 - **Doorbell name**
+
   - **Description**: The name that will be associated with the doorbell.
   - **Remarks**: Entities for the doorbell use the name of the doorbell when the device is first discovered. Changing the name does not change the entity ids for the doorbell's entities.
 
 - **Location place**
   - **Description**: The name that will be associated with the location's longitude and latitude coordinates.
-
 
 ## Known limitations
 
@@ -338,11 +366,12 @@ If the password has changed or the session authentication tokens have timed out.
 This means the integration has to re-authenticate with the Skybell cloud.
 
 ##### Resolution
+
 To resolve this issue, follow the steps in the reauthentication flow. If the password was changed using the Skybell cloud API or Skybell app, you can reconfigure the integration and supply the new password before the authentication timeout.
 
 ### I can't see a newly setup device
 
-#### Symptom: “The SkybellGen hub does doesn't show the device.”
+#### Symptom: “The SkybellGen hub does doesn't show the device”
 
 If the device as added via the Skybell cloud API or Skybell app.
 
@@ -351,11 +380,12 @@ If the device as added via the Skybell cloud API or Skybell app.
 This means the integration doesn't recognize the new device.
 
 ##### Resolution
+
 To resolve this issue, delete and recreate the SkybellGen Hub.
 
 <!---->
 
-## Contributions are welcome!
+## Contributions are welcome
 
 If you want to contribute to this please read the [Contribution guidelines](CONTRIBUTING.md)
 
@@ -375,14 +405,12 @@ The project used the Home Assistant core [Skybell](https://www.home-assistant.io
 [commits-shield]: https://img.shields.io/github/commit-activity/y/tcareyintx/skybellgen.svg?style=for-the-badge
 [commits]: https://github.com/tcareyintx/skybellgen/commits/main
 [hacs]: https://hacs.xyz/
-[hacs-repo]: https://github.com/hacs/integration
-[hacsbadge]: https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge
+[hacs-badge]: https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge
 [hacs-open]: https://my.home-assistant.io/redirect/hacs_repository/?owner=tcareyintx&repository=SkybellGen&category=integration
 [releases]: https://github.com/tcareyintx/skybellgen/releases
 [config-flow-start]: https://my.home-assistant.io/redirect/config_flow_start/?domain=smartcar
 [discord]: https://discord.gg/Qa5fW2R
 [discord-shield]: https://img.shields.io/discord/330944238910963714.svg?style=for-the-badge
-[skybellimg]: skybell.png
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge
 [forum]: https://community.home-assistant.io/
 [license-shield]: https://img.shields.io/github/license/tcareyintx/skybellgen.svg?style=for-the-badge
@@ -390,5 +418,4 @@ The project used the Home Assistant core [Skybell](https://www.home-assistant.io
 [pre-commit]: https://github.com/pre-commit/pre-commit
 [pre-commit-shield]: https://img.shields.io/badge/pre--commit-enabled-brightgreen?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/tcareyintx/skybellgen.svg?style=for-the-badge
-[releases]: https://github.com/tcareyintx/skybellgen/releases
 [user_profile]: https://github.com/tcareyintx
