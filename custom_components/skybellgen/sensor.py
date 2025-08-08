@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime
+from typing import cast
 
 from aioskybellgen import SkybellDevice
 from aioskybellgen.helpers import const as CONST
@@ -196,31 +197,32 @@ class SkybellSensor(SkybellEntity, SensorEntity):
             array_options = IMAGE_OPTIONS
 
         if array_options is not None:
-            index = value
             try:
+                index = cast(int, value)
                 value = array_options[index]
-            except (IndexError, ValueError) as exc:
+            except (IndexError, ValueError, TypeError) as exc:
                 raise ServiceValidationError(
                     translation_domain=DOMAIN,
                     translation_key="no_option_for_key",
                     translation_placeholders={
                         "key": self.entity_description.key,
-                        "option": index,
+                        "option": str(value),
                     },
                 ) from exc
 
         # Check the fields with number adjustments
         if self.entity_description.key in TENTH_PERCENT_TYPES:
             # Check for values 0,1,2 adjust for low medium high
-            if value >= 0 and value <= len(SENTSITIVTY_ADJ):
-                value = SENTSITIVTY_ADJ[value] * 10
+            adj_value = cast(int, value)
+            if adj_value >= 0 and adj_value <= len(SENTSITIVTY_ADJ):
+                adj_value = int(SENTSITIVTY_ADJ[adj_value] * 10)
             elif (
                 self.entity_description.key in USE_MOTION_VALUE
-                and value == CONST.USE_MOTION_SENSITIVITY
+                and adj_value == CONST.USE_MOTION_SENSITIVITY
             ):
                 value_fn = getattr(self._device, CONST.MOTION_SENSITIVITY)
-                value = value_fn
+                adj_value = int(value_fn)
             # Set the value returned by the function
-            value = float(value / 10)
+            value = float(adj_value / 10)
 
         return value

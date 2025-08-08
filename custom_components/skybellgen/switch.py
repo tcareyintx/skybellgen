@@ -157,7 +157,7 @@ class SkybellSwitch(SkybellEntity, SwitchEntity):
                 translation_key="invalid_setting",
                 translation_placeholders={
                     "key": self.entity_description.key,
-                    "value":str( False),
+                    "value": str(False),
                 },
             ) from exc
 

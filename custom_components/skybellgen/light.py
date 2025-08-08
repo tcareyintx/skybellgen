@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import cast, Any
+from typing import Any, cast
 
 from aioskybellgen.exceptions import SkybellAccessControlException, SkybellException
 from aioskybellgen.helpers import const as CONST
@@ -71,10 +71,11 @@ class SkybellLight(SkybellEntity, LightEntity):
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn on the light."""
+        current_color: tuple[int, int, int] | None = None
         brightness = self.brightness
         current_color = self.rgb_color
         if current_color is None:
-            current_color =  cast(tuple, DEFAULT_LED_COLOR)
+            current_color = DEFAULT_LED_COLOR
 
         if ATTR_RGB_COLOR in kwargs:
             current_color = kwargs[ATTR_RGB_COLOR]
@@ -152,7 +153,7 @@ class SkybellLight(SkybellEntity, LightEntity):
 
         hex_color = self._device.led_color
         int_array = [int(hex_color[i : i + 2], 16) for i in range(1, len(hex_color), 2)]
-        return cast (tuple, int_array)
+        return cast(tuple[int, int, int], tuple(int_array))
 
     @property
     def brightness(self) -> int | None:

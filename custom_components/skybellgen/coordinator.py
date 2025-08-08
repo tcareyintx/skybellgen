@@ -1,8 +1,8 @@
 """Data update coordinator for the Skybell Gen integration."""
 
 from datetime import datetime, timedelta
-from typing import cast
 import logging
+from typing import cast
 
 from aioskybellgen import SkybellDevice
 from aioskybellgen.exceptions import SkybellException
@@ -40,7 +40,7 @@ class SkybellDataUpdateCoordinator(DataUpdateCoordinator[None]):
 
     async def _async_refresh_skybell_session(self) -> None:  # pragma: no cover
         """Refresh the Skybell session if needed."""
-        api = cast(SkybellConfigEntry,self.config_entry).runtime_data.api
+        api = cast(SkybellConfigEntry, self.config_entry).runtime_data.api
         if api is None:
             _LOGGER.warning("SkybellGen API isn't setup, cannot refresh session")
             return
@@ -74,6 +74,6 @@ class SkybellDataUpdateCoordinator(DataUpdateCoordinator[None]):
                 translation_domain=DOMAIN,
                 translation_key="update_failed",
                 translation_placeholders={
-                    "error": exc,
+                    "error": str(exc),
                 },
             ) from exc

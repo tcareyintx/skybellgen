@@ -115,7 +115,8 @@ def bypass_initialize3_fixture():
 def bypass_refresh_session_fixture():
     """Skip calls to refresh session from API."""
     with patch(
-        "custom_components.skybellgen.coordinator.SkybellDataUpdateCoordinator._async_refresh_skybell_session"
+        "custom_components.skybellgen.coordinator."
+        + "SkybellDataUpdateCoordinator._async_refresh_skybell_session"
     ):
         yield
 

@@ -43,4 +43,15 @@ disable = [
     "too-few-public-methods",
     "unexpected-keyword-arg",
     "unused-argument",
+    "consider-using-get",
 ]
+
+[tool.mypy]
+exlude_gitinore = true
+ignore_missing_imports = true
+exclude = [
+    "tests",
+]
+[[tool.mypy.overrides]]
+module = "custom_components.camera"
+import_untyped = false

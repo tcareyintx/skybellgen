@@ -89,7 +89,7 @@ class SkybellSelect(SkybellEntity, SelectEntity):
             )
         try:
             value = array_options.index(option)
-        except (IndexError, ValueError) as exc:
+        except (IndexError, ValueError) as exc:  # pragma: no cover
             raise ServiceValidationError(
                 translation_domain=DOMAIN,
                 translation_key="no_option_for_key",
