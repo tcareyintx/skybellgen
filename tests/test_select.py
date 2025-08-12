@@ -22,7 +22,7 @@ TEST_ENTITIES = [
 ]
 
 
-async def test_select_service(hass, remove_platforms, bypass_initialize):
+async def test_select_service(hass, remove_platforms, bypass_get_devices):
     """Test select services."""
     # Create a mock entry so we don't have to go through config flow
     config_entry = await async_init_integration(hass)
@@ -51,7 +51,7 @@ async def test_select_service(hass, remove_platforms, bypass_initialize):
 
 
 async def test_select_exc(
-    hass, remove_platforms, bypass_initialize, error_set_setting_exc
+    hass, remove_platforms, bypass_get_devices, error_set_setting_exc
 ):
     """Test services with Skybell exception."""
     # Create a mock entry so we don't have to go through config flow
@@ -79,7 +79,7 @@ async def test_select_exc(
 
 
 async def test_select_acl(
-    hass, remove_platforms, bypass_initialize, error_set_setting_acl
+    hass, remove_platforms, bypass_get_devices, error_set_setting_acl
 ):
     """Test service with ACL exception."""
     # Create a mock entry so we don't have to go through config flow
@@ -106,7 +106,7 @@ async def test_select_acl(
         )
 
 
-async def test_select_no_option_for_key(hass, remove_platforms, bypass_initialize3):
+async def test_select_no_option_for_key(hass, remove_platforms, bypass_get_devices3):
     """Test select services with no option for key."""
     # Create a mock entry so we don't have to go through config flow
     config_entry = await async_init_integration(hass)

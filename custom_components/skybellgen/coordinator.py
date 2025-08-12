@@ -1,17 +1,19 @@
 """Data update coordinator for the Skybell Gen integration."""
 
+import asyncio
 from datetime import datetime, timedelta
 import logging
 from typing import cast
 
-from aioskybellgen import SkybellDevice
+from aioskybellgen import Skybell, SkybellDevice
 from aioskybellgen.exceptions import SkybellException
 from aioskybellgen.helpers.const import REFRESH_CYCLE
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from . import SkybellConfigEntry
-from .const import DOMAIN
+from .const import DOMAIN, HUB_REFRESH_CYCLE
 
 # Coordinator is used to centralize the data updates
 PARALLEL_UPDATES = 0
@@ -19,8 +21,141 @@ PARALLEL_UPDATES = 0
 _LOGGER = logging.getLogger(__name__)
 
 
-class SkybellDataUpdateCoordinator(DataUpdateCoordinator[None]):
-    """Data update coordinator for the Skybell integration."""
+class SkybellHubDataUpdateCoordinator(DataUpdateCoordinator[None]):
+    """Data update coordinator for a Skybell Hub."""
+
+    def __init__(
+        self,
+        hass: HomeAssistant,
+        config_entry: SkybellConfigEntry,
+        name: str,
+    ) -> None:
+        """Initialize the coordinator."""
+        super().__init__(
+            hass=hass,
+            logger=_LOGGER,
+            config_entry=config_entry,
+            name=name,
+            update_interval=timedelta(seconds=HUB_REFRESH_CYCLE),
+            always_update=True,
+        )
+        self.data = []  # type: ignore[assignment, var-annotated]
+
+    async def async_check_update_interval(self, api: Skybell) -> None:
+        """Check if the update_interval needs adjusted."""
+        update_interval = self.update_interval  # type: ignore[has-type]
+        if update_interval is None:
+            update_interval = timedelta(seconds=HUB_REFRESH_CYCLE)
+        session_refresh_timestamp = api.session_refresh_timestamp
+        if session_refresh_timestamp is None:
+            _LOGGER.warning("No refresh session for hub: %s", api.user_id)
+            return
+        if session_refresh_timestamp < (datetime.now() + update_interval):
+            self.update_interval = session_refresh_timestamp - datetime.now()
+
+    async def _async_refresh_skybell_session(
+        self, api: Skybell
+    ) -> None:  # pragma: no cover
+        """Refresh the Skybell session if needed."""
+        # If the session refresh timestamp is not None and the current time is greater
+        # than the session refresh timestamp, we need to refresh the session.
+        ts = api.session_refresh_timestamp
+        if ts is not None and (datetime.now() >= ts):
+            try:
+                await api.async_refresh_session()
+                _LOGGER.debug("Succesfull refresh session for %s", api.user_id)
+            except SkybellException as exc:
+                raise UpdateFailed(
+                    translation_domain=DOMAIN,
+                    translation_key="refresh_failed",
+                    translation_placeholders={
+                        "error": str(exc),
+                    },
+                ) from exc
+        self.update_interval = timedelta(seconds=HUB_REFRESH_CYCLE)
+        await self.async_check_update_interval(api)
+
+    async def _async_update_data(self) -> None:
+        """Fetch data from API endpoint."""
+        entry: SkybellConfigEntry = cast(SkybellConfigEntry, self.config_entry)
+        api = entry.runtime_data.api
+        if api is None:
+            _LOGGER.warning("SkybellGen API isn't setup, cannot refresh session")
+            return
+
+        # Check if we should refresh the tokens for the session
+        await self._async_refresh_skybell_session(api)
+
+        # Check if the update_interval needs adjusted.
+        await self.async_check_update_interval(api=api)
+
+        # Get devices
+        try:
+            devices: list[SkybellDevice] = await api.async_get_devices(refresh=True)
+            _LOGGER.debug("Succesfull hub retrieval %s", api.user_id)
+        except SkybellException as exc:
+            raise UpdateFailed(
+                translation_domain=DOMAIN,
+                translation_key="update_failed",
+                translation_placeholders={
+                    "error": str(exc),
+                },
+            ) from exc
+
+        current_device_ids = set()
+        for device in devices:
+            current_device_ids.add(device.device_id)
+
+        # Remove any stale devices
+        known_device_ids: set[str] = cast(set, entry.runtime_data.known_device_ids)
+        if stale_device_ids := known_device_ids - current_device_ids:
+            device_registry = dr.async_get(self.hass)
+            for device_id in stale_device_ids:
+                device_entry = device_registry.async_get_device(
+                    identifiers={(DOMAIN, device_id)}
+                )
+                if device_entry:
+                    device_registry.async_update_device(
+                        device_id=device_entry.id,
+                        remove_config_entry_id=entry.entry_id,
+                    )
+        entry.runtime_data.current_device_ids = current_device_ids
+        self.data = devices  # type: ignore[assignment, var-annotated]
+        await self.async_check_new_devices()
+
+    async def async_check_new_devices(self) -> None:
+        """Check for new devices and build the associated coordinators and platform entities."""
+        entry: SkybellConfigEntry = cast(SkybellConfigEntry, self.config_entry)
+        known_device_ids: set[str] = cast(set, entry.runtime_data.known_device_ids)
+        current_device_ids: set[str] = cast(set, entry.runtime_data.current_device_ids)
+        new_device_ids: set[str] = current_device_ids - known_device_ids
+        if new_device_ids:
+            await self.async_add_coordinators(new_device_ids)
+            known_device_ids.update(new_device_ids)
+
+    async def async_add_coordinators(self, new_device_ids: set[str]) -> None:
+        """Build the associated device coordinators."""
+        entry: SkybellConfigEntry = cast(SkybellConfigEntry, self.config_entry)
+        devices: list[SkybellDevice] = self.data  # type: ignore[assignment, var-annotated]
+        # Setup the device coordinators
+        device_coordinators: list[SkybellDeviceDataUpdateCoordinator] = []
+        for new_device_id in new_device_ids:
+            for device in devices:
+                if device.device_id == new_device_id:
+                    device_coordinators.append(
+                        SkybellDeviceDataUpdateCoordinator(self.hass, entry, device)
+                    )
+        await asyncio.gather(
+            *[
+                coordinator.async_config_entry_first_refresh()
+                for coordinator in device_coordinators
+            ]
+        )
+        entry.runtime_data.device_coordinators = device_coordinators  # type: ignore[assignment]
+
+
+class SkybellDeviceDataUpdateCoordinator(DataUpdateCoordinator[None]):
+    """Data update coordinator for a Skybell device."""
 
     def __init__(
         self,
@@ -38,34 +173,8 @@ class SkybellDataUpdateCoordinator(DataUpdateCoordinator[None]):
         )
         self.device = device
 
-    async def _async_refresh_skybell_session(self) -> None:  # pragma: no cover
-        """Refresh the Skybell session if needed."""
-        api = cast(SkybellConfigEntry, self.config_entry).runtime_data.api
-        if api is None:
-            _LOGGER.warning("SkybellGen API isn't setup, cannot refresh session")
-            return
-        # If the session refresh timestamp is not None and the current time is greater
-        # than the session refresh timestamp, we need to refresh the session.
-        ts = self.device.skybell.session_refresh_timestamp
-        if ts is not None and (datetime.now() > ts):
-            try:
-                await self.device.skybell.async_refresh_session()
-                _LOGGER.debug("Succesfull refresh session for %s", self.device.name)
-            except SkybellException as exc:
-                raise UpdateFailed(
-                    translation_domain=DOMAIN,
-                    translation_key="refresh_failed",
-                    translation_placeholders={
-                        "error": str(exc),
-                    },
-                ) from exc
-
     async def _async_update_data(self) -> None:
         """Fetch data from API endpoint."""
-        # Check if we should refresh the tokens for the ses
-        await self._async_refresh_skybell_session()
-
-        # Update the device
         try:
             await self.device.async_update(refresh=True, get_devices=True)
             _LOGGER.debug("Succesfull update for %s", self.device.name)

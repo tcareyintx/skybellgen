@@ -9,7 +9,7 @@ from homeassistant.const import CONF_PASSWORD
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.skybellgen import DOMAIN
+from custom_components.skybellgen.const import DOMAIN
 
 from .const import MOCK_CONFIG, PASSWORD, USER_ID
 

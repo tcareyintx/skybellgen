@@ -21,6 +21,8 @@ from aioskybellgen.helpers.const import (
 DEFAULT_NAME = "SkyBellGen"
 DOMAIN: Final = "skybellgen"
 
+HUB_REFRESH_CYCLE = 3600
+
 IMAGE_AVATAR = "avatar"
 IMAGE_ACTIVITY = "activity"
 

@@ -45,17 +45,6 @@ def skip_notifications_fixture():
         yield
 
 
-# This fixture, when used, will result in calls to bypass the coordinators first refresh.
-@pytest.fixture(name="bypass_first_refresh", autouse=True)
-def bypass_first_refresh_fixture():
-    """Skip calls refresh the configuration entry."""
-    with patch(
-        "homeassistant.helpers.update_coordinator.DataUpdateCoordinator."
-        + "async_config_entry_first_refresh"
-    ):
-        yield
-
-
 # This fixture, when used, will result in calls to bypass the dependency check.
 @pytest.fixture(name="bypass_dependency_check", autouse=True)
 def bypass_dependency_check_fixture():
@@ -65,11 +54,11 @@ def bypass_dependency_check_fixture():
         yield
 
 
-# This fixture, when used, will result in calls to async_initialize to return a MOCKED device.
-@pytest.fixture(name="bypass_initialize")
-def bypass_initialize_fixture():
+# This fixture, when used, will result in calls to async_get_devices to return a MOCKED device.
+@pytest.fixture(name="bypass_get_devices")
+def bypass_get_devices_fixture():
     """Skip calls to get data from API."""
-    with patch("custom_components.skybellgen.Skybell.async_initialize") as init_method:
+    with patch("custom_components.skybellgen.Skybell.async_get_devices") as init_method:
         basepath = path.dirname(__file__)
         filepath = path.abspath(path.join(basepath, "data/device.json"))
         with open(filepath, "r", encoding="utf-8") as file:
@@ -80,11 +69,11 @@ def bypass_initialize_fixture():
         yield
 
 
-# This fixture, when used, will result in calls to async_initialize to return a MOCKED device.
-@pytest.fixture(name="bypass_initialize2")
-def bypass_initialize2_fixture():
+# This fixture, when used, will result in calls to async_get_devices to return a MOCKED device.
+@pytest.fixture(name="bypass_get_devices2")
+def bypass_get_devices2_fixture():
     """Skip calls to get data from API."""
-    with patch("custom_components.skybellgen.Skybell.async_initialize") as init_method:
+    with patch("custom_components.skybellgen.Skybell.async_get_devices") as init_method:
         basepath = path.dirname(__file__)
         filepath = path.abspath(path.join(basepath, "data/device2.json"))
         with open(filepath, "r", encoding="utf-8") as file:
@@ -95,11 +84,11 @@ def bypass_initialize2_fixture():
         yield
 
 
-# This fixture, when used, will result in calls to async_initialize to return a MOCKED device.
-@pytest.fixture(name="bypass_initialize3")
-def bypass_initialize3_fixture():
+# This fixture, when used, will result in calls to async_get_devices to return a MOCKED device.
+@pytest.fixture(name="bypass_get_devices3")
+def bypass_get_devices3_fixture():
     """Skip calls to get data from API."""
-    with patch("custom_components.skybellgen.Skybell.async_initialize") as init_method:
+    with patch("custom_components.skybellgen.Skybell.async_get_devices") as init_method:
         basepath = path.dirname(__file__)
         filepath = path.abspath(path.join(basepath, "data/device3.json"))
         with open(filepath, "r", encoding="utf-8") as file:
@@ -116,7 +105,7 @@ def bypass_refresh_session_fixture():
     """Skip calls to refresh session from API."""
     with patch(
         "custom_components.skybellgen.coordinator."
-        + "SkybellDataUpdateCoordinator._async_refresh_skybell_session"
+        + "SkybellHubDataUpdateCoordinator._async_refresh_skybell_session"
     ):
         yield
 
@@ -126,6 +115,14 @@ def bypass_refresh_session_fixture():
 def bypass_delete_cache_fixture():
     """Skip calls to delete cache from API."""
     with patch("custom_components.skybellgen.Skybell.async_delete_cache"):
+        yield
+
+
+# In this fixture, we are bypassing calls to async_initialize.
+@pytest.fixture(name="bypass_initialize", autouse=True)
+def bypass_initialize_fixture():
+    """Simulate error when retrieving data from API."""
+    with patch("custom_components.skybellgen.Skybell.async_initialize"):
         yield
 
 

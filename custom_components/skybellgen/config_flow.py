@@ -22,7 +22,7 @@ _LOGGER = logging.getLogger(__name__)
 PARALLEL_UPDATES = 1
 
 
-class SkybellFlowHandler(ConfigFlow, domain=DOMAIN):
+class SkybellFlowHandler(ConfigFlow, domain=DOMAIN):  # type: ignore[call-arg]
     """Handle a config flow for Skybell."""
 
     async def async_step_reauth(

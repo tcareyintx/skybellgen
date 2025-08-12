@@ -172,10 +172,25 @@ async def async_setup_entry(
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up Skybell sensor."""
-    async_add_entities(
-        SkybellSensor(coordinator, description)
-        for coordinator in hass.data[DOMAIN][entry.entry_id]
-        for description in SENSOR_TYPES
+
+    known_device_ids: set[str] = set()
+
+    def _check_device() -> None:
+        entities = []
+        new_device_ids: set[str] = set()
+        for entity in SENSOR_TYPES:
+            for coordinator in entry.runtime_data.device_coordinators:
+                if coordinator.device.device_id not in known_device_ids:
+                    new_device_ids.add(coordinator.device.device_id)
+                    entities.append(SkybellSensor(coordinator, entity))
+        if entities:
+            known_device_ids.update(new_device_ids)
+            async_add_entities(entities)
+
+    _check_device()
+
+    entry.async_on_unload(
+        entry.runtime_data.hub_coordinator.async_add_listener(_check_device)
     )
 
 

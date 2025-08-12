@@ -47,11 +47,8 @@ disable = [
 ]
 
 [tool.mypy]
-exlude_gitinore = true
+exclude_gitignore = true
 ignore_missing_imports = true
 exclude = [
     "tests",
 ]
-[[tool.mypy.overrides]]
-module = "custom_components.camera"
-import_untyped = false
