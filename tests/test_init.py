@@ -63,15 +63,6 @@ async def test_setup_entry_exception(hass, error_initialize):
         assert await async_setup_entry(hass, config_entry)
 
 
-async def test_coord_exc(hass, remove_platforms, bypass_get_devices, error_update_exc):
-    """Test coordinator async update Skybell exception."""
-    # In this case we are testing the condition where async_setup_entry raises
-    # ConfigEntryNotReady using the `error_update_exc` fixture which simulates
-    # an error.
-    config_entry = await async_init_integration(hass)
-    assert config_entry.state is ConfigEntryState.SETUP_RETRY
-
-
 async def test_setup_entry_auth_exception(hass, error_initialize_auth):
     """Test ConfigEntryNotReady when API raises an exception during entry setup."""
     config_entry = MockConfigEntry(domain=DOMAIN, data=MOCK_CONFIG, entry_id="test")

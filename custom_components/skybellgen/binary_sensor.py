@@ -86,7 +86,9 @@ async def async_setup_entry(
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up Skybell binary sensor."""
-
+    # Known device is are the device ids that have been
+    # provisioned in this instantiation of HA - the set
+    # is not retained across restarts
     known_device_ids: set[str] = set()
 
     def _check_device() -> None:

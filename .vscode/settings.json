@@ -39,5 +39,6 @@
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
   "editor.formatOnType": true,
-  "makefile.configureOnOpen": false
+  "makefile.configureOnOpen": false,
+  "git.requireGitUserConfig": false
 }

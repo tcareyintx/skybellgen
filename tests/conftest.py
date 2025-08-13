@@ -1,5 +1,8 @@
 """Global fixtures for SkybellGen integration."""
 
+# pylint: disable=protected-access
+
+import copy
 import json
 from os import path
 from unittest.mock import patch
@@ -10,12 +13,47 @@ from aioskybellgen.exceptions import (
     SkybellAuthenticationException,
     SkybellException,
 )
+import aioskybellgen.helpers.const as CONST
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.skybellgen.const import DOMAIN
 
 from .const import MOCK_CONFIG, MOCK_PLATFORMS, USER_ID
+
+
+def get_two_devices() -> list[SkybellDevice]:
+    """Return two Skybell devices."""
+    devices: list[SkybellDevice] = []
+    basepath = path.dirname(__file__)
+    filepath = path.abspath(path.join(basepath, "data/device.json"))
+    with open(filepath, "r", encoding="utf-8") as file:
+        data = json.load(file)
+    device1 = SkybellDevice(device_json=data, skybell=None)
+    devices.append(device1)
+
+    device2_data = copy.deepcopy(data)
+    device2 = SkybellDevice(device_json=device2_data, skybell=None)
+    device2._device_id = "second_device"
+    device2._device_json[CONST.DEVICE_ID] = "second_device"
+    device2._device_json["serial"] = "second_device_sernum"
+    device_settings = device2._device_json.get(CONST.DEVICE_SETTINGS)
+    device_settings[CONST.SERIAL_NUM] = "second_device_sernum"
+    device_settings[CONST.MAC_ADDRESS] = "FF:EE:DD:CC:BB:AA"
+    devices.append(device2)
+    return devices
+
+
+def get_one_device() -> list[SkybellDevice]:
+    """Return one Skybell device."""
+    devices: list[SkybellDevice] = []
+    basepath = path.dirname(__file__)
+    filepath = path.abspath(path.join(basepath, "data/device.json"))
+    with open(filepath, "r", encoding="utf-8") as file:
+        data = json.load(file)
+    device1 = SkybellDevice(device_json=data, skybell=None)
+    devices.append(device1)
+    return devices
 
 
 @pytest.fixture(autouse=True)
@@ -96,6 +134,17 @@ def bypass_get_devices3_fixture():
         device = SkybellDevice(device_json=data, skybell=None)
         init_method.return_value = []
         init_method.return_value.append(device)
+        yield
+
+
+# Issue Skybell exception for Hub coordinator get_devices.
+@pytest.fixture(name="error_hub_update_exc")
+def error_hub_update_exc_fixture():
+    """Issue a SkybellException when called."""
+    with patch(
+        "custom_components.skybellgen.coordinator.Skybell.async_get_devices",
+        side_effect=SkybellException,
+    ):
         yield
 
 

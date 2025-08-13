@@ -115,13 +115,30 @@ class SkybellHubDataUpdateCoordinator(DataUpdateCoordinator[None]):
                     identifiers={(DOMAIN, device_id)}
                 )
                 if device_entry:
+                    # This action will trigger an event to remove the device
+                    # from the components/registries (entity registry)
+                    # listening for a "remove device" event.
                     device_registry.async_update_device(
                         device_id=device_entry.id,
                         remove_config_entry_id=entry.entry_id,
                     )
+                # Clean up the config_entries runtime data
+                self.remove_device_coordinator(device_id)
         entry.runtime_data.current_device_ids = current_device_ids
         self.data = devices  # type: ignore[assignment, var-annotated]
         await self.async_check_new_devices()
+
+    def remove_device_coordinator(self, device_id: str) -> None:
+        """Remove the coordinator and device info from the Hub Coordinator."""
+        entry: SkybellConfigEntry = cast(SkybellConfigEntry, self.config_entry)
+        entry.runtime_data.known_device_ids.discard(device_id)
+        array_index: int = -1
+        for i, dc in enumerate(entry.runtime_data.device_coordinators):
+            if dc.device.device_id == device_id:
+                array_index = i
+                break
+        if array_index >= 0:
+            del entry.runtime_data.device_coordinators[array_index]
 
     async def async_check_new_devices(self) -> None:
         """Check for new devices and build the associated coordinators and platform entities."""
@@ -130,8 +147,8 @@ class SkybellHubDataUpdateCoordinator(DataUpdateCoordinator[None]):
         current_device_ids: set[str] = cast(set, entry.runtime_data.current_device_ids)
         new_device_ids: set[str] = current_device_ids - known_device_ids
         if new_device_ids:
-            await self.async_add_coordinators(new_device_ids)
             known_device_ids.update(new_device_ids)
+            await self.async_add_coordinators(new_device_ids)
 
     async def async_add_coordinators(self, new_device_ids: set[str]) -> None:
         """Build the associated device coordinators."""
@@ -145,13 +162,16 @@ class SkybellHubDataUpdateCoordinator(DataUpdateCoordinator[None]):
                     device_coordinators.append(
                         SkybellDeviceDataUpdateCoordinator(self.hass, entry, device)
                     )
+
+        entry.runtime_data.device_coordinators.extend(
+            device_coordinators
+        )  # type: ignore[assignment]
         await asyncio.gather(
             *[
                 coordinator.async_config_entry_first_refresh()
                 for coordinator in device_coordinators
             ]
         )
-        entry.runtime_data.device_coordinators = device_coordinators  # type: ignore[assignment]
 
 
 class SkybellDeviceDataUpdateCoordinator(DataUpdateCoordinator[None]):
