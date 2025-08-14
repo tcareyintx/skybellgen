@@ -16,7 +16,7 @@ from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .const import DOMAIN
-from .coordinator import SkybellDataUpdateCoordinator
+from .coordinator import SkybellDeviceDataUpdateCoordinator
 from .entity import SkybellEntity
 
 BUTTON_TYPES: tuple[ButtonEntityDescription, ...] = (
@@ -38,17 +38,31 @@ async def async_setup_entry(
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up Skybell entity."""
-    async_add_entities(
-        SkybellButton(coordinator, description)
-        for coordinator in hass.data[DOMAIN][entry.entry_id]
-        for description in BUTTON_TYPES
-        if (
-            (not coordinator.device.is_readonly)
-            or (
-                coordinator.device.is_readonly
-                and description.key in CONST.ACL_EXCLUSIONS
-            )
-        )
+
+    known_device_ids: set[str] = set()
+
+    def _check_device() -> None:
+        entities = []
+        new_device_ids: set[str] = set()
+        for entity in BUTTON_TYPES:
+            for coordinator in entry.runtime_data.device_coordinators:
+                if (coordinator.device.device_id not in known_device_ids) and (
+                    (not coordinator.device.is_readonly)
+                    or (
+                        coordinator.device.is_readonly
+                        and entity.key in CONST.ACL_EXCLUSIONS
+                    )
+                ):
+                    new_device_ids.add(coordinator.device.device_id)
+                    entities.append(SkybellButton(coordinator, entity))
+        if entities:
+            known_device_ids.update(new_device_ids)
+            async_add_entities(entities)
+
+    _check_device()
+
+    entry.async_on_unload(
+        entry.runtime_data.hub_coordinator.async_add_listener(_check_device)
     )
 
 
@@ -57,7 +71,7 @@ class SkybellButton(SkybellEntity, ButtonEntity):
 
     def __init__(
         self,
-        coordinator: SkybellDataUpdateCoordinator,
+        coordinator: SkybellDeviceDataUpdateCoordinator,
         description: ButtonEntityDescription,
     ) -> None:
         """Initialize a entity for a Skybell device."""
@@ -82,6 +96,6 @@ class SkybellButton(SkybellEntity, ButtonEntity):
                     translation_key="reboot_failed",
                     translation_placeholders={
                         "key": self.entity_description.key,
-                        "error": exc,
+                        "error": str(exc),
                     },
                 ) from exc

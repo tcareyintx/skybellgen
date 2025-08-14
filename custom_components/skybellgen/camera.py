@@ -12,8 +12,7 @@ from homeassistant.helpers.aiohttp_client import async_aiohttp_proxy_stream
 from homeassistant.helpers.entity import EntityDescription
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from .const import DOMAIN
-from .coordinator import SkybellDataUpdateCoordinator
+from .coordinator import SkybellDeviceDataUpdateCoordinator
 from .entity import SkybellEntity
 
 CAMERA_TYPES: tuple[CameraEntityDescription, ...] = (
@@ -34,14 +33,29 @@ async def async_setup_entry(
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up Skybell camera."""
-    entities = []
-    for description in CAMERA_TYPES:
-        for coordinator in hass.data[DOMAIN][entry.entry_id]:
-            if description.key == "avatar":
-                entities.append(SkybellCamera(coordinator, description))
-            else:
-                entities.append(SkybellActivityCamera(coordinator, description))
-    async_add_entities(entities)
+
+    known_device_ids: set[str] = set()
+
+    def _check_device() -> None:
+        entities = []
+        new_device_ids: set[str] = set()
+        for entity in CAMERA_TYPES:
+            for coordinator in entry.runtime_data.device_coordinators:
+                if coordinator.device.device_id not in known_device_ids:
+                    if entity.key == "avatar":
+                        entities.append(SkybellCamera(coordinator, entity))
+                    else:
+                        entities.append(SkybellActivityCamera(coordinator, entity))
+                    new_device_ids.add(coordinator.device.device_id)
+        if entities:
+            known_device_ids.update(new_device_ids)
+            async_add_entities(entities)
+
+    _check_device()
+
+    entry.async_on_unload(
+        entry.runtime_data.hub_coordinator.async_add_listener(_check_device)
+    )
 
 
 class SkybellCamera(SkybellEntity, Camera):
@@ -49,7 +63,7 @@ class SkybellCamera(SkybellEntity, Camera):
 
     def __init__(
         self,
-        coordinator: SkybellDataUpdateCoordinator,
+        coordinator: SkybellDeviceDataUpdateCoordinator,
         description: EntityDescription,
     ) -> None:
         """Initialize a camera for a Skybell device."""

@@ -12,7 +12,7 @@ from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .const import DOMAIN, IMAGE_FIELDS, IMAGE_OPTIONS, VOLUME_FIELDS, VOLUME_OPTIONS
-from .coordinator import SkybellDataUpdateCoordinator
+from .coordinator import SkybellDeviceDataUpdateCoordinator
 from .entity import SkybellEntity
 
 SELECT_TYPES: tuple[SelectEntityDescription, ...] = (
@@ -46,17 +46,31 @@ async def async_setup_entry(
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up Skybell entity."""
-    async_add_entities(
-        SkybellSelect(coordinator, description)
-        for coordinator in hass.data[DOMAIN][entry.entry_id]
-        for description in SELECT_TYPES
-        if (
-            (not coordinator.device.is_readonly)
-            or (
-                coordinator.device.is_readonly
-                and description.key in CONST.ACL_EXCLUSIONS
-            )
-        )
+
+    known_device_ids: set[str] = set()
+
+    def _check_device() -> None:
+        entities = []
+        new_device_ids: set[str] = set()
+        for entity in SELECT_TYPES:
+            for coordinator in entry.runtime_data.device_coordinators:
+                if (coordinator.device.device_id not in known_device_ids) and (
+                    (not coordinator.device.is_readonly)
+                    or (
+                        coordinator.device.is_readonly
+                        and entity.key in CONST.ACL_EXCLUSIONS
+                    )
+                ):
+                    new_device_ids.add(coordinator.device.device_id)
+                    entities.append(SkybellSelect(coordinator, entity))
+        if entities:
+            known_device_ids.update(new_device_ids)
+            async_add_entities(entities)
+
+    _check_device()
+
+    entry.async_on_unload(
+        entry.runtime_data.hub_coordinator.async_add_listener(_check_device)
     )
 
 
@@ -65,13 +79,13 @@ class SkybellSelect(SkybellEntity, SelectEntity):
 
     def __init__(
         self,
-        coordinator: SkybellDataUpdateCoordinator,
+        coordinator: SkybellDeviceDataUpdateCoordinator,
         description: SelectEntityDescription,
     ) -> None:
         """Initialize a entity for a Skybell device."""
         super().__init__(coordinator, description)
 
-    async def async_handle_select_option(self, option: str) -> None:
+    async def async_select_option(self, option: str) -> None:
         """Set the value of the option."""
         array_options = None
         if self.entity_description.key in VOLUME_FIELDS:
@@ -89,7 +103,7 @@ class SkybellSelect(SkybellEntity, SelectEntity):
             )
         try:
             value = array_options.index(option)
-        except (IndexError, ValueError) as exc:
+        except (IndexError, ValueError) as exc:  # pragma: no cover
             raise ServiceValidationError(
                 translation_domain=DOMAIN,
                 translation_key="no_option_for_key",
@@ -97,7 +111,7 @@ class SkybellSelect(SkybellEntity, SelectEntity):
                     "key": self.entity_description.key,
                     "option": option,
                 },
-            ) from exc
+            ) from exc  # pragma: no cover
 
         try:
             await self._device.async_set_setting(self.entity_description.key, value)
@@ -115,7 +129,7 @@ class SkybellSelect(SkybellEntity, SelectEntity):
                 translation_key="invalid_setting",
                 translation_placeholders={
                     "key": self.entity_description.key,
-                    "value": value,
+                    "value": str(value),
                 },
             ) from exc
 

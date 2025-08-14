@@ -43,4 +43,12 @@ disable = [
     "too-few-public-methods",
     "unexpected-keyword-arg",
     "unused-argument",
+    "consider-using-get",
+]
+
+[tool.mypy]
+exclude_gitignore = true
+ignore_missing_imports = true
+exclude = [
+    "tests",
 ]

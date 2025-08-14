@@ -1,4 +1,6 @@
 -r requirements_dev.txt
-pytest-homeassistant-custom-component
-aioskybellgen
+pytest-homeassistant-custom-component==0.13.270
+aioskybellgen==0.1.3
 ha-ffmpeg
+freezegun>=1.5.1
+pytest-mock

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, cast
 
 from aioskybellgen.exceptions import SkybellAccessControlException, SkybellException
 from aioskybellgen.helpers import const as CONST
@@ -20,7 +20,7 @@ from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .const import DEFAULT_BRIGHTNESS, DEFAULT_LED_COLOR, DOMAIN
-from .coordinator import SkybellDataUpdateCoordinator
+from .coordinator import SkybellDeviceDataUpdateCoordinator
 from .entity import SkybellEntity
 
 LIGHT_TYPES: tuple[LightEntityDescription, ...] = (
@@ -41,17 +41,31 @@ async def async_setup_entry(
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up Skybell entity."""
-    async_add_entities(
-        SkybellLight(coordinator, description)
-        for coordinator in hass.data[DOMAIN][entry.entry_id]
-        for description in LIGHT_TYPES
-        if (
-            (not coordinator.device.is_readonly)
-            or (
-                coordinator.device.is_readonly
-                and description.key in CONST.ACL_EXCLUSIONS
-            )
-        )
+
+    known_device_ids: set[str] = set()
+
+    def _check_device() -> None:
+        entities = []
+        new_device_ids: set[str] = set()
+        for entity in LIGHT_TYPES:
+            for coordinator in entry.runtime_data.device_coordinators:
+                if (coordinator.device.device_id not in known_device_ids) and (
+                    (not coordinator.device.is_readonly)
+                    or (
+                        coordinator.device.is_readonly
+                        and entity.key in CONST.ACL_EXCLUSIONS
+                    )
+                ):
+                    new_device_ids.add(coordinator.device.device_id)
+                    entities.append(SkybellLight(coordinator, entity))
+        if entities:
+            known_device_ids.update(new_device_ids)
+            async_add_entities(entities)
+
+    _check_device()
+
+    entry.async_on_unload(
+        entry.runtime_data.hub_coordinator.async_add_listener(_check_device)
     )
 
 
@@ -60,7 +74,7 @@ class SkybellLight(SkybellEntity, LightEntity):
 
     def __init__(
         self,
-        coordinator: SkybellDataUpdateCoordinator,
+        coordinator: SkybellDeviceDataUpdateCoordinator,
         description: LightEntityDescription,
     ) -> None:
         """Initialize a light entity for a Skybell device."""
@@ -71,23 +85,22 @@ class SkybellLight(SkybellEntity, LightEntity):
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn on the light."""
+        current_color: tuple[int, int, int] | None = None
         brightness = self.brightness
         current_color = self.rgb_color
         if current_color is None:
             current_color = DEFAULT_LED_COLOR
-        else:
-            current_color = list(current_color)
 
         if ATTR_RGB_COLOR in kwargs:
-            current_color = list(kwargs[ATTR_RGB_COLOR])
+            current_color = kwargs[ATTR_RGB_COLOR]
             if brightness == 0:
-                current_color = []  # pragma: no cover
+                current_color = None  # pragma: no cover
         elif ATTR_BRIGHTNESS in kwargs:
             return  # pragma: no cover
 
         # Update the adjusted color
         rgb_value = ""
-        if len(current_color) > 0:
+        if current_color is not None:
             rgb_value = (
                 f"#{current_color[0]:02x}{current_color[1]:02x}{current_color[2]:02x}"
             )
@@ -154,7 +167,7 @@ class SkybellLight(SkybellEntity, LightEntity):
 
         hex_color = self._device.led_color
         int_array = [int(hex_color[i : i + 2], 16) for i in range(1, len(hex_color), 2)]
-        return tuple(int_array)
+        return cast(tuple[int, int, int], tuple(int_array))
 
     @property
     def brightness(self) -> int | None:

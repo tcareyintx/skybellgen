@@ -2,40 +2,54 @@
 
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
+from homeassistant.helpers import device_registry as dr
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.skybellgen import async_setup_entry, async_unload_entry
 from custom_components.skybellgen.const import DOMAIN
-from custom_components.skybellgen.coordinator import SkybellDataUpdateCoordinator
+from custom_components.skybellgen.coordinator import (
+    SkybellDeviceDataUpdateCoordinator,
+    SkybellHubDataUpdateCoordinator,
+)
 
 from .conftest import async_init_integration
 from .const import MOCK_CONFIG
 
 
-async def test_setup_and_unload_entry(hass, remove_platforms, bypass_initialize):
+async def test_setup_and_unload_entry(
+    hass,
+    remove_platforms,
+    bypass_get_devices,
+):
     """Test entry setup and unload."""
     # Create a mock entry so we don't have to go through config flow
     # Set up the entry and assert that the values set during setup are where we expect
     # them to be.
     # Because we have patched the following calls:
     #    Skybell.async_initialize
-    #    Skybell.async_refresh_session (DataCoordinator)
+    #    Skybell.async_get_devices (HubCoordinator)
+    #    Skybell.async_refresh_session (HubCoordinator)
     #    SkybellDevice.async_update(refresh=True, get_devices=True) (DataCoordinator)
     # No APIs to the Skybell Cloud (aioskybellgen) actually runs.
     config_entry = await async_init_integration(hass)
     assert config_entry.state is ConfigEntryState.LOADED
-    assert DOMAIN in hass.data and config_entry.entry_id in hass.data[DOMAIN]
+
+    # Check that the device registry has been loaded
+    device_registry = dr.async_get(hass)
+    device_entry = device_registry.async_get_device(
+        identifiers={(DOMAIN, "012345670123456789abcdef")}
+    )
+    assert isinstance(device_entry, dr.DeviceEntry)
     # We have to reload the platforms because the test auto tears down the integration
     # after the test is done.
-    dc = hass.data[DOMAIN][config_entry.entry_id]
-    assert isinstance(dc[0], SkybellDataUpdateCoordinator)
+    hc = config_entry.runtime_data.hub_coordinator
+    assert isinstance(hc, SkybellHubDataUpdateCoordinator)
+    dc = config_entry.runtime_data.device_coordinators
+    assert isinstance(dc[0], SkybellDeviceDataUpdateCoordinator)
 
-    # Unload the entry and verify that the data has been removed
+    # Execute the Unload the entry
     assert await async_unload_entry(hass, config_entry)
-    assert config_entry.entry_id not in hass.data[DOMAIN]
-    config_entry = await async_init_integration(hass)
-    assert config_entry.state is ConfigEntryState.LOADED
 
 
 async def test_setup_entry_exception(hass, error_initialize):

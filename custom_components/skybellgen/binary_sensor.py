@@ -12,8 +12,8 @@ from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from .const import BASIC_MOTION_GET_FUNCTION, DOMAIN
-from .coordinator import SkybellDataUpdateCoordinator
+from .const import BASIC_MOTION_GET_FUNCTION
+from .coordinator import SkybellDeviceDataUpdateCoordinator
 from .entity import SkybellEntity
 
 BINARY_SENSOR_TYPES: tuple[BinarySensorEntityDescription, ...] = (
@@ -86,10 +86,28 @@ async def async_setup_entry(
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up Skybell binary sensor."""
-    async_add_entities(
-        SkybellBinarySensor(coordinator, sensor)
-        for sensor in BINARY_SENSOR_TYPES
-        for coordinator in hass.data[DOMAIN][entry.entry_id]
+    # Known device is are the device ids that have been
+    # provisioned in this instantiation of HA - the set
+    # is not retained across restarts
+    known_device_ids: set[str] = set()
+
+    def _check_device() -> None:
+        entities = []
+        new_device_ids: set[str] = set()
+        for entity in BINARY_SENSOR_TYPES:
+            for coordinator in entry.runtime_data.device_coordinators:
+                if coordinator.device.device_id not in known_device_ids:
+                    new_device_ids.add(coordinator.device.device_id)
+                    entities.append(SkybellBinarySensor(coordinator, entity))
+
+        if entities:
+            known_device_ids.update(new_device_ids)
+            async_add_entities(entities)
+
+    _check_device()
+
+    entry.async_on_unload(
+        entry.runtime_data.hub_coordinator.async_add_listener(_check_device)
     )
 
 
@@ -98,7 +116,7 @@ class SkybellBinarySensor(SkybellEntity, BinarySensorEntity):
 
     def __init__(
         self,
-        coordinator: SkybellDataUpdateCoordinator,
+        coordinator: SkybellDeviceDataUpdateCoordinator,
         description: BinarySensorEntityDescription,
     ) -> None:
         """Initialize a binary sensor for a Skybell device."""
@@ -108,7 +126,7 @@ class SkybellBinarySensor(SkybellEntity, BinarySensorEntity):
     def _handle_coordinator_update(self) -> None:
         key = self.entity_description.key
         if key in BASIC_MOTION_GET_FUNCTION:
-            key = BASIC_MOTION_GET_FUNCTION.get(key)
+            key = BASIC_MOTION_GET_FUNCTION[key]
         value_fn = getattr(self._device, key)
         self._attr_is_on = bool(value_fn)
         super()._handle_coordinator_update()

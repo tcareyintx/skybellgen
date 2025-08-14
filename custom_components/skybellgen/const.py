@@ -21,10 +21,12 @@ from aioskybellgen.helpers.const import (
 DEFAULT_NAME = "SkyBellGen"
 DOMAIN: Final = "skybellgen"
 
+HUB_REFRESH_CYCLE = 3600
+
 IMAGE_AVATAR = "avatar"
 IMAGE_ACTIVITY = "activity"
 
-DEFAULT_LED_COLOR = [0, 255, 0]
+DEFAULT_LED_COLOR = (0, 255, 0)
 DEFAULT_BRIGHTNESS = 255
 
 ENUMERATION_VS_VALUES = [

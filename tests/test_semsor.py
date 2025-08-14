@@ -18,7 +18,7 @@ TEST_ENTITIES = [
 ]
 
 
-async def test_sensor_service(hass, remove_platforms, bypass_initialize):
+async def test_sensor_service(hass, remove_platforms, bypass_get_devices):
     """Test sensor services."""
     # Create a mock entry so we don't have to go through config flow
     config_entry = await async_init_integration(hass)
@@ -37,7 +37,7 @@ async def test_sensor_service(hass, remove_platforms, bypass_initialize):
         assert state.state == initial_state
 
 
-async def test_sensor_no_option_for_key(hass, remove_platforms, bypass_initialize3):
+async def test_sensor_no_option_for_key(hass, remove_platforms, bypass_get_devices3):
     """Test sensor services with no options exception."""
     # Create a mock entry so we don't have to go through config flow
     config_entry = await async_init_integration(hass)

@@ -20,7 +20,7 @@ TEST_ENTITIES = [
 ]
 
 
-async def test_text_service(hass, remove_platforms, bypass_initialize):
+async def test_text_service(hass, remove_platforms, bypass_get_devices):
     """Test text services."""
     # Create a mock entry so we don't have to go through config flow
     config_entry = await async_init_integration(hass)
@@ -49,7 +49,7 @@ async def test_text_service(hass, remove_platforms, bypass_initialize):
 
 
 async def test_text_exc(
-    hass, remove_platforms, bypass_initialize, error_set_setting_exc
+    hass, remove_platforms, bypass_get_devices, error_set_setting_exc
 ):
     """Test services with Skybell exception."""
     # Create a mock entry so we don't have to go through config flow
@@ -77,7 +77,7 @@ async def test_text_exc(
 
 
 async def test_text_acl(
-    hass, remove_platforms, bypass_initialize, error_set_setting_acl
+    hass, remove_platforms, bypass_get_devices, error_set_setting_acl
 ):
     """Test services with ACL exception."""
     # Create a mock entry so we don't have to go through config flow

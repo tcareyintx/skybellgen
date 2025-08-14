@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime
+from typing import cast
 
 from aioskybellgen import SkybellDevice
 from aioskybellgen.helpers import const as CONST
@@ -171,10 +172,25 @@ async def async_setup_entry(
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up Skybell sensor."""
-    async_add_entities(
-        SkybellSensor(coordinator, description)
-        for coordinator in hass.data[DOMAIN][entry.entry_id]
-        for description in SENSOR_TYPES
+
+    known_device_ids: set[str] = set()
+
+    def _check_device() -> None:
+        entities = []
+        new_device_ids: set[str] = set()
+        for entity in SENSOR_TYPES:
+            for coordinator in entry.runtime_data.device_coordinators:
+                if coordinator.device.device_id not in known_device_ids:
+                    new_device_ids.add(coordinator.device.device_id)
+                    entities.append(SkybellSensor(coordinator, entity))
+        if entities:
+            known_device_ids.update(new_device_ids)
+            async_add_entities(entities)
+
+    _check_device()
+
+    entry.async_on_unload(
+        entry.runtime_data.hub_coordinator.async_add_listener(_check_device)
     )
 
 
@@ -196,31 +212,32 @@ class SkybellSensor(SkybellEntity, SensorEntity):
             array_options = IMAGE_OPTIONS
 
         if array_options is not None:
-            index = value
             try:
+                index = cast(int, value)
                 value = array_options[index]
-            except (IndexError, ValueError) as exc:
+            except (IndexError, ValueError, TypeError) as exc:
                 raise ServiceValidationError(
                     translation_domain=DOMAIN,
                     translation_key="no_option_for_key",
                     translation_placeholders={
                         "key": self.entity_description.key,
-                        "option": index,
+                        "option": str(value),
                     },
                 ) from exc
 
         # Check the fields with number adjustments
         if self.entity_description.key in TENTH_PERCENT_TYPES:
             # Check for values 0,1,2 adjust for low medium high
-            if value >= 0 and value <= len(SENTSITIVTY_ADJ):
-                value = SENTSITIVTY_ADJ[value] * 10
+            adj_value = cast(int, value)
+            if adj_value >= 0 and adj_value <= len(SENTSITIVTY_ADJ):
+                adj_value = int(SENTSITIVTY_ADJ[adj_value] * 10)
             elif (
                 self.entity_description.key in USE_MOTION_VALUE
-                and value == CONST.USE_MOTION_SENSITIVITY
+                and adj_value == CONST.USE_MOTION_SENSITIVITY
             ):
                 value_fn = getattr(self._device, CONST.MOTION_SENSITIVITY)
-                value = value_fn
+                adj_value = int(value_fn)
             # Set the value returned by the function
-            value = float(value / 10)
+            value = float(adj_value / 10)
 
         return value

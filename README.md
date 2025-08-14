@@ -88,11 +88,7 @@ Configuration is done via the Home Assistant UI after installation.
 
 1. Navigate to "Settings" &rarr; "Devices & Services"
 1. Click "+ Add Integration"
-1. Search for and select &rarr; "Smartcar"
-
-Or you can use the My Home Assistant Button below.
-
-[![Add Integration](https://my.home-assistant.io/badges/config_flow_start.svg)][config-flow-start]
+1. Search for and select &rarr; "SkybellGen"
 
 Follow the instructions to configure the integration.
 
@@ -134,7 +130,7 @@ The SkybellGen integration provides actuators to configure attributes of the Sky
 
 The following devices are known to be supported by the SkybellGen integration:
 
-- SkyBell SlimLine II - Model number: SB_SLIM2_0001
+- Skybell SlimLine II - Model number: SB_SLIM2_0001
 
 ## Unsupported devices
 
@@ -337,7 +333,7 @@ The Skybell integration exposes many of the capabilities and attributes of the S
 
 ### SkybellGen integration capabilities that are not supported
 
-1. Currently devices are discovered when the a new hub is created. If devices are added or removed via the Skybell cloud API, the hub in the SkybellGen integration will need to be removed and re-added,
+1. Currently devices are discovered when the a new hub is created. If devices are added or removed via the Skybell cloud API, the hub in the will continue to remove stale devices as well as add new devices. However, if Home Assistant is restarted, information that permits the integration to keep track of stale devices is lost. In this scenario the user can still manually delete the stale device through the Home Assistant UI.
 
 ### Skybell cloud API capabilities that are not supported
 
@@ -369,19 +365,20 @@ This means the integration has to re-authenticate with the Skybell cloud.
 
 To resolve this issue, follow the steps in the reauthentication flow. If the password was changed using the Skybell cloud API or Skybell app, you can reconfigure the integration and supply the new password before the authentication timeout.
 
-### I can't see a newly setup device
+### I still see a stale device
 
-#### Symptom: “The SkybellGen hub does doesn't show the device”
+#### Symptom: “The SkybellGen hub continues to show the device”
 
-If the device as added via the Skybell cloud API or Skybell app.
+If the device as removed via the Skybell cloud API or Skybell app but Home Assistant has been restarted, stale devices may still
+exist in the Home Assistant device registry.
 
 ##### Description
 
-This means the integration doesn't recognize the new device.
+This means the integration doesn't recognize that the device is a stale device.
 
 ##### Resolution
 
-To resolve this issue, delete and recreate the SkybellGen Hub.
+To resolve this issue, manually delete the device from the SkybellGen Hub.
 
 <!---->
 
@@ -408,7 +405,6 @@ The project used the Home Assistant core [Skybell](https://www.home-assistant.io
 [hacs-badge]: https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge
 [hacs-open]: https://my.home-assistant.io/redirect/hacs_repository/?owner=tcareyintx&repository=SkybellGen&category=integration
 [releases]: https://github.com/tcareyintx/skybellgen/releases
-[config-flow-start]: https://my.home-assistant.io/redirect/config_flow_start/?domain=smartcar
 [discord]: https://discord.gg/Qa5fW2R
 [discord-shield]: https://img.shields.io/discord/330944238910963714.svg?style=for-the-badge
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge

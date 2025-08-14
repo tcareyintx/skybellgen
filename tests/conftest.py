@@ -1,5 +1,8 @@
 """Global fixtures for SkybellGen integration."""
 
+# pylint: disable=protected-access
+
+import copy
 import json
 from os import path
 from unittest.mock import patch
@@ -10,12 +13,48 @@ from aioskybellgen.exceptions import (
     SkybellAuthenticationException,
     SkybellException,
 )
+import aioskybellgen.helpers.const as CONST
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.skybellgen.const import DOMAIN
 
 from .const import MOCK_CONFIG, MOCK_PLATFORMS, USER_ID
+
+
+def get_two_devices() -> list[SkybellDevice]:
+    """Return two Skybell devices."""
+    devices: list[SkybellDevice] = []
+    basepath = path.dirname(__file__)
+    filepath = path.abspath(path.join(basepath, "data/device.json"))
+    with open(filepath, "r", encoding="utf-8") as file:
+        data = json.load(file)
+    device1 = SkybellDevice(device_json=data, skybell=None)
+    devices.append(device1)
+
+    device2_data = copy.deepcopy(data)
+    device2 = SkybellDevice(device_json=device2_data, skybell=None)
+    device2._device_id = "second_device"
+    device2._device_json[CONST.DEVICE_ID] = "second_device"
+    device2._device_json[CONST.NAME] = "second_device name"
+    device2._device_json["serial"] = "second_device_sernum"
+    device_settings = device2._device_json.get(CONST.DEVICE_SETTINGS)
+    device_settings[CONST.SERIAL_NUM] = "second_device_sernum"
+    device_settings[CONST.MAC_ADDRESS] = "FF:EE:DD:CC:BB:AA"
+    devices.append(device2)
+    return devices
+
+
+def get_one_device() -> list[SkybellDevice]:
+    """Return one Skybell device."""
+    devices: list[SkybellDevice] = []
+    basepath = path.dirname(__file__)
+    filepath = path.abspath(path.join(basepath, "data/device.json"))
+    with open(filepath, "r", encoding="utf-8") as file:
+        data = json.load(file)
+    device1 = SkybellDevice(device_json=data, skybell=None)
+    devices.append(device1)
+    return devices
 
 
 @pytest.fixture(autouse=True)
@@ -45,17 +84,6 @@ def skip_notifications_fixture():
         yield
 
 
-# This fixture, when used, will result in calls to bypass the coordinators first refresh.
-@pytest.fixture(name="bypass_first_refresh", autouse=True)
-def bypass_first_refresh_fixture():
-    """Skip calls refresh the configuration entry."""
-    with patch(
-        "homeassistant.helpers.update_coordinator.DataUpdateCoordinator."
-        + "async_config_entry_first_refresh"
-    ):
-        yield
-
-
 # This fixture, when used, will result in calls to bypass the dependency check.
 @pytest.fixture(name="bypass_dependency_check", autouse=True)
 def bypass_dependency_check_fixture():
@@ -65,26 +93,22 @@ def bypass_dependency_check_fixture():
         yield
 
 
-# This fixture, when used, will result in calls to async_initialize to return a MOCKED device.
-@pytest.fixture(name="bypass_initialize")
-def bypass_initialize_fixture():
+# This fixture, when used, will result in calls to async_get_devices to return a MOCKED device.
+@pytest.fixture(name="bypass_get_devices")
+def bypass_get_devices_fixture():
     """Skip calls to get data from API."""
-    with patch("custom_components.skybellgen.Skybell.async_initialize") as init_method:
-        basepath = path.dirname(__file__)
-        filepath = path.abspath(path.join(basepath, "data/device.json"))
-        with open(filepath, "r", encoding="utf-8") as file:
-            data = json.load(file)
-        device = SkybellDevice(device_json=data, skybell=None)
+    with patch("custom_components.skybellgen.Skybell.async_get_devices") as init_method:
+        devices = get_one_device()
         init_method.return_value = []
-        init_method.return_value.append(device)
+        init_method.return_value.append(devices[0])
         yield
 
 
-# This fixture, when used, will result in calls to async_initialize to return a MOCKED device.
-@pytest.fixture(name="bypass_initialize2")
-def bypass_initialize2_fixture():
+# This fixture, when used, will result in calls to async_get_devices to return a MOCKED device.
+@pytest.fixture(name="bypass_get_devices2")
+def bypass_get_devices2_fixture():
     """Skip calls to get data from API."""
-    with patch("custom_components.skybellgen.Skybell.async_initialize") as init_method:
+    with patch("custom_components.skybellgen.Skybell.async_get_devices") as init_method:
         basepath = path.dirname(__file__)
         filepath = path.abspath(path.join(basepath, "data/device2.json"))
         with open(filepath, "r", encoding="utf-8") as file:
@@ -95,11 +119,11 @@ def bypass_initialize2_fixture():
         yield
 
 
-# This fixture, when used, will result in calls to async_initialize to return a MOCKED device.
-@pytest.fixture(name="bypass_initialize3")
-def bypass_initialize3_fixture():
+# This fixture, when used, will result in calls to async_get_devices to return a MOCKED device.
+@pytest.fixture(name="bypass_get_devices3")
+def bypass_get_devices3_fixture():
     """Skip calls to get data from API."""
-    with patch("custom_components.skybellgen.Skybell.async_initialize") as init_method:
+    with patch("custom_components.skybellgen.Skybell.async_get_devices") as init_method:
         basepath = path.dirname(__file__)
         filepath = path.abspath(path.join(basepath, "data/device3.json"))
         with open(filepath, "r", encoding="utf-8") as file:
@@ -110,12 +134,34 @@ def bypass_initialize3_fixture():
         yield
 
 
-# This fixture, when used, will result in calls to async_refresh_skybell_session.
-@pytest.fixture(name="bypass_refresh_session", autouse=True)
-def bypass_refresh_session_fixture():
-    """Skip calls to refresh session from API."""
+# Issue Skybell exception for Hub coordinator get_devices.
+@pytest.fixture(name="error_hub_update_exc")
+def error_hub_update_exc_fixture():
+    """Issue a SkybellException when called."""
     with patch(
-        "custom_components.skybellgen.coordinator.SkybellDataUpdateCoordinator._async_refresh_skybell_session"
+        "custom_components.skybellgen.coordinator.Skybell.async_get_devices",
+        side_effect=SkybellException,
+    ):
+        yield
+
+
+# Issue Skybell exception for Hub coordinator get_devices.
+@pytest.fixture(name="error_hub_refresh_exc")
+def error_hub_refresh_exc_fixture():
+    """Issue a SkybellException when called."""
+    with patch(
+        "custom_components.skybellgen.coordinator.Skybell.async_refresh_session",
+        side_effect=SkybellException,
+    ):
+        yield
+
+
+# Bypess for Hub coordinator get_devices.
+@pytest.fixture(name="bypass_hub_refresh")
+def bypass_hub_refresh_fixture():
+    """Bypass the hub refresh call."""
+    with patch(
+        "custom_components.skybellgen.coordinator.Skybell.async_refresh_session",
     ):
         yield
 
@@ -125,6 +171,14 @@ def bypass_refresh_session_fixture():
 def bypass_delete_cache_fixture():
     """Skip calls to delete cache from API."""
     with patch("custom_components.skybellgen.Skybell.async_delete_cache"):
+        yield
+
+
+# In this fixture, we are bypassing calls to async_initialize.
+@pytest.fixture(name="bypass_initialize", autouse=True)
+def bypass_initialize_fixture():
+    """Simulate error when retrieving data from API."""
+    with patch("custom_components.skybellgen.Skybell.async_initialize"):
         yield
 
 
