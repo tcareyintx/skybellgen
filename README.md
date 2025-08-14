@@ -88,11 +88,7 @@ Configuration is done via the Home Assistant UI after installation.
 
 1. Navigate to "Settings" &rarr; "Devices & Services"
 1. Click "+ Add Integration"
-1. Search for and select &rarr; "Smartcar"
-
-Or you can use the My Home Assistant Button below.
-
-[![Add Integration](https://my.home-assistant.io/badges/config_flow_start.svg)][config-flow-start]
+1. Search for and select &rarr; "SkybellGen"
 
 Follow the instructions to configure the integration.
 
@@ -134,7 +130,7 @@ The SkybellGen integration provides actuators to configure attributes of the Sky
 
 The following devices are known to be supported by the SkybellGen integration:
 
-- SkyBell SlimLine II - Model number: SB_SLIM2_0001
+- Skybell SlimLine II - Model number: SB_SLIM2_0001
 
 ## Unsupported devices
 
