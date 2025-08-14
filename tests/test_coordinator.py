@@ -1,18 +1,21 @@
 """Test SkybellGen coordinator."""
+
+# pylint: disable=protected-access
+
 from datetime import datetime, timedelta
-import pytest
 
 from aioskybellgen import Skybell
+from freezegun.api import FrozenDateTimeFactory
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.helpers import device_registry as dr, entity_registry as er
 from homeassistant.helpers.device_registry import DeviceEntry
 from homeassistant.helpers.update_coordinator import UpdateFailed
+import pytest
 
 from custom_components.skybellgen.const import DOMAIN
 
 from .conftest import async_init_integration, get_one_device, get_two_devices
 
-from freezegun.api import FrozenDateTimeFactory
 
 async def test_hub_coord_exc(hass, remove_platforms, error_hub_update_exc):
     """Test hub coordinator Skybell exception."""
@@ -121,12 +124,8 @@ async def test_hub_coord_add(hass, remove_platforms, mocker):
 
 
 async def test_hub_coord_refresh(
-        hass,
-        remove_platforms,
-        mocker,
-        freezer: FrozenDateTimeFactory,
-        bypass_hub_refresh
-        ):
+    hass, remove_platforms, mocker, freezer: FrozenDateTimeFactory, bypass_hub_refresh
+):
     """Test Hub coordinator for refresh_session_timestamp."""
     freezer.move_to("2023-03-30 13:33:00+00:00")
 
@@ -156,9 +155,9 @@ async def test_hub_coord_refresh(
     # Modify the API cache
     api = config_entry.runtime_data.api
     auth_result = {
-            "AccessToken": "token",
-            "ExpiresIn": 3600,
-            "RefreshToken": "token",
+        "AccessToken": "token",
+        "ExpiresIn": 3600,
+        "RefreshToken": "token",
     }
     auth_result["ExpirationDate"] = datetime.now() - timedelta(seconds=86400)
     api._cache["AuthenticationResult"] = auth_result
@@ -173,12 +172,12 @@ async def test_hub_coord_refresh(
 
 
 async def test_hub_coord_refresh_exc(
-        hass,
-        remove_platforms,
-        mocker,
-        freezer: FrozenDateTimeFactory,
-        error_hub_refresh_exc
-        ):
+    hass,
+    remove_platforms,
+    mocker,
+    freezer: FrozenDateTimeFactory,
+    error_hub_refresh_exc,
+):
     """Test Hub coordinator for refresh_session_timestamp."""
     freezer.move_to("2023-03-30 13:33:00+00:00")
 
@@ -208,9 +207,9 @@ async def test_hub_coord_refresh_exc(
     # Modify the API cache
     api = config_entry.runtime_data.api
     auth_result = {
-            "AccessToken": "token",
-            "ExpiresIn": 3600,
-            "RefreshToken": "token",
+        "AccessToken": "token",
+        "ExpiresIn": 3600,
+        "RefreshToken": "token",
     }
     auth_result["ExpirationDate"] = datetime.now()
     api._cache["AuthenticationResult"] = auth_result
@@ -225,12 +224,12 @@ async def test_hub_coord_refresh_exc(
 
 
 async def test_hub_coord_no_api(
-        hass,
-        remove_platforms,
-        mocker,
-        freezer: FrozenDateTimeFactory,
-        error_hub_refresh_exc
-        ):
+    hass,
+    remove_platforms,
+    mocker,
+    freezer: FrozenDateTimeFactory,
+    error_hub_refresh_exc,
+):
     """Test Hub coordinator for refresh_session_timestamp."""
     freezer.move_to("2023-03-30 13:33:00+00:00")
 
@@ -266,4 +265,3 @@ async def test_hub_coord_no_api(
         assert True
     except UpdateFailed:  # pragma no cover
         pytest.fail("Unexpected Update failed")  # pragma no cover
-

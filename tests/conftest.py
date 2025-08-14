@@ -144,6 +144,7 @@ def error_hub_update_exc_fixture():
     ):
         yield
 
+
 # Issue Skybell exception for Hub coordinator get_devices.
 @pytest.fixture(name="error_hub_refresh_exc")
 def error_hub_refresh_exc_fixture():
@@ -153,6 +154,7 @@ def error_hub_refresh_exc_fixture():
         side_effect=SkybellException,
     ):
         yield
+
 
 # Bypess for Hub coordinator get_devices.
 @pytest.fixture(name="bypass_hub_refresh")

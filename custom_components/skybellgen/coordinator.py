@@ -163,7 +163,8 @@ class SkybellHubDataUpdateCoordinator(DataUpdateCoordinator[None]):
                     )
 
         entry.runtime_data.device_coordinators.extend(
-            device_coordinators)  # type: ignore[assignment]
+            device_coordinators
+        )  # type: ignore[assignment]
 
         if entry.state == ConfigEntryState.SETUP_IN_PROGRESS:
             await asyncio.gather(
