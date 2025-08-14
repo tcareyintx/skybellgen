@@ -10,7 +10,10 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_EMAIL, CONF_PASSWORD, Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+
+from .const import DOMAIN
 
 PLATFORMS = [
     Platform.BINARY_SENSOR,
@@ -89,6 +92,25 @@ async def async_setup_entry(hass: HomeAssistant, entry: SkybellConfigEntry) -> b
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     return True
+
+
+async def async_remove_config_entry_device(
+    hass: HomeAssistant,
+    config_entry: SkybellConfigEntry,
+    device_entry: dr.DeviceEntry,
+) -> bool:  # pragma: no cover
+    """Remove a config entry from a device."""
+    remove_entry = False
+    for identifier in device_entry.identifiers:
+        device_id = identifier[1]
+        if (
+            identifier[0] == DOMAIN
+            and device_id not in config_entry.runtime_data.current_device_ids
+        ):
+            remove_entry = True
+            if device_id in config_entry.runtime_data.known_device_ids:
+                del config_entry.runtime_data.known_device_ids[device_id]
+    return remove_entry
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: SkybellConfigEntry) -> bool:

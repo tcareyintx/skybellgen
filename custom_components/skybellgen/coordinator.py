@@ -8,6 +8,7 @@ from typing import cast
 from aioskybellgen import Skybell, SkybellDevice
 from aioskybellgen.exceptions import SkybellException
 from aioskybellgen.helpers.const import REFRESH_CYCLE
+from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
@@ -45,7 +46,7 @@ class SkybellHubDataUpdateCoordinator(DataUpdateCoordinator[None]):
         """Check if the update_interval needs adjusted."""
         update_interval = self.update_interval  # type: ignore[has-type]
         if update_interval is None:
-            update_interval = timedelta(seconds=HUB_REFRESH_CYCLE)
+            update_interval = timedelta(seconds=HUB_REFRESH_CYCLE)  # pragma: no cover
         session_refresh_timestamp = api.session_refresh_timestamp
         if session_refresh_timestamp is None:
             _LOGGER.warning("No refresh session for hub: %s", api.user_id)
@@ -53,9 +54,7 @@ class SkybellHubDataUpdateCoordinator(DataUpdateCoordinator[None]):
         if session_refresh_timestamp < (datetime.now() + update_interval):
             self.update_interval = session_refresh_timestamp - datetime.now()
 
-    async def _async_refresh_skybell_session(
-        self, api: Skybell
-    ) -> None:  # pragma: no cover
+    async def _async_refresh_skybell_session(self, api: Skybell) -> None:
         """Refresh the Skybell session if needed."""
         # If the session refresh timestamp is not None and the current time is greater
         # than the session refresh timestamp, we need to refresh the session.
@@ -164,14 +163,15 @@ class SkybellHubDataUpdateCoordinator(DataUpdateCoordinator[None]):
                     )
 
         entry.runtime_data.device_coordinators.extend(
-            device_coordinators
-        )  # type: ignore[assignment]
-        await asyncio.gather(
-            *[
-                coordinator.async_config_entry_first_refresh()
-                for coordinator in device_coordinators
-            ]
-        )
+            device_coordinators)  # type: ignore[assignment]
+
+        if entry.state == ConfigEntryState.SETUP_IN_PROGRESS:
+            await asyncio.gather(
+                *[
+                    coordinator.async_config_entry_first_refresh()
+                    for coordinator in device_coordinators
+                ]
+            )
 
 
 class SkybellDeviceDataUpdateCoordinator(DataUpdateCoordinator[None]):

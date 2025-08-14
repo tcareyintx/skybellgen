@@ -36,6 +36,7 @@ def get_two_devices() -> list[SkybellDevice]:
     device2 = SkybellDevice(device_json=device2_data, skybell=None)
     device2._device_id = "second_device"
     device2._device_json[CONST.DEVICE_ID] = "second_device"
+    device2._device_json[CONST.NAME] = "second_device name"
     device2._device_json["serial"] = "second_device_sernum"
     device_settings = device2._device_json.get(CONST.DEVICE_SETTINGS)
     device_settings[CONST.SERIAL_NUM] = "second_device_sernum"
@@ -97,13 +98,9 @@ def bypass_dependency_check_fixture():
 def bypass_get_devices_fixture():
     """Skip calls to get data from API."""
     with patch("custom_components.skybellgen.Skybell.async_get_devices") as init_method:
-        basepath = path.dirname(__file__)
-        filepath = path.abspath(path.join(basepath, "data/device.json"))
-        with open(filepath, "r", encoding="utf-8") as file:
-            data = json.load(file)
-        device = SkybellDevice(device_json=data, skybell=None)
+        devices = get_one_device()
         init_method.return_value = []
-        init_method.return_value.append(device)
+        init_method.return_value.append(devices[0])
         yield
 
 
@@ -147,14 +144,22 @@ def error_hub_update_exc_fixture():
     ):
         yield
 
-
-# This fixture, when used, will result in calls to async_refresh_skybell_session.
-@pytest.fixture(name="bypass_refresh_session", autouse=True)
-def bypass_refresh_session_fixture():
-    """Skip calls to refresh session from API."""
+# Issue Skybell exception for Hub coordinator get_devices.
+@pytest.fixture(name="error_hub_refresh_exc")
+def error_hub_refresh_exc_fixture():
+    """Issue a SkybellException when called."""
     with patch(
-        "custom_components.skybellgen.coordinator."
-        + "SkybellHubDataUpdateCoordinator._async_refresh_skybell_session"
+        "custom_components.skybellgen.coordinator.Skybell.async_refresh_session",
+        side_effect=SkybellException,
+    ):
+        yield
+
+# Bypess for Hub coordinator get_devices.
+@pytest.fixture(name="bypass_hub_refresh")
+def bypass_hub_refresh_fixture():
+    """Bypass the hub refresh call."""
+    with patch(
+        "custom_components.skybellgen.coordinator.Skybell.async_refresh_session",
     ):
         yield
 

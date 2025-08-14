@@ -1,14 +1,18 @@
 """Test SkybellGen coordinator."""
+from datetime import datetime, timedelta
+import pytest
 
 from aioskybellgen import Skybell
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.helpers import device_registry as dr, entity_registry as er
 from homeassistant.helpers.device_registry import DeviceEntry
+from homeassistant.helpers.update_coordinator import UpdateFailed
 
 from custom_components.skybellgen.const import DOMAIN
 
 from .conftest import async_init_integration, get_one_device, get_two_devices
 
+from freezegun.api import FrozenDateTimeFactory
 
 async def test_hub_coord_exc(hass, remove_platforms, error_hub_update_exc):
     """Test hub coordinator Skybell exception."""
@@ -114,3 +118,152 @@ async def test_hub_coord_add(hass, remove_platforms, mocker):
     entity_registry = er.async_get(hass)
     devices = entity_registry.async_device_ids()
     assert device_entry.id in devices
+
+
+async def test_hub_coord_refresh(
+        hass,
+        remove_platforms,
+        mocker,
+        freezer: FrozenDateTimeFactory,
+        bypass_hub_refresh
+        ):
+    """Test Hub coordinator for refresh_session_timestamp."""
+    freezer.move_to("2023-03-30 13:33:00+00:00")
+
+    # In this case we are testing the logic where we have a timestamp
+    # and the refresh session returns an exception but HA
+    # Intercepts the update failed and reschedules the update
+
+    # Set up the config_entry and platform with 1 device
+    mocker.patch(
+        "custom_components.skybellgen.Skybell.async_get_devices",
+        return_value=get_one_device(),
+    )
+    config_entry = await async_init_integration(hass)
+    assert config_entry.state is ConfigEntryState.LOADED
+    assert isinstance(config_entry.runtime_data.api, Skybell)
+    device_id = "012345670123456789abcdef"
+    assert device_id in config_entry.runtime_data.known_device_ids
+    # device should be in the device and entity registries
+    device_registry = dr.async_get(hass)
+    device_entry = device_registry.async_get_device(identifiers={(DOMAIN, device_id)})
+    assert isinstance(device_entry, DeviceEntry)
+
+    entity_registry = er.async_get(hass)
+    devices = entity_registry.async_device_ids()
+    assert device_entry.id in devices
+
+    # Modify the API cache
+    api = config_entry.runtime_data.api
+    auth_result = {
+            "AccessToken": "token",
+            "ExpiresIn": 3600,
+            "RefreshToken": "token",
+    }
+    auth_result["ExpirationDate"] = datetime.now() - timedelta(seconds=86400)
+    api._cache["AuthenticationResult"] = auth_result
+
+    # Refresh the hub controller
+    hc = config_entry.runtime_data.hub_coordinator
+    try:
+        await hc.async_refresh()
+        assert True
+    except UpdateFailed:  # pragma no cover
+        pytest.fail("Unexpected Update failed")  # pragma no cover
+
+
+async def test_hub_coord_refresh_exc(
+        hass,
+        remove_platforms,
+        mocker,
+        freezer: FrozenDateTimeFactory,
+        error_hub_refresh_exc
+        ):
+    """Test Hub coordinator for refresh_session_timestamp."""
+    freezer.move_to("2023-03-30 13:33:00+00:00")
+
+    # In this case we are testing the logic where we have a timestamp
+    # and the refresh session returns an exception but HA
+    # Intercepts the update failed and reschedules the update
+
+    # Set up the config_entry and platform with 1 device
+    mocker.patch(
+        "custom_components.skybellgen.Skybell.async_get_devices",
+        return_value=get_one_device(),
+    )
+    config_entry = await async_init_integration(hass)
+    assert config_entry.state is ConfigEntryState.LOADED
+    assert isinstance(config_entry.runtime_data.api, Skybell)
+    device_id = "012345670123456789abcdef"
+    assert device_id in config_entry.runtime_data.known_device_ids
+    # device should be in the device and entity registries
+    device_registry = dr.async_get(hass)
+    device_entry = device_registry.async_get_device(identifiers={(DOMAIN, device_id)})
+    assert isinstance(device_entry, DeviceEntry)
+
+    entity_registry = er.async_get(hass)
+    devices = entity_registry.async_device_ids()
+    assert device_entry.id in devices
+
+    # Modify the API cache
+    api = config_entry.runtime_data.api
+    auth_result = {
+            "AccessToken": "token",
+            "ExpiresIn": 3600,
+            "RefreshToken": "token",
+    }
+    auth_result["ExpirationDate"] = datetime.now()
+    api._cache["AuthenticationResult"] = auth_result
+
+    # Refresh the hub controller
+    hc = config_entry.runtime_data.hub_coordinator
+    try:
+        await hc.async_refresh()
+        assert True
+    except UpdateFailed:  # pragma no cover
+        pytest.fail("Unexpected Update failed")  # pragma no cover
+
+
+async def test_hub_coord_no_api(
+        hass,
+        remove_platforms,
+        mocker,
+        freezer: FrozenDateTimeFactory,
+        error_hub_refresh_exc
+        ):
+    """Test Hub coordinator for refresh_session_timestamp."""
+    freezer.move_to("2023-03-30 13:33:00+00:00")
+
+    # In this case we are testing the logic where the
+    # Skybell API isn't assigned for this hub controller.
+
+    # Set up the config_entry and platform with 1 device
+    mocker.patch(
+        "custom_components.skybellgen.Skybell.async_get_devices",
+        return_value=get_one_device(),
+    )
+    config_entry = await async_init_integration(hass)
+    assert config_entry.state is ConfigEntryState.LOADED
+    assert isinstance(config_entry.runtime_data.api, Skybell)
+    device_id = "012345670123456789abcdef"
+    assert device_id in config_entry.runtime_data.known_device_ids
+    # device should be in the device and entity registries
+    device_registry = dr.async_get(hass)
+    device_entry = device_registry.async_get_device(identifiers={(DOMAIN, device_id)})
+    assert isinstance(device_entry, DeviceEntry)
+
+    entity_registry = er.async_get(hass)
+    devices = entity_registry.async_device_ids()
+    assert device_entry.id in devices
+
+    # Modify the API
+    config_entry.runtime_data.api = None
+
+    # Refresh the hub controller
+    hc = config_entry.runtime_data.hub_coordinator
+    try:
+        await hc.async_refresh()
+        assert True
+    except UpdateFailed:  # pragma no cover
+        pytest.fail("Unexpected Update failed")  # pragma no cover
+
