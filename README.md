@@ -333,8 +333,7 @@ The Skybell integration exposes many of the capabilities and attributes of the S
 
 ### SkybellGen integration capabilities that are not supported
 
-1. Currently devices are discovered when the a new hub is created. If devices are added or removed via the Skybell cloud API, the hub in the SkybellGen integration will continue to remove stale devices as well as add new devices. However, if Home Assistant is restarted information that permits the integration to keep track of stale devices is lost. In this scenario the user can still manually delete the stale device through the
-Home assistant UI.
+1. Currently devices are discovered when the a new hub is created. If devices are added or removed via the Skybell cloud API, the hub in the will continue to remove stale devices as well as add new devices. However, if Home Assistant is restarted, information that permits the integration to keep track of stale devices is lost. In this scenario the user can still manually delete the stale device through the Home Assistant UI.
 
 ### Skybell cloud API capabilities that are not supported
 
