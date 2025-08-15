@@ -1,4 +1,4 @@
-"""Test SkybellGen setup process."""
+"""Test SkyBellGen setup process."""
 
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
@@ -27,11 +27,11 @@ async def test_setup_and_unload_entry(
     # Set up the entry and assert that the values set during setup are where we expect
     # them to be.
     # Because we have patched the following calls:
-    #    Skybell.async_initialize
-    #    Skybell.async_get_devices (HubCoordinator)
-    #    Skybell.async_refresh_session (HubCoordinator)
-    #    SkybellDevice.async_update(refresh=True, get_devices=True) (DataCoordinator)
-    # No APIs to the Skybell Cloud (aioskybellgen) actually runs.
+    #    SkyBell.async_initialize
+    #    SkyBell.async_get_devices (HubCoordinator)
+    #    SkyBell.async_refresh_session (HubCoordinator)
+    #    SkyBellDevice.async_update(refresh=True, get_devices=True) (DataCoordinator)
+    # No APIs to the SkyBell Cloud (aioskybellgen) actually runs.
     config_entry = await async_init_integration(hass)
     assert config_entry.state is ConfigEntryState.LOADED
 

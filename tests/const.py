@@ -1,4 +1,4 @@
-"""Constants for SkybellGen tests."""
+"""Constants for SkyBellGen tests."""
 
 from homeassistant.const import CONF_EMAIL, CONF_PASSWORD, Platform
 

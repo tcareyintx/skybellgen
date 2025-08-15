@@ -1,4 +1,4 @@
-"""Diagnostics support for the SkybellGen integration."""
+"""Diagnostics support for the SkyBellGen integration."""
 
 # pylint: disable=protected-access
 
@@ -7,12 +7,13 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import Any, cast
 
-from aioskybellgen import SkybellDevice
+from aioskybellgen import Skybell, SkybellDevice
 from homeassistant.components.diagnostics import async_redact_data
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceEntry
 
 from . import SkybellConfigEntry
+from .coordinator import SkybellDeviceDataUpdateCoordinator
 
 PARALLEL_UPDATES = 1
 
@@ -44,7 +45,7 @@ TO_REDACT_DATA = [
 
 
 def device_to_dict(device: SkybellDevice) -> dict:
-    """Convert a SkybellDevice to a dictionary."""
+    """Convert a SkyBellDevice to a dictionary."""
     diagnostic_data: dict[str, Any] = {}
     data: dict[str, Any] = deepcopy(device._device_json)
     data.pop("settings", None)
@@ -71,7 +72,7 @@ async def async_get_config_entry_diagnostics(
     """Return diagnostics for a config entry."""
     known_devices = config_entry.runtime_data.known_device_ids
     current_devices = config_entry.runtime_data.current_device_ids
-    api = config_entry.runtime_data.api
+    api: Skybell = cast(Skybell, config_entry.runtime_data.api)
     dcs = config_entry.runtime_data.device_coordinators
 
     info: dict[str, Any] = {}

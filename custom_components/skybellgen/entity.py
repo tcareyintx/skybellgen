@@ -1,4 +1,4 @@
-"""Entity representing a Skybell Gen Doorbell."""
+"""Entity representing a SkyBell Gen Doorbell."""
 
 from __future__ import annotations
 
@@ -14,9 +14,9 @@ from .coordinator import SkybellDeviceDataUpdateCoordinator
 
 
 class SkybellEntity(CoordinatorEntity[SkybellDeviceDataUpdateCoordinator]):
-    """An HA implementation for Skybell entity."""
+    """An HA implementation for SkyBell entity."""
 
-    _attr_attribution = "Data provided by Skybell.com"
+    _attr_attribution = "Data provided by SkyBell.com"
     _attr_has_entity_name = True
 
     def __init__(
@@ -24,7 +24,7 @@ class SkybellEntity(CoordinatorEntity[SkybellDeviceDataUpdateCoordinator]):
         coordinator: SkybellDeviceDataUpdateCoordinator,
         description: EntityDescription,
     ) -> None:
-        """Initialize a Skybell entity."""
+        """Initialize a SkyBell entity."""
         super().__init__(coordinator)
         self.entity_description = description
         self._attr_unique_id = f"{self._device.device_id}_{description.key}"

@@ -1,4 +1,4 @@
-"""Light/LED support for the Skybell Gen Doorbell."""
+"""Light/LED support for the SkyBell Gen Doorbell."""
 
 from __future__ import annotations
 
@@ -40,7 +40,7 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
-    """Set up Skybell entity."""
+    """Set up SkyBell entity."""
 
     known_device_ids: set[str] = set()
 
@@ -70,14 +70,14 @@ async def async_setup_entry(
 
 
 class SkybellLight(SkybellEntity, LightEntity):
-    """A light implementation for Skybell devices."""
+    """A light implementation for SkyBell devices."""
 
     def __init__(
         self,
         coordinator: SkybellDeviceDataUpdateCoordinator,
         description: LightEntityDescription,
     ) -> None:
-        """Initialize a light entity for a Skybell device."""
+        """Initialize a light entity for a SkyBell device."""
         super().__init__(coordinator, description)
         self._attr_color_mode = ColorMode.RGB
         self._attr_supported_color_modes = {ColorMode.RGB}

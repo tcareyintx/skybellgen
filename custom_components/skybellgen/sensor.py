@@ -1,4 +1,4 @@
-"""Sensor support for Skybell Gen  Doorbells."""
+"""Sensor support for SkyBell Gen  Doorbells."""
 
 from __future__ import annotations
 
@@ -35,7 +35,7 @@ from .entity import DOMAIN, SkybellEntity
 
 @dataclass(frozen=True, kw_only=True)
 class SkybellSensorEntityDescription(SensorEntityDescription):
-    """Class to describe a Skybell sensor."""
+    """Class to describe a SkyBell sensor."""
 
     value_fn: Callable[[SkybellDevice], StateType | datetime]
 
@@ -171,7 +171,7 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
-    """Set up Skybell sensor."""
+    """Set up SkyBell sensor."""
 
     known_device_ids: set[str] = set()
 
@@ -195,7 +195,7 @@ async def async_setup_entry(
 
 
 class SkybellSensor(SkybellEntity, SensorEntity):
-    """A sensor implementation for Skybell devices."""
+    """A sensor implementation for SkyBell devices."""
 
     entity_description: SkybellSensorEntityDescription
 

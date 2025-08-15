@@ -1,4 +1,4 @@
-"""Switch support for the Skybell Gen Doorbell."""
+"""Switch support for the SkyBell Gen Doorbell."""
 
 from __future__ import annotations
 
@@ -89,7 +89,7 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
-    """Set up the Skybell switch."""
+    """Set up the SkyBell switch."""
 
     known_device_ids: set[str] = set()
 
@@ -119,14 +119,14 @@ async def async_setup_entry(
 
 
 class SkybellSwitch(SkybellEntity, SwitchEntity):
-    """A switch implementation for Skybell devices."""
+    """A switch implementation for SkyBell devices."""
 
     def __init__(
         self,
         coordinator: SkybellDeviceDataUpdateCoordinator,
         description: SwitchEntityDescription,
     ) -> None:
-        """Initialize a binary sensor for a Skybell device."""
+        """Initialize a binary sensor for a SkyBell device."""
         super().__init__(coordinator, description)
 
     async def async_turn_on(self, **kwargs: Any) -> None:

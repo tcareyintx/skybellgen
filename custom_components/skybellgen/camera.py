@@ -1,4 +1,4 @@
-"""Camera support for the Skybell Gen Doorbell."""
+"""Camera support for the SkyBell Gen Doorbell."""
 
 from __future__ import annotations
 
@@ -32,7 +32,7 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
-    """Set up Skybell camera."""
+    """Set up SkyBell camera."""
 
     known_device_ids: set[str] = set()
 
@@ -59,14 +59,14 @@ async def async_setup_entry(
 
 
 class SkybellCamera(SkybellEntity, Camera):
-    """A camera implementation for Skybell devices."""
+    """A camera implementation for SkyBell devices."""
 
     def __init__(
         self,
         coordinator: SkybellDeviceDataUpdateCoordinator,
         description: EntityDescription,
     ) -> None:
-        """Initialize a camera for a Skybell device."""
+        """Initialize a camera for a SkyBell device."""
         super().__init__(coordinator, description)
         Camera.__init__(self)
 
@@ -78,7 +78,7 @@ class SkybellCamera(SkybellEntity, Camera):
 
 
 class SkybellActivityCamera(SkybellCamera):
-    """A camera implementation for latest Skybell activity."""
+    """A camera implementation for latest SkyBell activity."""
 
     async def handle_async_mjpeg_stream(
         self, request: web.Request

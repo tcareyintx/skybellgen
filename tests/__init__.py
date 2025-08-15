@@ -1,1 +1,1 @@
-"""Tests for SkybellGen integration."""
+"""Tests for SkyBellGen integration."""

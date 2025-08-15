@@ -1,4 +1,4 @@
-# SkybellGen
+# SkyBellGen
 
 [![GitHub Release][releases-shield]][releases]
 [![GitHub Activity][commits-shield]][commits]
@@ -15,18 +15,18 @@
 
 ## Description
 
-![Skybell](skybell.png)
+![SkyBell](skybell.png)
 
-The **SkybellGen** integration is used to integrate with doorbell devices from [Skybell](https://skybell.com/).
-The access to the doorbell is via the [SkybellGen communication driver](https://pypi.org/project/aioskybellgen/)
-that implements the [Skybell cloud API](https://api.skybell.network/docs/). The integration be used in automations that use changes and event's detected by Skybell doorbell. See the [examples](#examples) section for more ideas of how to use this integration.
+The **SkyBellGen** integration is used to integrate with doorbell devices from [SkyBell](https://skybell.com/).
+The access to the doorbell is via the [SkyBellGen communication driver](https://pypi.org/project/aioskybellgen/)
+that implements the [SkyBell cloud API](https://api.skybell.network/docs/). The integration be used in automations that use changes and event's detected by SkyBell doorbell. See the [examples](#examples) section for more ideas of how to use this integration.
 
 ## Prerequisites
 
-1. Open the app store and install the **Skybell** app.
+1. Open the app store and install the **SkyBell** app.
 2. [Create an account](https://support.skybell.com/hc/en-us/articles/36672108421645-Account-Creation-and-Verification).
-   You will use the username(email) and password to connect to the Skybell cloud API.
-3. Follow the app instructions to discover the Skybell devices.
+   You will use the username(email) and password to connect to the SkyBell cloud API.
+3. Follow the app instructions to discover the SkyBell devices.
 
 ## Installation
 
@@ -34,10 +34,10 @@ that implements the [Skybell cloud API](https://api.skybell.network/docs/). The 
 
 Installation through [HACS][hacs] is the preferred installation method.
 
-[![Open the SkybellGen integration in HACS][hacs-badge]][hacs-open]
+[![Open the SkyBellGen integration in HACS][hacs-badge]][hacs-open]
 
 1. Click the button above or go to HACS &rarr; Integrations &rarr; search for
-   "SkybellGen" &rarr; select it.
+   "SkyBellGen" &rarr; select it.
 1. Press _DOWNLOAD_.
 1. Select the version (it will auto select the latest) &rarr; press _DOWNLOAD_.
 1. Restart Home Assistant then continue to [the setup section](#setup).
@@ -79,7 +79,7 @@ custom_components/skybellgen/text.py
 This integration follows standard integration removal via the UI.
 
 1. Go to Settings > Devices & Services
-2. Click on the SkybellGen integration that you loaded
+2. Click on the SkyBellGen integration that you loaded
 3. Click Delete
 
 ## Setup
@@ -88,59 +88,59 @@ Configuration is done via the Home Assistant UI after installation.
 
 1. Navigate to "Settings" &rarr; "Devices & Services"
 1. Click "+ Add Integration"
-1. Search for and select &rarr; "SkybellGen"
+1. Search for and select &rarr; "SkyBellGen"
 
 Follow the instructions to configure the integration.
 
 ## Configuration flow
 
-This integration uses the HA configuration flow to setup the SkybellGen hub.
+This integration uses the HA configuration flow to setup the SkyBellGen hub.
 
 email:
 
-- description: Your email that you used when setting up the account on the Skybell app.
+- description: Your email that you used when setting up the account on the SkyBell app.
 
 password:
 
-- description: Your password that you used when setting up the account on the Skybell app. If you
+- description: Your password that you used when setting up the account on the SkyBell app. If you
   change your password you can use the reconfigure or re-authentication options of the integration configuration flow.
 
 ## Data updates {#data-updates}
 
-The SkybellGen integration fetches data from the device via the Skybell cloud API every 30 seconds.
+The SkyBellGen integration fetches data from the device via the SkyBell cloud API every 30 seconds.
 
 ## Examples {#examples}
 
-The SkybellGen integration provides actuators to modify attributes of the Skybell devices. Additionally the integration provides sensors that are updated with the refresh cycle documented in the [Data updates](#data-updates) section.
+The SkyBellGen integration provides actuators to modify attributes of the SkyBell devices. Additionally the integration provides sensors that are updated with the refresh cycle documented in the [Data updates](#data-updates) section.
 This actuators and sensors provided by the integration permits example automations as described in this section.
 
-### Turning on the exterior lights when motion is detected by the Skybell
+### Turning on the exterior lights when motion is detected by the SkyBell
 
-If the doorbell is pressed or motion is detected, the SkybellGen integration's sensors can detect the event and activate, via automations, other entities that can turn on exterior lighting.
+If the doorbell is pressed or motion is detected, the SkyBellGen integration's sensors can detect the event and activate, via automations, other entities that can turn on exterior lighting.
 
-### Monitoring the last motion event detected by the Skybell
+### Monitoring the last motion event detected by the SkyBell
 
-When a motion event is detected by the Skybell, a video is recorded that can be viewed and/or downloaded by the SkybellGen integration.
+When a motion event is detected by the SkyBell, a video is recorded that can be viewed and/or downloaded by the SkyBellGen integration.
 
-### Modifying the configuration for a Skybell doorbell
+### Modifying the configuration for a SkyBell doorbell
 
-The SkybellGen integration provides actuators to configure attributes of the SkybellGen inorder to modify the behavior of the device. For example, the sensitivity of the motion being detected by the doorbell's camera can be adjusted in order to provide a better viewing experience.
+The SkyBellGen integration provides actuators to configure attributes of the SkyBellGen inorder to modify the behavior of the device. For example, the sensitivity of the motion being detected by the doorbell's camera can be adjusted in order to provide a better viewing experience.
 
 ## Supported devices
 
-The following devices are known to be supported by the SkybellGen integration:
+The following devices are known to be supported by the SkyBellGen integration:
 
-- Skybell SlimLine II - Model number: SB_SLIM2_0001
+- SkyBell SlimLine II - Model number: SB_SLIM2_0001
 
 ## Unsupported devices
 
 The following devices are not supported by the integration:
 
-- Devices that have not been migrated to the Skybell Genv5 API and associated Skybell app.
+- Devices that have not been migrated to the SkyBell Genv5 API and associated SkyBell app.
 
 ## Supported functionality
 
-The SkybellGen integration provides support for the platforms listed below.
+The SkyBellGen integration provides support for the platforms listed below.
 
 | Platform        | Description                                         |
 | --------------- | --------------------------------------------------- |
@@ -156,7 +156,7 @@ The SkybellGen integration provides support for the platforms listed below.
 
 ### Entities
 
-The SkybellGen integration provides the following entities.
+The SkyBellGen integration provides the following entities.
 
 #### Binary Sensors
 
@@ -295,7 +295,7 @@ Sensors for corresponding entities in Number, Select and Text entities. These se
 
 - **Last seen**
 
-  - **Description**: The last time the doorbell has checked in with the Skybell cloud.
+  - **Description**: The last time the doorbell has checked in with the SkyBell cloud.
   - **Remarks**: Diagnostics, disabled by default
 
 - **Last connected**
@@ -329,23 +329,23 @@ Sensors for corresponding entities in Number, Select and Text entities. These se
 
 ## Known limitations
 
-The Skybell integration exposes many of the capabilities and attributes of the Skybell doorbell. However, there are capabilities and attributes that are not currently exposed using the integration. For these limitations, the Skybell app should be used.
+The SkyBell integration exposes many of the capabilities and attributes of the SkyBell doorbell. However, there are capabilities and attributes that are not currently exposed using the integration. For these limitations, the SkyBell app should be used.
 
-### SkybellGen integration capabilities that are not supported
+### SkyBellGen integration capabilities that are not supported
 
-1. Currently devices are discovered when the a new hub is created. If devices are added or removed via the Skybell cloud API, the hub in the will continue to remove stale devices as well as add new devices. However, if Home Assistant is restarted, information that permits the integration to keep track of stale devices is lost. In this scenario the user can still manually delete the stale device through the Home Assistant UI.
+1. Currently devices are discovered when the a new hub is created. If devices are added or removed via the SkyBell cloud API, the hub in the will continue to remove stale devices as well as add new devices. However, if Home Assistant is restarted, information that permits the integration to keep track of stale devices is lost. In this scenario the user can still manually delete the stale device through the Home Assistant UI.
 
-### Skybell cloud API capabilities that are not supported
+### SkyBell cloud API capabilities that are not supported
 
-1. Maintaining the Skybell cloud API account. Including changing the password and sharing access to devices
-2. The use of Access tokens to log into the Skybell cloud API
-3. Adding and removing new devices to the Skybell cloud API
+1. Maintaining the SkyBell cloud API account. Including changing the password and sharing access to devices
+2. The use of Access tokens to log into the SkyBell cloud API
+3. Adding and removing new devices to the SkyBell cloud API
 4. Maintaining (deleting) and viewing the historical activity events
 5. Livestreaming through the doorbell's camera
 
-### Skybell cloud API attributes that are not supported
+### SkyBell cloud API attributes that are not supported
 
-1. Skybell premium account attributes and capabilities
+1. SkyBell premium account attributes and capabilities
 2. Setting chime tones for the doorbell press and motion detection events
 3. Advanced motion detection zones
 
@@ -359,17 +359,17 @@ If the password has changed or the session authentication tokens have timed out.
 
 ##### Description
 
-This means the integration has to re-authenticate with the Skybell cloud.
+This means the integration has to re-authenticate with the SkyBell cloud.
 
 ##### Resolution
 
-To resolve this issue, follow the steps in the reauthentication flow. If the password was changed using the Skybell cloud API or Skybell app, you can reconfigure the integration and supply the new password before the authentication timeout.
+To resolve this issue, follow the steps in the reauthentication flow. If the password was changed using the SkyBell cloud API or SkyBell app, you can reconfigure the integration and supply the new password before the authentication timeout.
 
 ### I still see a stale device
 
-#### Symptom: “The SkybellGen hub continues to show the device”
+#### Symptom: “The SkyBellGen hub continues to show the device”
 
-If the device as removed via the Skybell cloud API or Skybell app but Home Assistant has been restarted, stale devices may still
+If the device as removed via the SkyBell cloud API or SkyBell app but Home Assistant has been restarted, stale devices may still
 exist in the Home Assistant device registry.
 
 ##### Description
@@ -378,7 +378,7 @@ This means the integration doesn't recognize that the device is a stale device.
 
 ##### Resolution
 
-To resolve this issue, manually delete the device from the SkybellGen Hub.
+To resolve this issue, manually delete the device from the SkyBellGen Hub.
 
 <!---->
 
@@ -392,7 +392,7 @@ This project was generated from [@oncleben31](https://github.com/oncleben31)'s [
 
 Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [integration_blueprint][integration_blueprint] template.
 
-The project used the Home Assistant core [Skybell](https://www.home-assistant.io/integrations/skybell/) core component as the starting point.
+The project used the Home Assistant core [SkyBell](https://www.home-assistant.io/integrations/skybell/) core component as the starting point.
 
 ---
 
@@ -403,7 +403,7 @@ The project used the Home Assistant core [Skybell](https://www.home-assistant.io
 [commits]: https://github.com/tcareyintx/skybellgen/commits/main
 [hacs]: https://hacs.xyz/
 [hacs-badge]: https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge
-[hacs-open]: https://my.home-assistant.io/redirect/hacs_repository/?owner=tcareyintx&repository=SkybellGen&category=integration
+[hacs-open]: https://my.home-assistant.io/redirect/hacs_repository/?owner=tcareyintx&repository=SkyBellGen&category=integration
 [releases]: https://github.com/tcareyintx/skybellgen/releases
 [discord]: https://discord.gg/Qa5fW2R
 [discord-shield]: https://img.shields.io/discord/330944238910963714.svg?style=for-the-badge

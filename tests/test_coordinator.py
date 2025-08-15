@@ -1,4 +1,4 @@
-"""Test SkybellGen coordinator."""
+"""Test SkyBellGen coordinator."""
 
 # pylint: disable=protected-access
 
@@ -14,11 +14,12 @@ import pytest
 
 from custom_components.skybellgen.const import DOMAIN
 
+from .const import DEVICE_ID
 from .conftest import async_init_integration, get_one_device, get_two_devices
 
 
 async def test_hub_coord_exc(hass, remove_platforms, error_hub_update_exc):
-    """Test hub coordinator Skybell exception."""
+    """Test hub coordinator SkyBell exception."""
     # In this case we are testing the condition where async_setup_entry keeps the
     # configuration in setup when problems occurr in the Hub coordinator.
     config_entry = await async_init_integration(hass)
@@ -28,7 +29,7 @@ async def test_hub_coord_exc(hass, remove_platforms, error_hub_update_exc):
 async def test_device_coord_exc(
     hass, remove_platforms, bypass_get_devices, error_update_exc
 ):
-    """Test device coordinator async update Skybell exception."""
+    """Test device coordinator async update SkyBell exception."""
     # In this case we are testing the condition where async_setup_entry keeps the
     # configuration in setup when problems occurr in the Device coordinator.
     config_entry = await async_init_integration(hass)
@@ -38,11 +39,11 @@ async def test_device_coord_exc(
 async def test_hub_coord_stale(hass, remove_platforms, mocker):
     """Test Hub coordinator for stale devices."""
     # In this case we are testing the condition which a device exists in HA but doesn't exist
-    # in the Skybell Cloud.
+    # in the SkyBell Cloud.
 
     # Set up the config_entry and platform with 2 devices
     mocker.patch(
-        "custom_components.skybellgen.Skybell.async_get_devices",
+        "custom_components.skybellgen.SkyBell.async_get_devices",
         return_value=get_two_devices(),
     )
     config_entry = await async_init_integration(hass)
@@ -63,7 +64,7 @@ async def test_hub_coord_stale(hass, remove_platforms, mocker):
     # Execute the Hub coordinators _async_update_data but patch the get_devices to only
     # return 1 device
     mocker.patch(
-        "custom_components.skybellgen.Skybell.async_get_devices",
+        "custom_components.skybellgen.SkyBell.async_get_devices",
         return_value=get_one_device(),
     )
     hc = config_entry.runtime_data.hub_coordinator
@@ -82,11 +83,11 @@ async def test_hub_coord_stale(hass, remove_platforms, mocker):
 async def test_hub_coord_add(hass, remove_platforms, mocker):
     """Test Hub coordinator for stale devices."""
     # In this case we are testing the condition which a device is added
-    # in the Skybell Cloud.
+    # in the SkyBell Cloud.
 
     # Set up the config_entry and platform with 1 device
     mocker.patch(
-        "custom_components.skybellgen.Skybell.async_get_devices",
+        "custom_components.skybellgen.SkyBell.async_get_devices",
         return_value=get_one_device(),
     )
     config_entry = await async_init_integration(hass)
@@ -106,7 +107,7 @@ async def test_hub_coord_add(hass, remove_platforms, mocker):
     # Execute the Hub coordinators _async_update_data but patch the get_devices to
     # return 2 devices
     mocker.patch(
-        "custom_components.skybellgen.Skybell.async_get_devices",
+        "custom_components.skybellgen.SkyBell.async_get_devices",
         return_value=get_two_devices(),
     )
     hc = config_entry.runtime_data.hub_coordinator
@@ -135,7 +136,7 @@ async def test_hub_coord_refresh(
 
     # Set up the config_entry and platform with 1 device
     mocker.patch(
-        "custom_components.skybellgen.Skybell.async_get_devices",
+        "custom_components.skybellgen.SkyBell.async_get_devices",
         return_value=get_one_device(),
     )
     config_entry = await async_init_integration(hass)
@@ -187,7 +188,7 @@ async def test_hub_coord_refresh_exc(
 
     # Set up the config_entry and platform with 1 device
     mocker.patch(
-        "custom_components.skybellgen.Skybell.async_get_devices",
+        "custom_components.skybellgen.SkyBell.async_get_devices",
         return_value=get_one_device(),
     )
     config_entry = await async_init_integration(hass)
@@ -234,17 +235,17 @@ async def test_hub_coord_no_api(
     freezer.move_to("2023-03-30 13:33:00+00:00")
 
     # In this case we are testing the logic where the
-    # Skybell API isn't assigned for this hub controller.
+    # SkyBell API isn't assigned for this hub controller.
 
     # Set up the config_entry and platform with 1 device
     mocker.patch(
-        "custom_components.skybellgen.Skybell.async_get_devices",
+        "custom_components.skybellgen.SkyBell.async_get_devices",
         return_value=get_one_device(),
     )
     config_entry = await async_init_integration(hass)
     assert config_entry.state is ConfigEntryState.LOADED
     assert isinstance(config_entry.runtime_data.api, Skybell)
-    device_id = "012345670123456789abcdef"
+    device_id = DEVICE_ID
     assert device_id in config_entry.runtime_data.known_device_ids
     # device should be in the device and entity registries
     device_registry = dr.async_get(hass)

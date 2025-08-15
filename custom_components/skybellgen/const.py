@@ -1,4 +1,4 @@
-"""Constants for the Skybell Gen Doorbell."""
+"""Constants for the SkyBell Gen Doorbell."""
 
 from typing import Final
 
@@ -18,7 +18,7 @@ from aioskybellgen.helpers.const import (
     SPEAKER_VOLUME,
 )
 
-DEFAULT_NAME = "SkybellGen"
+DEFAULT_NAME = "SkyBellGen"
 DOMAIN: Final = "skybellgen"
 
 HUB_REFRESH_CYCLE = 3600

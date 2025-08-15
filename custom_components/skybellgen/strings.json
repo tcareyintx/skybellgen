@@ -16,7 +16,7 @@
       },
       "reconfigure": {
         "description": "Please update your password for {email}",
-        "title": "[Reconfigure the SkybellGen Hub]",
+        "title": "[Reconfigure the SkyBellGen Hub]",
         "data": {
           "password": "[%key:common::config_flow::data::password%]"
         }
