@@ -1,6 +1,6 @@
 {
   "domain": "skybellgen",
-  "name": "SkyBellGen Custom Component",
+  "name": "SkybellGen Custom Component",
   "codeowners": ["@tcarey"],
   "config_flow": true,
   "dependencies": ["ffmpeg"],

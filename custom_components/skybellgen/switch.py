@@ -89,7 +89,7 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
-    """Set up the SkyBell switch."""
+    """Set up the Skybell switch."""
 
     known_device_ids: set[str] = set()
 

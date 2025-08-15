@@ -24,7 +24,7 @@ class SkybellEntity(CoordinatorEntity[SkybellDeviceDataUpdateCoordinator]):
         coordinator: SkybellDeviceDataUpdateCoordinator,
         description: EntityDescription,
     ) -> None:
-        """Initialize a SkyBell entity."""
+        """Initialize a Skybell entity."""
         super().__init__(coordinator)
         self.entity_description = description
         self._attr_unique_id = f"{self._device.device_id}_{description.key}"

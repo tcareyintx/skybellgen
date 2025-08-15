@@ -18,7 +18,7 @@ from aioskybellgen.helpers.const import (
     SPEAKER_VOLUME,
 )
 
-DEFAULT_NAME = "SkyBellGen"
+DEFAULT_NAME = "SkybellGen"
 DOMAIN: Final = "skybellgen"
 
 HUB_REFRESH_CYCLE = 3600

@@ -53,6 +53,11 @@ def get_one_device() -> list[SkybellDevice]:
     with open(filepath, "r", encoding="utf-8") as file:
         data = json.load(file)
     device1 = SkybellDevice(device_json=data, skybell=None)
+    filepath = path.abspath(path.join(basepath, "data/activity.json"))
+    with open(filepath, "r", encoding="utf-8") as file:
+        data = json.load(file)
+    activity = data
+    device1._activities.append(activity)
     devices.append(device1)
     return devices
 
