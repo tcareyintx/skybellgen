@@ -1,4 +1,4 @@
-"""Test SkybellGen config flow."""
+"""Test SkyBellGen config flow."""
 
 from unittest.mock import PropertyMock, patch
 
@@ -57,7 +57,7 @@ async def test_successful_config_flow(hass, bypass_initialize):
 
 # In this case, we want to simulate a failure during the config flow.
 # We use the `error_initialize_auth` mock
-# (note the function parameters) to raise an SkybellException during
+# (note the function parameters) to raise an SkyBellException during
 # validation of the input config.
 async def test_failed_config_flow(hass, bypass_initialize, error_initialize_auth):
     """Test a failed config flow due to credential validation failure."""
@@ -168,7 +168,7 @@ async def test_step_reauth_recover(hass, bypass_initialize) -> None:
 async def test_step_reauth_skybell_exception(
     hass, bypass_initialize, error_initialize
 ) -> None:
-    """Test the reauth flow fails for Skybell exception."""
+    """Test the reauth flow fails for SkyBell exception."""
     entry = MockConfigEntry(domain=DOMAIN, unique_id=USER_ID, data=MOCK_CONFIG)
     entry.add_to_hass(hass)
 
@@ -189,7 +189,7 @@ async def test_step_reauth_skybell_exception(
 async def test_step_reauth_exception(
     hass, bypass_initialize, error_initialize_exception
 ) -> None:
-    """Test the reauth flow fails for Skybell exception."""
+    """Test the reauth flow fails for SkyBell exception."""
     entry = MockConfigEntry(domain=DOMAIN, unique_id=USER_ID, data=MOCK_CONFIG)
     entry.add_to_hass(hass)
 

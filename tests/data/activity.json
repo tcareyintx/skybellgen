@@ -1,0 +1,18 @@
+{
+  "account_id": "123-123-123",
+  "activity_id": "bdc15f68-4c7b-41e2-8c54-adfb800898a9",
+  "ai_ppe": null,
+  "created_at": "2019-07-05T16:19:51.157Z",
+  "date": "07/05/2019",
+  "device_id": "012345670123456789abcdef",
+  "device_name": "FrontDoor",
+  "edge_tags": ["doorbell"],
+  "event_time": 1751732391135,
+  "event_type": "doorbell",
+  "events": [],
+  "image": "aGVsbG8gd29ybGQ=",
+  "video_ready": true,
+  "video_ready_time": "2019-07-05T16:20:37.545Z",
+  "video_size": 3695950,
+  "video_url": "/activity/act-doorbell/video"
+}

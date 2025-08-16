@@ -1,4 +1,4 @@
-"""Test SkybellGen sensor."""
+"""Test SkyBellGen sensor."""
 
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.const import Platform

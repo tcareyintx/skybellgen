@@ -1,4 +1,4 @@
-"""Constants for the Skybell Gen Doorbell."""
+"""Constants for the SkyBell Gen Doorbell."""
 
 from typing import Final
 

@@ -1,4 +1,4 @@
-"""Data update coordinator for the Skybell Gen integration."""
+"""Data update coordinator for the SkyBell Gen integration."""
 
 import asyncio
 from datetime import datetime, timedelta
@@ -23,7 +23,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class SkybellHubDataUpdateCoordinator(DataUpdateCoordinator[None]):
-    """Data update coordinator for a Skybell Hub."""
+    """Data update coordinator for a SkyBell Hub."""
 
     def __init__(
         self,
@@ -55,7 +55,7 @@ class SkybellHubDataUpdateCoordinator(DataUpdateCoordinator[None]):
             self.update_interval = session_refresh_timestamp - datetime.now()
 
     async def _async_refresh_skybell_session(self, api: Skybell) -> None:
-        """Refresh the Skybell session if needed."""
+        """Refresh the SkyBell session if needed."""
         # If the session refresh timestamp is not None and the current time is greater
         # than the session refresh timestamp, we need to refresh the session.
         ts = api.session_refresh_timestamp
@@ -68,7 +68,7 @@ class SkybellHubDataUpdateCoordinator(DataUpdateCoordinator[None]):
                     translation_domain=DOMAIN,
                     translation_key="refresh_failed",
                     translation_placeholders={
-                        "error": str(exc),
+                        "error": repr(exc),
                     },
                 ) from exc
         self.update_interval = timedelta(seconds=HUB_REFRESH_CYCLE)
@@ -79,7 +79,7 @@ class SkybellHubDataUpdateCoordinator(DataUpdateCoordinator[None]):
         entry: SkybellConfigEntry = cast(SkybellConfigEntry, self.config_entry)
         api = entry.runtime_data.api
         if api is None:
-            _LOGGER.warning("SkybellGen API isn't setup, cannot refresh session")
+            _LOGGER.warning("SkyBellGen API isn't setup, cannot refresh session")
             return
 
         # Check if we should refresh the tokens for the session
@@ -97,7 +97,7 @@ class SkybellHubDataUpdateCoordinator(DataUpdateCoordinator[None]):
                 translation_domain=DOMAIN,
                 translation_key="update_failed",
                 translation_placeholders={
-                    "error": str(exc),
+                    "error": repr(exc),
                 },
             ) from exc
 
@@ -176,7 +176,7 @@ class SkybellHubDataUpdateCoordinator(DataUpdateCoordinator[None]):
 
 
 class SkybellDeviceDataUpdateCoordinator(DataUpdateCoordinator[None]):
-    """Data update coordinator for a Skybell device."""
+    """Data update coordinator for a SkyBell device."""
 
     def __init__(
         self,
@@ -204,6 +204,6 @@ class SkybellDeviceDataUpdateCoordinator(DataUpdateCoordinator[None]):
                 translation_domain=DOMAIN,
                 translation_key="update_failed",
                 translation_placeholders={
-                    "error": str(exc),
+                    "error": repr(exc),
                 },
             ) from exc

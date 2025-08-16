@@ -1,4 +1,4 @@
-"""Support for the Skybell Doorbells using the Cloud GEN APIs."""
+"""Support for the SkyBell Doorbells using the Cloud GEN APIs."""
 
 from __future__ import annotations
 
@@ -33,7 +33,7 @@ PARALLEL_UPDATES = 1
 
 @dataclass
 class SkybellData:
-    """The Skybell data class for a Hub config entity."""
+    """The SkyBell data class for a Hub config entity."""
 
     api: Skybell | None = None
     # Ignore typing errors due to circular imports with the data coordinator
@@ -47,7 +47,7 @@ type SkybellConfigEntry = ConfigEntry[SkybellData]  # flake8: noqa: E999
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: SkybellConfigEntry) -> bool:
-    """Set up Skybell from a config entry."""
+    """Set up SkyBell from a config entry."""
     from .coordinator import (  # pylint: disable=import-outside-toplevel, cyclic-import
         SkybellHubDataUpdateCoordinator,
     )
@@ -70,7 +70,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: SkybellConfigEntry) -> b
         raise ConfigEntryAuthFailed from ex
     except SkybellException as ex:
         await api.async_delete_cache()
-        raise ConfigEntryNotReady(f"Unable to connect to Skybell service: {ex}") from ex
+        raise ConfigEntryNotReady(f"Unable to connect to SkyBell service: {ex}") from ex
 
     # Assign the API and initialize the runtime data
     entry.runtime_data = SkybellData(api=api)

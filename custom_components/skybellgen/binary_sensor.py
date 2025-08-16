@@ -1,4 +1,4 @@
-"""Binary sensor support for the Skybell Gen Doorbell."""
+"""Binary sensor support for the SkyBell Gen Doorbell."""
 
 from __future__ import annotations
 
@@ -85,7 +85,7 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
-    """Set up Skybell binary sensor."""
+    """Set up SkyBell binary sensor."""
     # Known device is are the device ids that have been
     # provisioned in this instantiation of HA - the set
     # is not retained across restarts
@@ -112,14 +112,14 @@ async def async_setup_entry(
 
 
 class SkybellBinarySensor(SkybellEntity, BinarySensorEntity):
-    """A binary sensor implementation for Skybell devices."""
+    """A binary sensor implementation for SkyBell devices."""
 
     def __init__(
         self,
         coordinator: SkybellDeviceDataUpdateCoordinator,
         description: BinarySensorEntityDescription,
     ) -> None:
-        """Initialize a binary sensor for a Skybell device."""
+        """Initialize a binary sensor for a SkyBell device."""
         super().__init__(coordinator, description)
 
     @callback

@@ -1,4 +1,4 @@
-"""Button support for the Skybell Gen Doorbell."""
+"""Button support for the SkyBell Gen Doorbell."""
 
 from __future__ import annotations
 
@@ -37,7 +37,7 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
-    """Set up Skybell entity."""
+    """Set up SkyBell entity."""
 
     known_device_ids: set[str] = set()
 
@@ -67,14 +67,14 @@ async def async_setup_entry(
 
 
 class SkybellButton(SkybellEntity, ButtonEntity):
-    """A button implementation for Skybell devices."""
+    """A button implementation for SkyBell devices."""
 
     def __init__(
         self,
         coordinator: SkybellDeviceDataUpdateCoordinator,
         description: ButtonEntityDescription,
     ) -> None:
-        """Initialize a entity for a Skybell device."""
+        """Initialize a entity for a SkyBell device."""
         super().__init__(coordinator, description)
 
     async def async_press(self) -> None:
@@ -96,6 +96,6 @@ class SkybellButton(SkybellEntity, ButtonEntity):
                     translation_key="reboot_failed",
                     translation_placeholders={
                         "key": self.entity_description.key,
-                        "error": str(exc),
+                        "error": repr(exc),
                     },
                 ) from exc

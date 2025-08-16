@@ -1,4 +1,4 @@
-"""Number support for the Skybell Gen Doorbell."""
+"""Number support for the SkyBell Gen Doorbell."""
 
 from __future__ import annotations
 
@@ -75,7 +75,7 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
-    """Set up Skybell entity."""
+    """Set up SkyBell entity."""
 
     known_device_ids: set[str] = set()
 
@@ -105,14 +105,14 @@ async def async_setup_entry(
 
 
 class SkybellNumber(SkybellEntity, NumberEntity):
-    """A number implementation for Skybell devices."""
+    """A number implementation for SkyBell devices."""
 
     def __init__(
         self,
         coordinator: SkybellDeviceDataUpdateCoordinator,
         description: NumberEntityDescription,
     ) -> None:
-        """Initialize a entity for a Skybell device."""
+        """Initialize a entity for a SkyBell device."""
         super().__init__(coordinator, description)
 
     async def async_set_native_value(self, value: float) -> None:

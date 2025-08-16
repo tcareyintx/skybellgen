@@ -1,4 +1,4 @@
-"""Config flow for Skybell Gen integration."""
+"""Config flow for SkyBell Gen integration."""
 
 from __future__ import annotations
 
@@ -23,7 +23,7 @@ PARALLEL_UPDATES = 1
 
 
 class SkybellFlowHandler(ConfigFlow, domain=DOMAIN):  # type: ignore[call-arg]
-    """Handle a config flow for Skybell."""
+    """Handle a config flow for SkyBell."""
 
     async def async_step_reauth(
         self, entry_data: Mapping[str, Any]

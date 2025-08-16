@@ -1,4 +1,4 @@
-"""Select support for the Skybell Gen Doorbell."""
+"""Select support for the SkyBell Gen Doorbell."""
 
 from __future__ import annotations
 
@@ -45,7 +45,7 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
-    """Set up Skybell entity."""
+    """Set up SkyBell entity."""
 
     known_device_ids: set[str] = set()
 
@@ -75,14 +75,14 @@ async def async_setup_entry(
 
 
 class SkybellSelect(SkybellEntity, SelectEntity):
-    """A select implementation for Skybell devices."""
+    """A select implementation for SkyBell devices."""
 
     def __init__(
         self,
         coordinator: SkybellDeviceDataUpdateCoordinator,
         description: SelectEntityDescription,
     ) -> None:
-        """Initialize a entity for a Skybell device."""
+        """Initialize a entity for a SkyBell device."""
         super().__init__(coordinator, description)
 
     async def async_select_option(self, option: str) -> None:
