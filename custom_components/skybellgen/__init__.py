@@ -49,7 +49,7 @@ type SkybellConfigEntry = ConfigEntry[SkybellData]  # flake8: noqa: E999
 async def async_setup_entry(hass: HomeAssistant, entry: SkybellConfigEntry) -> bool:
     """Set up SkyBell from a config entry."""
     from .coordinator import (  # pylint: disable=import-outside-toplevel, cyclic-import
-        SkyBellHubDataUpdateCoordinator,
+        SkybellHubDataUpdateCoordinator,
     )
 
     # Sign into the session and get initial devices
@@ -79,7 +79,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: SkybellConfigEntry) -> b
     entry.runtime_data.device_coordinators = []  # type: ignore[assignment]
 
     # Setup the hub coordinator
-    hub_coordinator: SkyBellHubDataUpdateCoordinator = SkyBellHubDataUpdateCoordinator(
+    hub_coordinator: SkybellHubDataUpdateCoordinator = SkybellHubDataUpdateCoordinator(
         hass, entry, str(entry.unique_id)
     )
     entry.runtime_data.hub_coordinator = hub_coordinator  # type: ignore[assignment]

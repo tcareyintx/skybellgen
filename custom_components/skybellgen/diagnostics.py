@@ -13,7 +13,6 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceEntry
 
 from . import SkybellConfigEntry
-from .coordinator import SkybellDeviceDataUpdateCoordinator
 
 PARALLEL_UPDATES = 1
 

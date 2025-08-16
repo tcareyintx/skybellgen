@@ -146,7 +146,7 @@ async def test_step_reauth_recover(hass, bypass_initialize) -> None:
     assert result["step_id"] == "reauth_confirm"
 
     with patch(
-        "custom_components.skybellgen.SkyBell.async_initialize",
+        "custom_components.skybellgen.Skybell.async_initialize",
         side_effect=SkybellAuthenticationException,
     ):
         result = await hass.config_entries.flow.async_configure(

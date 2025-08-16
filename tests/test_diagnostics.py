@@ -10,8 +10,8 @@ from custom_components.skybellgen.diagnostics import (
     async_get_device_diagnostics,
 )
 
-from .const import import DEVICE_ID
 from .conftest import async_init_integration
+from .const import DEVICE_ID
 
 
 async def test_diagnostic_config(hass, remove_platforms, bypass_get_devices):

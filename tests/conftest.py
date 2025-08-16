@@ -7,11 +7,11 @@ import json
 from os import path
 from unittest.mock import patch
 
-from aioskybellgen import SkyBellDevice
+from aioskybellgen import SkybellDevice
 from aioskybellgen.exceptions import (
-    SkyBellAccessControlException,
-    SkyBellAuthenticationException,
-    SkyBellException,
+    SkybellAccessControlException,
+    SkybellAuthenticationException,
+    SkybellException,
 )
 import aioskybellgen.helpers.const as CONST
 import pytest
@@ -22,18 +22,18 @@ from custom_components.skybellgen.const import DOMAIN
 from .const import MOCK_CONFIG, MOCK_PLATFORMS, USER_ID
 
 
-def get_two_devices() -> list[SkyBellDevice]:
+def get_two_devices() -> list[SkybellDevice]:
     """Return two SkyBell devices."""
-    devices: list[SkyBellDevice] = []
+    devices: list[SkybellDevice] = []
     basepath = path.dirname(__file__)
     filepath = path.abspath(path.join(basepath, "data/device.json"))
     with open(filepath, "r", encoding="utf-8") as file:
         data = json.load(file)
-    device1 = SkyBellDevice(device_json=data, skybell=None)
+    device1 = SkybellDevice(device_json=data, skybell=None)
     devices.append(device1)
 
     device2_data = copy.deepcopy(data)
-    device2 = SkyBellDevice(device_json=device2_data, skybell=None)
+    device2 = SkybellDevice(device_json=device2_data, skybell=None)
     device2._device_id = "second_device"
     device2._device_json[CONST.DEVICE_ID] = "second_device"
     device2._device_json[CONST.NAME] = "second_device name"
@@ -45,14 +45,14 @@ def get_two_devices() -> list[SkyBellDevice]:
     return devices
 
 
-def get_one_device() -> list[SkyBellDevice]:
+def get_one_device() -> list[SkybellDevice]:
     """Return one SkyBell device."""
-    devices: list[SkyBellDevice] = []
+    devices: list[SkybellDevice] = []
     basepath = path.dirname(__file__)
     filepath = path.abspath(path.join(basepath, "data/device.json"))
     with open(filepath, "r", encoding="utf-8") as file:
         data = json.load(file)
-    device1 = SkyBellDevice(device_json=data, skybell=None)
+    device1 = SkybellDevice(device_json=data, skybell=None)
     filepath = path.abspath(path.join(basepath, "data/activity.json"))
     with open(filepath, "r", encoding="utf-8") as file:
         data = json.load(file)
@@ -102,7 +102,7 @@ def bypass_dependency_check_fixture():
 @pytest.fixture(name="bypass_get_devices")
 def bypass_get_devices_fixture():
     """Skip calls to get data from API."""
-    with patch("custom_components.skybellgen.SkyBell.async_get_devices") as init_method:
+    with patch("custom_components.skybellgen.Skybell.async_get_devices") as init_method:
         devices = get_one_device()
         init_method.return_value = []
         init_method.return_value.append(devices[0])
@@ -113,12 +113,12 @@ def bypass_get_devices_fixture():
 @pytest.fixture(name="bypass_get_devices2")
 def bypass_get_devices2_fixture():
     """Skip calls to get data from API."""
-    with patch("custom_components.skybellgen.SkyBell.async_get_devices") as init_method:
+    with patch("custom_components.skybellgen.Skybell.async_get_devices") as init_method:
         basepath = path.dirname(__file__)
         filepath = path.abspath(path.join(basepath, "data/device2.json"))
         with open(filepath, "r", encoding="utf-8") as file:
             data = json.load(file)
-        device = SkyBellDevice(device_json=data, skybell=None)
+        device = SkybellDevice(device_json=data, skybell=None)
         init_method.return_value = []
         init_method.return_value.append(device)
         yield
@@ -128,12 +128,12 @@ def bypass_get_devices2_fixture():
 @pytest.fixture(name="bypass_get_devices3")
 def bypass_get_devices3_fixture():
     """Skip calls to get data from API."""
-    with patch("custom_components.skybellgen.SkyBell.async_get_devices") as init_method:
+    with patch("custom_components.skybellgen.Skybell.async_get_devices") as init_method:
         basepath = path.dirname(__file__)
         filepath = path.abspath(path.join(basepath, "data/device3.json"))
         with open(filepath, "r", encoding="utf-8") as file:
             data = json.load(file)
-        device = SkyBellDevice(device_json=data, skybell=None)
+        device = SkybellDevice(device_json=data, skybell=None)
         init_method.return_value = []
         init_method.return_value.append(device)
         yield
@@ -144,8 +144,8 @@ def bypass_get_devices3_fixture():
 def error_hub_update_exc_fixture():
     """Issue a SkyBellException when called."""
     with patch(
-        "custom_components.skybellgen.coordinator.SkyBell.async_get_devices",
-        side_effect=SkyBellException,
+        "custom_components.skybellgen.coordinator.Skybell.async_get_devices",
+        side_effect=SkybellException,
     ):
         yield
 
@@ -155,8 +155,8 @@ def error_hub_update_exc_fixture():
 def error_hub_refresh_exc_fixture():
     """Issue a SkyBellException when called."""
     with patch(
-        "custom_components.skybellgen.coordinator.SkyBell.async_refresh_session",
-        side_effect=SkyBellException,
+        "custom_components.skybellgen.coordinator.Skybell.async_refresh_session",
+        side_effect=SkybellException,
     ):
         yield
 
@@ -166,7 +166,7 @@ def error_hub_refresh_exc_fixture():
 def bypass_hub_refresh_fixture():
     """Bypass the hub refresh call."""
     with patch(
-        "custom_components.skybellgen.coordinator.SkyBell.async_refresh_session",
+        "custom_components.skybellgen.coordinator.Skybell.async_refresh_session",
     ):
         yield
 
@@ -175,7 +175,7 @@ def bypass_hub_refresh_fixture():
 @pytest.fixture(name="bypass_delete_cache", autouse=True)
 def bypass_delete_cache_fixture():
     """Skip calls to delete cache from API."""
-    with patch("custom_components.skybellgen.SkyBell.async_delete_cache"):
+    with patch("custom_components.skybellgen.Skybell.async_delete_cache"):
         yield
 
 
@@ -183,7 +183,7 @@ def bypass_delete_cache_fixture():
 @pytest.fixture(name="bypass_initialize", autouse=True)
 def bypass_initialize_fixture():
     """Simulate error when retrieving data from API."""
-    with patch("custom_components.skybellgen.SkyBell.async_initialize"):
+    with patch("custom_components.skybellgen.Skybell.async_initialize"):
         yield
 
 
@@ -193,8 +193,8 @@ def bypass_initialize_fixture():
 def error_initialize_fixture():
     """Simulate error when retrieving data from API."""
     with patch(
-        "custom_components.skybellgen.SkyBell.async_initialize",
-        side_effect=SkyBellException,
+        "custom_components.skybellgen.Skybell.async_initialize",
+        side_effect=SkybellException,
     ):
         yield
 
@@ -205,8 +205,8 @@ def error_initialize_fixture():
 def error_initialize_auth_fixture():
     """Simulate error when retrieving data from API."""
     with patch(
-        "custom_components.skybellgen.SkyBell.async_initialize",
-        side_effect=SkyBellAuthenticationException,
+        "custom_components.skybellgen.Skybell.async_initialize",
+        side_effect=SkybellAuthenticationException,
     ):
         yield
 
@@ -217,7 +217,7 @@ def error_initialize_auth_fixture():
 def error_initialize_exception_fixture():
     """Simulate error when authenticating from the API."""
     with patch(
-        "custom_components.skybellgen.SkyBell.async_initialize",
+        "custom_components.skybellgen.Skybell.async_initialize",
         side_effect=Exception,
     ):
         yield
@@ -236,7 +236,7 @@ def remove_camera_platform_fixture():
 def bypass_set_settings_fixture():
     """Bypass the call to set settings the SkyBellGen integration."""
     with patch(
-        "custom_components.skybellgen.coordinator.SkyBellDevice.async_set_setting"
+        "custom_components.skybellgen.coordinator.SkybellDevice.async_set_setting"
     ):
         yield
 
@@ -247,8 +247,8 @@ def bypass_set_settings_fixture():
 def error_set_setting_exc_fixture():
     """Simulate error from the API."""
     with patch(
-        "custom_components.skybellgen.coordinator.SkyBellDevice.async_set_setting",
-        side_effect=SkyBellException,
+        "custom_components.skybellgen.coordinator.SkybellDevice.async_set_setting",
+        side_effect=SkybellException,
     ):
         yield
 
@@ -259,8 +259,8 @@ def error_set_setting_exc_fixture():
 def error_set_setting_acl_fixture():
     """Simulate error from the API."""
     with patch(
-        "custom_components.skybellgen.coordinator.SkyBellDevice.async_set_setting",
-        side_effect=SkyBellAccessControlException,
+        "custom_components.skybellgen.coordinator.SkybellDevice.async_set_setting",
+        side_effect=SkybellAccessControlException,
     ):
         yield
 
@@ -270,7 +270,7 @@ def error_set_setting_acl_fixture():
 def bypass_device_reboot_fixture():
     """Bypass the call to set settings the SkyBellGen integration."""
     with patch(
-        "custom_components.skybellgen.coordinator.SkyBellDevice.async_reboot_device"
+        "custom_components.skybellgen.coordinator.SkybellDevice.async_reboot_device"
     ):
         yield
 
@@ -281,8 +281,8 @@ def bypass_device_reboot_fixture():
 def error_reboot_exc_fixture():
     """Simulate error from the API."""
     with patch(
-        "custom_components.skybellgen.coordinator.SkyBellDevice.async_reboot_device",
-        side_effect=SkyBellException,
+        "custom_components.skybellgen.coordinator.SkybellDevice.async_reboot_device",
+        side_effect=SkybellException,
     ):
         yield
 
@@ -293,8 +293,8 @@ def error_reboot_exc_fixture():
 def error_reboot_acl_fixture():
     """Simulate error from the API."""
     with patch(
-        "custom_components.skybellgen.coordinator.SkyBellDevice.async_reboot_device",
-        side_effect=SkyBellAccessControlException,
+        "custom_components.skybellgen.coordinator.SkybellDevice.async_reboot_device",
+        side_effect=SkybellAccessControlException,
     ):
         yield
 
@@ -303,7 +303,7 @@ def error_reboot_acl_fixture():
 @pytest.fixture(name="bypass_device_update", autouse=True)
 def bypass_device_update_fixture():
     """Bypass the call to update the SkyBellGen device."""
-    with patch("custom_components.skybellgen.coordinator.SkyBellDevice.async_update"):
+    with patch("custom_components.skybellgen.coordinator.SkybellDevice.async_update"):
         yield
 
 
@@ -312,8 +312,8 @@ def bypass_device_update_fixture():
 def error_update_exc_fixture():
     """Issue a SkyBellException when called."""
     with patch(
-        "custom_components.skybellgen.coordinator.SkyBellDevice.async_update",
-        side_effect=SkyBellException,
+        "custom_components.skybellgen.coordinator.SkybellDevice.async_update",
+        side_effect=SkybellException,
     ):
         yield
 
