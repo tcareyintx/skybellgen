@@ -68,7 +68,7 @@ class SkybellHubDataUpdateCoordinator(DataUpdateCoordinator[None]):
                     translation_domain=DOMAIN,
                     translation_key="refresh_failed",
                     translation_placeholders={
-                        "error": str(exc),
+                        "error": repr(exc),
                     },
                 ) from exc
         self.update_interval = timedelta(seconds=HUB_REFRESH_CYCLE)
@@ -97,7 +97,7 @@ class SkybellHubDataUpdateCoordinator(DataUpdateCoordinator[None]):
                 translation_domain=DOMAIN,
                 translation_key="update_failed",
                 translation_placeholders={
-                    "error": str(exc),
+                    "error": repr(exc),
                 },
             ) from exc
 
@@ -204,6 +204,6 @@ class SkybellDeviceDataUpdateCoordinator(DataUpdateCoordinator[None]):
                 translation_domain=DOMAIN,
                 translation_key="update_failed",
                 translation_placeholders={
-                    "error": str(exc),
+                    "error": repr(exc),
                 },
             ) from exc
