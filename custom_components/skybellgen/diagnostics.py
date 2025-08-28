@@ -80,6 +80,8 @@ async def async_get_config_entry_diagnostics(
     api_info: dict[str, Any] = {}
     api_info["session_refresh_timestamp"] = api.session_refresh_timestamp
     api_info["session_refresh_period"] = api.session_refresh_period
+    api_info["capture_local_events"] = api.capture_local_events
+    api_info["local_event_server_started"] = Skybell._local_event_server is not None
     api_info["user"] = api._user
     info["api"] = api_info
 
