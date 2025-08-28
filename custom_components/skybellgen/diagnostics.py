@@ -84,7 +84,7 @@ async def async_get_config_entry_diagnostics(
     info["api"] = api_info
 
     devices = {}
-    for dc in dcs:
+    for dc in cast(list, dcs):
         device = device_to_dict(dc.device)
         devices[dc.device.device_id] = device
 
@@ -102,7 +102,7 @@ async def async_get_device_diagnostics(
     """Return diagnostics for a device."""
     dcs = config_entry.runtime_data.device_coordinators
     devices = []
-    for dc in dcs:
+    for dc in cast(list, dcs):
         devices.append(dc.device)
 
     # Get the device specific information

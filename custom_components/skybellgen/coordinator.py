@@ -7,8 +7,6 @@ from typing import cast
 
 from aioskybellgen import Skybell, SkybellDevice
 from aioskybellgen.exceptions import SkybellException
-
-# from aioskybellgen.helpers.const import REFRESH_CYCLE
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry as dr
@@ -62,15 +60,16 @@ class SkybellHubDataUpdateCoordinator(DataUpdateCoordinator[None]):
             self.update_interval = session_refresh_timestamp - datetime.now(
                 timezone.utc
             )
+            if self.update_interval.total_seconds() < 0:
+                self.update_interval = timedelta(seconds=LOCAL_REFRESH_CYCLE)
 
     async def _async_refresh_skybell_session(self, api: Skybell) -> None:
         """Refresh the SkyBell session if needed."""
         # If the session refresh timestamp is not None and the current time is greater
         # than the session refresh timestamp, we need to refresh the session.
         ts = api.session_refresh_timestamp
-        if ts is not None and (
-            (datetime.now(timezone.utc) + self.update_interval) >= ts
-        ):
+        next_update = datetime.now(timezone.utc) + cast(timedelta, self.update_interval)
+        if ts is not None and (next_update >= ts):
             try:
                 await api.async_refresh_session()
                 _LOGGER.debug("Succesfull refresh session for %s", api.user_id)
@@ -141,13 +140,15 @@ class SkybellHubDataUpdateCoordinator(DataUpdateCoordinator[None]):
     def remove_device_coordinators(self, device_id: str) -> None:
         """Remove the coordinator and device info from the Hub Coordinator."""
         entry: SkybellConfigEntry = cast(SkybellConfigEntry, self.config_entry)
-        entry.runtime_data.known_device_ids.discard(device_id)
+        cast(set, entry.runtime_data.known_device_ids).discard(device_id)
         array_index: list[int] = []
-        for i, dc in enumerate(entry.runtime_data.device_coordinators):
+        for i, dc in enumerate(
+            cast(list, entry.runtime_data.device_coordinators)
+        ):  # type: ignore[var-annotated]
             if dc.device.device_id == device_id:
                 array_index.append(i)
         for index in sorted(array_index, reverse=True):
-            del entry.runtime_data.device_coordinators[index]
+            del cast(list, entry.runtime_data.device_coordinators)[index]
 
     async def async_check_new_devices(self) -> None:
         """Check for new devices and build the associated coordinators and platform entities."""
@@ -164,7 +165,9 @@ class SkybellHubDataUpdateCoordinator(DataUpdateCoordinator[None]):
         entry: SkybellConfigEntry = cast(SkybellConfigEntry, self.config_entry)
         devices: list[SkybellDevice] = self.data  # type: ignore[assignment, var-annotated]
         # Setup the device coordinators
-        device_coordinators: list[SkybellDeviceDataUpdateCoordinator] = []
+        device_coordinators: list[
+            SkybellDeviceDataUpdateCoordinator | SkybellDeviceLocalUpdateCoordinator
+        ] = []
         for new_device_id in new_device_ids:
             for device in devices:
                 if device.device_id == new_device_id:
@@ -179,7 +182,7 @@ class SkybellHubDataUpdateCoordinator(DataUpdateCoordinator[None]):
                             )
                         )
 
-        entry.runtime_data.device_coordinators.extend(
+        cast(list, entry.runtime_data.device_coordinators).extend(
             device_coordinators
         )  # type: ignore[assignment]
 

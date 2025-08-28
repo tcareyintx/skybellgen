@@ -2,7 +2,7 @@
 
 # pylint: disable=protected-access
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from aioskybellgen import Skybell
 from freezegun.api import FrozenDateTimeFactory
@@ -160,11 +160,14 @@ async def test_hub_coord_refresh(
         "ExpiresIn": 3600,
         "RefreshToken": "token",
     }
-    auth_result["ExpirationDate"] = datetime.now() - timedelta(seconds=86400)
+    auth_result["ExpirationDate"] = datetime.now(timezone.utc) - timedelta(
+        seconds=86400
+    )
     api._cache["AuthenticationResult"] = auth_result
 
     # Refresh the hub controller
     hc = config_entry.runtime_data.hub_coordinator
+    # await hc._async_refresh_skybell_session(api)
     try:
         await hc.async_refresh()
         assert True
@@ -212,7 +215,7 @@ async def test_hub_coord_refresh_exc(
         "ExpiresIn": 3600,
         "RefreshToken": "token",
     }
-    auth_result["ExpirationDate"] = datetime.now()
+    auth_result["ExpirationDate"] = datetime.now(timezone.utc)
     api._cache["AuthenticationResult"] = auth_result
 
     # Refresh the hub controller

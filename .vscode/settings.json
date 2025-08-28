@@ -33,10 +33,10 @@
     "green": 90
   },
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "ms-python.black-formatter",
+  "editor.defaultFormatter": "ms-python.autopep8",
   "files.trimTrailingWhitespace": true,
   "[python]": {
-    "editor.defaultFormatter": "ms-python.black-formatter"
+    "editor.defaultFormatter": "ms-python.autopep8"
   },
   "editor.formatOnType": true,
   "makefile.configureOnOpen": false,

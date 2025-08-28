@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import cast
 
 from aioskybellgen import Skybell
 from aioskybellgen.exceptions import SkybellAuthenticationException, SkybellException
@@ -114,13 +115,11 @@ async def async_remove_config_entry_device(
     remove_entry = False
     for identifier in device_entry.identifiers:
         device_id = identifier[1]
-        if (
-            identifier[0] == DOMAIN
-            and device_id not in config_entry.runtime_data.current_device_ids
+        if (identifier[0] == DOMAIN) and (
+            device_id not in cast(set, config_entry.runtime_data.current_device_ids)
         ):
             remove_entry = True
-            if device_id in config_entry.runtime_data.known_device_ids:
-                del config_entry.runtime_data.known_device_ids[device_id]
+            cast(set, config_entry.runtime_data.known_device_ids).discard(device_id)
     return remove_entry
 
 

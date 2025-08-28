@@ -207,7 +207,9 @@ async def async_setup_entry(
                         entity.key in LOCAL_SENSORS
                     ):
                         if isinstance(coordinator, SkybellDeviceLocalUpdateCoordinator):
-                            entities.append(SkybellSensor(coordinator, entity))
+                            entities.append(
+                                SkybellSensor(coordinator, entity)  # type: ignore[arg-type]
+                            )
                     elif not isinstance(
                         coordinator, SkybellDeviceLocalUpdateCoordinator
                     ):
