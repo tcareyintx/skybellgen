@@ -41,6 +41,8 @@ async def async_setup_entry(
         new_device_ids: set[str] = set()
         for entity in CAMERA_TYPES:
             for coordinator in entry.runtime_data.device_coordinators:
+                if not isinstance(coordinator, SkybellDeviceDataUpdateCoordinator):
+                    continue
                 if coordinator.device.device_id not in known_device_ids:
                     if entity.key == "avatar":
                         entities.append(SkybellCamera(coordinator, entity))

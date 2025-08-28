@@ -13,7 +13,8 @@ from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from .const import DOMAIN
+from .const import CONF_USE_LOCAL_SERVER, DOMAIN
+from .services import async_setup_services
 
 PLATFORMS = [
     Platform.BINARY_SENSOR,
@@ -46,6 +47,14 @@ class SkybellData:
 type SkybellConfigEntry = ConfigEntry[SkybellData]  # flake8: noqa: E999
 
 
+async def async_setup(hass: HomeAssistant, config: SkybellConfigEntry) -> bool:
+    """Set up SkyBellgen services."""
+
+    async_setup_services(hass)
+
+    return True
+
+
 async def async_setup_entry(hass: HomeAssistant, entry: SkybellConfigEntry) -> bool:
     """Set up SkyBell from a config entry."""
     from .coordinator import (  # pylint: disable=import-outside-toplevel, cyclic-import
@@ -55,6 +64,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: SkybellConfigEntry) -> b
     # Sign into the session and get initial devices
     email = entry.data[CONF_EMAIL]
     password = entry.data[CONF_PASSWORD]
+    use_local_server = entry.data.get(CONF_USE_LOCAL_SERVER, False)
     api = Skybell(
         username=email,
         password=password,
@@ -62,6 +72,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: SkybellConfigEntry) -> b
         get_devices=False,
         cache_path=hass.config.path(f"./skybellgen_{entry.unique_id}.pickle"),
         session=async_get_clientsession(hass),
+        capture_local_events=use_local_server,
     )
     try:
         await api.async_initialize()
@@ -119,5 +130,6 @@ async def async_unload_entry(hass: HomeAssistant, entry: SkybellConfigEntry) -> 
         api = entry.runtime_data.api
         if api is not None:
             await api.async_delete_cache()
+            del api
 
     return unload_ok

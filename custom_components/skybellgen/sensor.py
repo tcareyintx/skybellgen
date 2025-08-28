@@ -22,6 +22,7 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.typing import StateType
 
 from .const import (
+    CONF_USE_LOCAL_SERVER,
     IMAGE_FIELDS,
     IMAGE_OPTIONS,
     SENTSITIVTY_ADJ,
@@ -30,7 +31,15 @@ from .const import (
     VOLUME_FIELDS,
     VOLUME_OPTIONS,
 )
+from .coordinator import SkybellDeviceLocalUpdateCoordinator
 from .entity import DOMAIN, SkybellEntity
+
+LAST_LOCAL_BUTTON_EVENT = "last_local_button_event"
+LAST_LOCAL_MOTION_EVENT = "last_local_motion_event"
+LOCAL_SENSORS = [
+    LAST_LOCAL_BUTTON_EVENT,
+    LAST_LOCAL_MOTION_EVENT,
+]
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -52,6 +61,18 @@ SENSOR_TYPES: tuple[SkybellSensorEntityDescription, ...] = (
         translation_key="last_motion_event",
         device_class=SensorDeviceClass.TIMESTAMP,
         value_fn=lambda device: device.latest_motion_event_time,
+    ),
+    SkybellSensorEntityDescription(
+        key=LAST_LOCAL_BUTTON_EVENT,
+        translation_key=LAST_LOCAL_BUTTON_EVENT,
+        device_class=SensorDeviceClass.TIMESTAMP,
+        value_fn=lambda device: device.latest_local_doorbell_event_time,
+    ),
+    SkybellSensorEntityDescription(
+        key=LAST_LOCAL_MOTION_EVENT,
+        translation_key=LAST_LOCAL_MOTION_EVENT,
+        device_class=SensorDeviceClass.TIMESTAMP,
+        value_fn=lambda device: device.latest_local_motion_event_time,
     ),
     SkybellSensorEntityDescription(
         key="last_livestream_event",
@@ -182,7 +203,15 @@ async def async_setup_entry(
             for coordinator in entry.runtime_data.device_coordinators:
                 if coordinator.device.device_id not in known_device_ids:
                     new_device_ids.add(coordinator.device.device_id)
-                    entities.append(SkybellSensor(coordinator, entity))
+                    if (entry.data.get(CONF_USE_LOCAL_SERVER, False)) and (
+                        entity.key in LOCAL_SENSORS
+                    ):
+                        if isinstance(coordinator, SkybellDeviceLocalUpdateCoordinator):
+                            entities.append(SkybellSensor(coordinator, entity))
+                    elif not isinstance(
+                        coordinator, SkybellDeviceLocalUpdateCoordinator
+                    ):
+                        entities.append(SkybellSensor(coordinator, entity))
         if entities:
             known_device_ids.update(new_device_ids)
             async_add_entities(entities)
