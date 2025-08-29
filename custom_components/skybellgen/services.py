@@ -43,6 +43,7 @@ def async_setup_services(hass: HomeAssistant) -> None:
         DOMAIN,
         SERVICE_START_LOCAL_EVENT_SERVER,
         _start_local_event_server,
+        SERVICE_START_LOCAL_EVENT_SERVER_SCHEMA,
     )
 
     hass.services.async_register(
