@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
-import voluptuous as vol
-
 from aioskybellgen import Skybell
 from homeassistant.core import HomeAssistant, ServiceCall, callback
 from homeassistant.helpers import config_validation as cv
+import voluptuous as vol
 
 from .const import (
     DOMAIN,

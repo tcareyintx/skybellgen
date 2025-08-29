@@ -346,6 +346,23 @@ Sensors for corresponding entities in Number, Select and Text entities. These se
 - **Location place**
   - **Description**: The name that will be associated with the location's longitude and latitude coordinates.
 
+## Services
+
+The SkyBell integration exposes the following services (actions) that can be used in automations.
+
+### Start local event server
+
+This service starts the local event server that is used to capture UDP broadcast events from the SkyBell doorbell. The Button Pressed and Motion Detection events are captured and presented to Home Assistant via the associated Last local button event and Last local motion event sensors.
+
+#### Fields
+
+interface: The interface field is an optional string field that, when provided, will restrict the local event service to the specified interface. If the field is empty or not provided, then all interfaces "0.0.0.0" is used.
+
+### Stop local event server
+
+This service stops the local event server that is used to capture UDP broadcast events from the SkyBell doorbell.
+
+
 ## Known limitations
 
 The SkyBell integration exposes many of the capabilities and attributes of the SkyBell doorbell. However, there are capabilities and attributes that are not currently exposed using the integration. For these limitations, the SkyBell app should be used.
