@@ -4,6 +4,7 @@ from homeassistant.config_entries import ConfigEntryState
 
 from custom_components.skybellgen.const import (
     DOMAIN,
+    SERVICE_CONF_INTERFACE,
     SERVICE_START_LOCAL_EVENT_SERVER,
     SERVICE_STOP_LOCAL_EVENT_SERVER,
 )
@@ -25,6 +26,13 @@ async def test_local_server(hass, remove_platforms, bypass_get_devices, mocker):
         DOMAIN,
         SERVICE_START_LOCAL_EVENT_SERVER,
         None,
+        blocking=True,
+    )
+
+    await hass.services.async_call(
+        DOMAIN,
+        SERVICE_START_LOCAL_EVENT_SERVER,
+        {SERVICE_CONF_INTERFACE: "0.0.0.0"},
         blocking=True,
     )
 

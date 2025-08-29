@@ -91,3 +91,4 @@ BASIC_MOTION_GET_FUNCTION = {
 
 SERVICE_START_LOCAL_EVENT_SERVER = "start_local_event_server"
 SERVICE_STOP_LOCAL_EVENT_SERVER = "stop_local_event_server"
+SERVICE_CONF_INTERFACE = "interface"

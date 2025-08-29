@@ -36,6 +36,22 @@
       "wrong_account": "[%key:common::config_flow::abort::wrong_account%]"
     }
   },
+  "services": {
+    "start_local_event_server": {
+      "name": "Start local event server",
+      "description": "Starts the SkyBellGen server to receive local broadcast events.",
+      "fields": {
+        "interface": {
+          "name": "Interface",
+          "description": "Interface to which the server is bound."
+        }
+      }
+    },
+    "stop_local_event_server": {
+      "name": "Stop local event server",
+      "description": "Stops the SkyBellGen local event server."
+    }
+  },
   "exceptions": {
     "invalid_setting": {
       "message": "The setting for field {key} and value {value} is invalid"
