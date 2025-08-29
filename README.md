@@ -362,7 +362,6 @@ interface: The interface field is an optional string field that, when provided, 
 
 This service stops the local event server that is used to capture UDP broadcast events from the SkyBell doorbell.
 
-
 ## Known limitations
 
 The SkyBell integration exposes many of the capabilities and attributes of the SkyBell doorbell. However, there are capabilities and attributes that are not currently exposed using the integration. For these limitations, the SkyBell app should be used.
