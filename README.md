@@ -114,9 +114,9 @@ use local event server:
 
 ## Data updates {#data-updates}
 
-The SkyBellGen integration fetches data from the device via the SkyBell cloud API every 1800 seconds (30 minutes). When enabled, the SkyBellGen integration updates local Button Pressed and Motion detection events every 5 seconds.
+The SkyBellGen integration fetches data from the device via the SkyBell cloud API every 600 seconds (10 minutes). When enabled, the SkyBellGen integration updates local Button Pressed and Motion detection events every 5 seconds.
 
-The SkyBellGen integration will refresh hub and session data at least every 3600 secons (1 hour). The timeframe may be sooner passed on the session refresh expiration period.
+The SkyBellGen integration will refresh hub and session data at least every 3600 seconds (1 hour). The timeframe may be sooner passed on the session refresh expiration period received from the Cloud API server.
 
 If the refresh cycle for the device data isn't frequent enough, you can create an automation forr any entity in the device that receives it's data from the cloud API to manually update its data at a faster pace. It is recommended that the shortest interval is 30 seconds as to not overload the Cloud API server with many requests. If you need a faster poll cycle, look into using the local event server. In future releases, webhook triggers will be available for use as well.
 
