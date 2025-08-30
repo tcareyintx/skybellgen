@@ -1,0 +1,16 @@
+# Describes the format for available SkyBellgen services
+
+#Service ID
+start_local_event_server:
+  # Start the local event server in the SkyBellGen communications driver.
+  # The local event server services all SkyBell hubs that have set the hub
+  # attribute capture_local_events to True.
+  fields:
+    interface:
+      example: "0.0.0.0"
+      selector:
+        text:
+
+stop_local_event_server:
+  # Stop the local event server in the SkyBellGen communications driver.
+  # Once stopped hubs will no longer receive local events.

@@ -1,20 +1,25 @@
 """Data update coordinator for the SkyBell Gen integration."""
 
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import logging
 from typing import cast
 
 from aioskybellgen import Skybell, SkybellDevice
 from aioskybellgen.exceptions import SkybellException
-from aioskybellgen.helpers.const import REFRESH_CYCLE
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from . import SkybellConfigEntry
-from .const import DOMAIN, HUB_REFRESH_CYCLE
+from .const import (
+    CONF_USE_LOCAL_SERVER,
+    DATA_REFRESH_CYCLE,
+    DOMAIN,
+    HUB_REFRESH_CYCLE,
+    LOCAL_REFRESH_CYCLE,
+)
 
 # Coordinator is used to centralize the data updates
 PARALLEL_UPDATES = 0
@@ -51,15 +56,20 @@ class SkybellHubDataUpdateCoordinator(DataUpdateCoordinator[None]):
         if session_refresh_timestamp is None:
             _LOGGER.warning("No refresh session for hub: %s", api.user_id)
             return
-        if session_refresh_timestamp < (datetime.now() + update_interval):
-            self.update_interval = session_refresh_timestamp - datetime.now()
+        if session_refresh_timestamp < (datetime.now(timezone.utc) + update_interval):
+            self.update_interval = session_refresh_timestamp - datetime.now(
+                timezone.utc
+            )
+            if self.update_interval.total_seconds() < 0:
+                self.update_interval = timedelta(seconds=LOCAL_REFRESH_CYCLE)
 
     async def _async_refresh_skybell_session(self, api: Skybell) -> None:
         """Refresh the SkyBell session if needed."""
         # If the session refresh timestamp is not None and the current time is greater
         # than the session refresh timestamp, we need to refresh the session.
         ts = api.session_refresh_timestamp
-        if ts is not None and (datetime.now() >= ts):
+        next_update = datetime.now(timezone.utc) + cast(timedelta, self.update_interval)
+        if ts is not None and (next_update >= ts):
             try:
                 await api.async_refresh_session()
                 _LOGGER.debug("Succesfull refresh session for %s", api.user_id)
@@ -122,22 +132,23 @@ class SkybellHubDataUpdateCoordinator(DataUpdateCoordinator[None]):
                         remove_config_entry_id=entry.entry_id,
                     )
                 # Clean up the config_entries runtime data
-                self.remove_device_coordinator(device_id)
+                self.remove_device_coordinators(device_id)
         entry.runtime_data.current_device_ids = current_device_ids
         self.data = devices  # type: ignore[assignment, var-annotated]
         await self.async_check_new_devices()
 
-    def remove_device_coordinator(self, device_id: str) -> None:
+    def remove_device_coordinators(self, device_id: str) -> None:
         """Remove the coordinator and device info from the Hub Coordinator."""
         entry: SkybellConfigEntry = cast(SkybellConfigEntry, self.config_entry)
-        entry.runtime_data.known_device_ids.discard(device_id)
-        array_index: int = -1
-        for i, dc in enumerate(entry.runtime_data.device_coordinators):
+        cast(set, entry.runtime_data.known_device_ids).discard(device_id)
+        array_index: list[int] = []
+        for i, dc in enumerate(
+            cast(list, entry.runtime_data.device_coordinators)
+        ):  # type: ignore[var-annotated]
             if dc.device.device_id == device_id:
-                array_index = i
-                break
-        if array_index >= 0:
-            del entry.runtime_data.device_coordinators[array_index]
+                array_index.append(i)
+        for index in sorted(array_index, reverse=True):
+            del cast(list, entry.runtime_data.device_coordinators)[index]
 
     async def async_check_new_devices(self) -> None:
         """Check for new devices and build the associated coordinators and platform entities."""
@@ -154,7 +165,9 @@ class SkybellHubDataUpdateCoordinator(DataUpdateCoordinator[None]):
         entry: SkybellConfigEntry = cast(SkybellConfigEntry, self.config_entry)
         devices: list[SkybellDevice] = self.data  # type: ignore[assignment, var-annotated]
         # Setup the device coordinators
-        device_coordinators: list[SkybellDeviceDataUpdateCoordinator] = []
+        device_coordinators: list[
+            SkybellDeviceDataUpdateCoordinator | SkybellDeviceLocalUpdateCoordinator
+        ] = []
         for new_device_id in new_device_ids:
             for device in devices:
                 if device.device_id == new_device_id:
@@ -162,7 +175,14 @@ class SkybellHubDataUpdateCoordinator(DataUpdateCoordinator[None]):
                         SkybellDeviceDataUpdateCoordinator(self.hass, entry, device)
                     )
 
-        entry.runtime_data.device_coordinators.extend(
+                    if entry.data.get(CONF_USE_LOCAL_SERVER, False):
+                        device_coordinators.append(
+                            SkybellDeviceLocalUpdateCoordinator(
+                                self.hass, entry, device
+                            )
+                        )
+
+        cast(list, entry.runtime_data.device_coordinators).extend(
             device_coordinators
         )  # type: ignore[assignment]
 
@@ -190,7 +210,7 @@ class SkybellDeviceDataUpdateCoordinator(DataUpdateCoordinator[None]):
             logger=_LOGGER,
             config_entry=config_entry,
             name=device.name,
-            update_interval=timedelta(seconds=REFRESH_CYCLE),
+            update_interval=timedelta(seconds=DATA_REFRESH_CYCLE),
         )
         self.device = device
 
@@ -207,3 +227,27 @@ class SkybellDeviceDataUpdateCoordinator(DataUpdateCoordinator[None]):
                     "error": repr(exc),
                 },
             ) from exc
+
+
+class SkybellDeviceLocalUpdateCoordinator(DataUpdateCoordinator[None]):
+    """Data update coordinator for a SkyBell device local information."""
+
+    def __init__(
+        self,
+        hass: HomeAssistant,
+        config_entry: SkybellConfigEntry,
+        device: SkybellDevice,
+    ) -> None:
+        """Initialize the coordinator."""
+        super().__init__(
+            hass=hass,
+            logger=_LOGGER,
+            config_entry=config_entry,
+            name=device.name,
+            update_interval=timedelta(seconds=LOCAL_REFRESH_CYCLE),
+        )
+        self.device = device
+
+    async def _async_update_data(self) -> None:
+        """Fetch data from API endpoint."""
+        # No need to update information from the API

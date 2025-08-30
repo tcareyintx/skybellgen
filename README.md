@@ -62,6 +62,7 @@ custom_components/skybellgen/camera.py
 custom_components/skybellgen/config_flow.py
 custom_components/skybellgen/const.py
 custom_components/skybellgen/coordinator.py
+custom_components/skybellgen/diagnostics.py
 custom_components/skybellgen/entity.py
 custom_components/skybellgen/icons.json
 custom_components/skybellgen/light.py
@@ -69,6 +70,8 @@ custom_components/skybellgen/manifest.json
 custom_components/skybellgen/number.py
 custom_components/skybellgen/select.py
 custom_components/skybellgen/sensor.py
+custom_components/skybellgen/services.py
+custom_components/skybellgen/services.yaml
 custom_components/skybellgen/strings.json
 custom_components/skybellgen/switch.py
 custom_components/skybellgen/text.py
@@ -105,9 +108,17 @@ password:
 - description: Your password that you used when setting up the account on the SkyBell app. If you
   change your password you can use the reconfigure or re-authentication options of the integration configuration flow.
 
+use local event server:
+
+- description: When checked and the Local event server has been started (via a service), you will receive Button Pressed and Motion Detection events locally that are broadcasted by the device.
+
 ## Data updates {#data-updates}
 
-The SkyBellGen integration fetches data from the device via the SkyBell cloud API every 30 seconds.
+The SkyBellGen integration fetches data from the device via the SkyBell cloud API every 600 seconds (10 minutes). When enabled, the SkyBellGen integration updates local Button Pressed and Motion detection events every 5 seconds.
+
+The SkyBellGen integration will refresh hub and session data at least every 3600 seconds (1 hour). The timeframe may be sooner passed on the session refresh expiration period received from the Cloud API server.
+
+If the refresh cycle for the device data isn't frequent enough, you can create an automation forr any entity in the device that receives it's data from the cloud API to manually update its data at a faster pace. It is recommended that the shortest interval is 30 seconds as to not overload the Cloud API server with many requests. If you need a faster poll cycle, look into using the local event server. In future releases, webhook triggers will be available for use as well.
 
 ## Examples {#examples}
 
@@ -283,11 +294,19 @@ Sensors for corresponding entities in Number, Select and Text entities. These se
 
 - **Last button event**
 
-  - **Description**: The timestamp of the last recorded doorbell button pressed event.
+  - **Description**: The timestamp of the last recorded doorbell button pressed event provided by the Cloud API.
 
 - **Last motion event**
 
-  - **Description**: The timestamp of the last recorded doorbell motion event.
+  - **Description**: The timestamp of the last recorded doorbell motion event provided by the Cloud API.
+
+- **Last local button event**
+
+  - **Description**: The timestamp of the last recorded doorbell button pressed event broadcast by the device.
+
+- **Last local motion event**
+
+  - **Description**: The timestamp of the last recorded doorbell motion event broadcast by the device.
 
 - **Last livestream event**
 
@@ -327,6 +346,22 @@ Sensors for corresponding entities in Number, Select and Text entities. These se
 - **Location place**
   - **Description**: The name that will be associated with the location's longitude and latitude coordinates.
 
+## Services
+
+The SkyBell integration exposes the following services (actions) that can be used in automations.
+
+### Start local event server
+
+This service starts the local event server that is used to capture UDP broadcast events from the SkyBell doorbell. The Button Pressed and Motion Detection events are captured and presented to Home Assistant via the associated Last local button event and Last local motion event sensors.
+
+#### Fields
+
+interface: The interface field is an optional string field that, when provided, will restrict the local event service to the specified interface. If the field is empty or not provided, then all interfaces "0.0.0.0" is used.
+
+### Stop local event server
+
+This service stops the local event server that is used to capture UDP broadcast events from the SkyBell doorbell.
+
 ## Known limitations
 
 The SkyBell integration exposes many of the capabilities and attributes of the SkyBell doorbell. However, there are capabilities and attributes that are not currently exposed using the integration. For these limitations, the SkyBell app should be used.
@@ -342,6 +377,7 @@ The SkyBell integration exposes many of the capabilities and attributes of the S
 3. Adding and removing new devices to the SkyBell cloud API
 4. Maintaining (deleting) and viewing the historical activity events
 5. Livestreaming through the doorbell's camera
+6. Webhook triggers emitted by the Cloud API for various doorbell events (coming soon)
 
 ### SkyBell cloud API attributes that are not supported
 
@@ -350,6 +386,10 @@ The SkyBell integration exposes many of the capabilities and attributes of the S
 3. Advanced motion detection zones
 
 ## Troubleshooting
+
+### Diagnostics
+
+Redacted diagnostics is available for each Hub entry and/or device. These can be downloaded using the Home Assistant diagnostic interface for the SkyBellGen Hub and Device information entities.
 
 ### My password has changed
 

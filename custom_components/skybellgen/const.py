@@ -18,10 +18,14 @@ from aioskybellgen.helpers.const import (
     SPEAKER_VOLUME,
 )
 
+CONF_USE_LOCAL_SERVER = "use_local_server"
 DEFAULT_NAME = "SkyBellGen"
 DOMAIN: Final = "skybellgen"
 
-HUB_REFRESH_CYCLE = 3600
+HUB_REFRESH_CYCLE = 3000
+DATA_REFRESH_CYCLE = 600
+LOCAL_REFRESH_CYCLE = 5
+
 
 IMAGE_AVATAR = "avatar"
 IMAGE_ACTIVITY = "activity"
@@ -84,3 +88,7 @@ BASIC_MOTION_GET_FUNCTION = {
     BASIC_MOTION_RECORD: "basic_motion_record",
     BASIC_MOTION_NOTIFY: "basic_motion_notify",
 }
+
+SERVICE_START_LOCAL_EVENT_SERVER = "start_local_event_server"
+SERVICE_STOP_LOCAL_EVENT_SERVER = "stop_local_event_server"
+SERVICE_CONF_INTERFACE = "interface"

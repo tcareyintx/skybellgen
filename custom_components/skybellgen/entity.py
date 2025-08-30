@@ -10,10 +10,17 @@ from homeassistant.helpers.entity import EntityDescription
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DEFAULT_NAME, DOMAIN
-from .coordinator import SkybellDeviceDataUpdateCoordinator
+from .coordinator import (
+    SkybellDeviceDataUpdateCoordinator,
+    SkybellDeviceLocalUpdateCoordinator,
+)
 
 
-class SkybellEntity(CoordinatorEntity[SkybellDeviceDataUpdateCoordinator]):
+class SkybellEntity(
+    CoordinatorEntity[
+        SkybellDeviceDataUpdateCoordinator | SkybellDeviceLocalUpdateCoordinator
+    ]
+):
     """An HA implementation for SkyBell entity."""
 
     _attr_attribution = "Data provided by SkyBell.com"

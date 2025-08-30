@@ -4,7 +4,8 @@
       "user": {
         "data": {
           "email": "Email",
-          "password": "Password"
+          "password": "Password",
+          "use_local_server": "Use local UDP server for event capture"
         }
       },
       "reauth_confirm": {
@@ -15,11 +16,12 @@
         }
       },
       "reconfigure": {
-        "description": "Please update your password for {email}",
+        "description": "Please update your hub information for {email}",
         "title": "Reconfigure the SkyBellGen Hub",
         "data": {
           "email": "Email",
-          "password": "Password"
+          "password": "Password",
+          "use_local_server": "Use local UDP server for event capture"
         }
       }
     },
@@ -33,6 +35,22 @@
       "reauth_successful": "Re-authentication was successful",
       "wrong_account": "Configuration mismatch for email",
       "reconfigure_successful": "Re-configuration was successful"
+    }
+  },
+  "services": {
+    "start_local_event_server": {
+      "name": "Start local event server",
+      "description": "Starts the SkyBellGen server to receive local broadcast events.",
+      "fields": {
+        "interface": {
+          "name": "Interface",
+          "description": "Interface to which the server is bound."
+        }
+      }
+    },
+    "stop_local_event_server": {
+      "name": "Stop local event server",
+      "description": "Stops the SkyBellGen local event server."
     }
   },
   "exceptions": {
@@ -125,6 +143,12 @@
       },
       "last_motion_event": {
         "name": "Last motion event"
+      },
+      "last_local_button_event": {
+        "name": "Last local button event"
+      },
+      "last_local_motion_event": {
+        "name": "Last local motion event"
       },
       "last_livestream_event": {
         "name": "Last livestream event"
