@@ -76,6 +76,12 @@
     },
     "update_failed": {
       "message": "Device update failed with the exception: {error}"
+    },
+    "turnon_livestream_failed": {
+      "message": "Device failed to turn on livestream with the exception: {error}"
+    },
+    "turnoff_livestream_failed": {
+      "message": "Device failed to turn off livestream with the exception: {error}"
     }
   },
   "entity": {
@@ -134,6 +140,9 @@
       },
       "avatar": {
         "name": "Snapshot"
+      },
+      "livetream": {
+        "name": "Livestream"
       }
     },
     "sensor": {
