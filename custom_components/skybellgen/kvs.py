@@ -1,10 +1,10 @@
+"""AWS Kinesis WebRTC support for the SkyBell Gen Doorbell cameras."""
+
+from dataclasses import dataclass
+from datetime import datetime, timezone
 import json
 import logging
-from dataclasses import dataclass
 
-from datetime import datetime, timezone
-
-import boto3
 from botocore.auth import SigV4QueryAuth
 from botocore.awsrequest import AWSRequest
 from botocore.credentials import Credentials
@@ -13,7 +13,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 @dataclass
-class KVSEndpointData:
+class KVSEndpointData:  # pylint: disable=too-many-instance-attributes
     """Data for KVS endpoint."""
 
     service: str = ""
@@ -38,7 +38,7 @@ def sign_ws_endpoint(kvs_endpoint: KVSEndpointData) -> str:
         secret_key=kvs_endpoint.secret_key,
         token=kvs_endpoint.session_token,
     )
-    SigV4 = SigV4QueryAuth(
+    sigv4 = SigV4QueryAuth(
         auth_credentials, kvs_endpoint.service, kvs_endpoint.region, 299
     )
     aws_request = AWSRequest(
@@ -49,11 +49,11 @@ def sign_ws_endpoint(kvs_endpoint: KVSEndpointData) -> str:
             "X-Amz-ClientId": kvs_endpoint.client_id,
         },
     )
-    SigV4.add_auth(aws_request)
-    preparedRequest = aws_request.prepare()
+    sigv4.add_auth(aws_request)
+    prepared_request = aws_request.prepare()
 
-    url = preparedRequest.url
-    _LOGGER.debug(f"WSS Endpoint: {url}")
+    url = prepared_request.url
+    _LOGGER.debug("WSS Endpoint: %s", url)
 
     return url
 
@@ -67,7 +67,7 @@ def parse_kvs_response(data: dict, device: str) -> KVSEndpointData:
     # parse the channel ARN
     kvs_endpoint.channel_arn = data["channelARN"]
     _LOGGER.debug(
-        f"Livestream Channel ARN for {device} is {kvs_endpoint.channel_arn}"
+        "Livestream Channel ARN for %s is %s", device, kvs_endpoint.channel_arn
     )
     channel_arn = kvs_endpoint.channel_arn.split(":")
     assert channel_arn[0] == "arn"
@@ -84,7 +84,7 @@ def parse_kvs_response(data: dict, device: str) -> KVSEndpointData:
     # get the ICE servers
     kvs_endpoint.ice_servers = json.dumps(data["ice"], separators=(",", ":"))
     _LOGGER.debug(
-        f"Livestream ICE Servers for {device} is {kvs_endpoint.ice_servers}"
+        "Livestream ICE Servers for %s is %s", device, kvs_endpoint.ice_servers
     )
 
     # credentials and expiration
@@ -94,7 +94,7 @@ def parse_kvs_response(data: dict, device: str) -> KVSEndpointData:
     time_offset = expiration_ts - datetime.now(tz=timezone.utc)
     expiration_period = int(time_offset.total_seconds())
     _LOGGER.debug(
-        f"Livestream expiration period for {device} is {expiration_period} seconds"
+        "Livestream expiration period for %s is %d seconds", device, expiration_period
     )
     kvs_endpoint.access_key = credentials["AccessKeyId"]
     kvs_endpoint.secret_key = credentials["SecretAccessKey"]
@@ -115,9 +115,7 @@ def parse_kvs_response(data: dict, device: str) -> KVSEndpointData:
     kvs_endpoint.signed_ws_endpoint = data["signedWSS"]
     signed_url = sign_ws_endpoint(kvs_endpoint)
     if signed_url != kvs_endpoint.ws_endpoint:
-        _LOGGER.debug(
-            f"Signed url is different than WSS endpoint. Using signed url."
-        )
+        _LOGGER.debug("Signed url is different than WSS endpoint. Using signed url.")
         kvs_endpoint.signed_ws_endpoint = signed_url
 
     return kvs_endpoint
