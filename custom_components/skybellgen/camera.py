@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from datetime import datetime, timezone
 from aiohttp import web
 
 from aioskybellgen.exceptions import (
@@ -175,119 +176,17 @@ class SkybellLiveStreamCamera(SkybellCamera):
 
         return self._device.images.get(CONST.SNAPSHOT, b"")
 
-    def _get_go2rtc_url(self) -> str:
-        """Get the WS Signed url for kvs in go2rtc format."""
-
-        kvs_ep = self._kvs_ep
-        result = (
-            "webrtc:"
-            + kvs_ep.signed_ws_endpoint
-            + "#format=kinesis"
-            + "#client_id="
-            + kvs_ep.client_id
-            + "#ice_servers="
-            + kvs_ep.ice_servers
-        )
-        return result
-
-    async def get_webrtc_signalling(self) -> str | None:
-        """Return the webrtc signalling channel."""
-
-        if self._kvs_ep is None:
-            await self.async_start_livestream()
-
-        ss = self._get_go2rtc_url()
-
-        return ss
-
-    async def async_start_livestream(self) -> None:
-        """Handle starting the live stream."""
-
-        try:
-            ls: LiveStreamConnectionData = (
-                await self._device.async_start_livestream()
-            )
-        except SkybellAccessControlException as exc:
-            raise ServiceValidationError(
-                translation_domain=DOMAIN,
-                translation_key="invalid_permissions",
-                translation_placeholders={
-                    "key": self.entity_description.key,
-                },
-            ) from exc
-        except SkybellException as exc:
-            raise ServiceValidationError(
-                translation_domain=DOMAIN,
-                translation_key="turnon_livestream_failed",
-                translation_placeholders={
-                    "key": self.entity_description.key,
-                    "error": repr(exc),
-                },
-            ) from exc
-        self._kvs_ep = parse_kvs_response(ls, self._device.device_id)
-
-    async def async_stop_livestream(self) -> None:
-        """Handle stopping the live stream."""
-
-        try:
-            await self._device.async_stop_livestream()
-        except SkybellAccessControlException as exc:
-            raise ServiceValidationError(
-                translation_domain=DOMAIN,
-                translation_key="invalid_permissions",
-                translation_placeholders={
-                    "key": self.entity_description.key,
-                },
-            ) from exc
-        except SkybellException as exc:
-            raise ServiceValidationError(
-                translation_domain=DOMAIN,
-                translation_key="turnoff_livestream_failed",
-                translation_placeholders={
-                    "key": self.entity_description.key,
-                    "error": repr(exc),
-                },
-            ) from exc
-        finally:
-            self._kvs_ep = None
-
-    async def _register_go2rtc_stream_if_not_exists(self) -> None:
-        """Register the stream in go2rtc if it does not already exist."""
-
-        rest_client = Go2RtcRestClient(
-            async_get_clientsession(self.hass), self.hass.data["go2rtc"]
-        )
-        resp = await rest_client._client.request("GET", "/api")  # noqa: SLF001
-        respJson = await resp.json()
-        rtsp_port: str = respJson["rtsp"]["listen"].split(":")[1]
-
-        signed_url = await self.get_webrtc_signalling()
-
-        streams = await rest_client.streams.list()
-
-        if (stream := streams.get(self.entity_id)) is None or not any(
-            signed_url == producer.url for producer in stream.producers
-        ):
-            await rest_client.streams.add(
-                self.entity_id,
-                [
-                    signed_url,
-                    f"ffmpeg:{self.entity_id}#audio=opus#query=log_level=debug",
-                ],
-            )
-
     async def async_handle_async_webrtc_offer(
         self, offer_sdp: str, session_id: str, send_message: WebRTCSendMessage
     ) -> None:
         """Handle the async WebRTC offer."""
-        # await self.get_webrtc_signalling()
 
         self._sessions[session_id] = ws_client = Go2RtcWsClient(
             async_get_clientsession(self.hass),
             self.hass.data["go2rtc"],
             source=self.entity_id,
         )
-        await self._register_go2rtc_stream_if_not_exists()
+        await self._async_register_go2rtc_stream()
 
         @callback
         def on_messages(message: ReceiveMessages) -> None:
@@ -304,6 +203,7 @@ class SkybellLiveStreamCamera(SkybellCamera):
                     value = WebRTCError(
                         "go2rtc_webrtc_offer_failed", message.error
                     )
+                    self.close_webrtc_session(session_id)
 
             send_message(value)
 
@@ -335,7 +235,110 @@ class SkybellLiveStreamCamera(SkybellCamera):
         if ws_client is not None:
             self.hass.async_create_task(ws_client.close())
         if not self._sessions:
-            # self.hass.async_create_task(self.async_stop_livestream())
+            self.hass.async_create_task(self._async_stop_livestream())
             _LOGGER.debug(
                 "session %s. Created task to stop livestream", session_id
             )
+
+    def _get_go2rtc_url(self) -> str:
+        """Get the WS Signed url for kvs in go2rtc format."""
+
+        kvs_ep = self._kvs_ep
+        result = (
+            "webrtc:"
+            + kvs_ep.signed_ws_endpoint
+            + "#format=kinesis"
+            + "#client_id="
+            + kvs_ep.client_id
+            + "#ice_servers="
+            + kvs_ep.ice_servers
+        )
+        return result
+
+    async def _async_get_webrtc_signalling(self) -> str | None:
+        """Return the webrtc signalling channel."""
+
+        if self._kvs_ep is None:
+            await self._async_start_livestream()
+
+        # if the kvs endpoint is expired, restart the livestream
+        expiration_ts = datetime.fromisoformat(self._kvs_ep.expiration)
+        if expiration_ts < datetime.now(tz=timezone.utc):
+            _LOGGER.info(
+                "Livestream endpoint expired. Restarting livestream for %s",
+            )
+            await self._async_stop_livestream()
+            await self._async_start_livestream()
+
+        ss = self._get_go2rtc_url()
+
+        return ss
+
+    async def _async_register_go2rtc_stream(self) -> None:
+        """Register the stream in go2rtc if it does not already exist."""
+
+        rest_client = Go2RtcRestClient(
+            async_get_clientsession(self.hass), self.hass.data["go2rtc"]
+        )
+
+        signed_url = await self._async_get_webrtc_signalling()
+
+        streams = await rest_client.streams.list()
+        if (stream := streams.get(self.entity_id)) is None or not any(
+            signed_url == producer.url for producer in stream.producers
+        ):
+            await rest_client.streams.add(
+                self.entity_id,
+                [signed_url],
+            )
+
+    async def _async_start_livestream(self) -> None:
+        """Handle starting the live stream."""
+
+        try:
+            ls: LiveStreamConnectionData = (
+                await self._device.async_start_livestream()
+            )
+        except SkybellAccessControlException as exc:
+            raise ServiceValidationError(
+                translation_domain=DOMAIN,
+                translation_key="invalid_permissions",
+                translation_placeholders={
+                    "key": self.entity_description.key,
+                },
+            ) from exc
+        except SkybellException as exc:
+            raise ServiceValidationError(
+                translation_domain=DOMAIN,
+                translation_key="turnon_livestream_failed",
+                translation_placeholders={
+                    "key": self.entity_description.key,
+                    "error": repr(exc),
+                },
+            ) from exc
+        self._kvs_ep = parse_kvs_response(ls, self._device.device_id)
+
+    async def _async_stop_livestream(self) -> None:
+        """Handle stopping the live stream."""
+
+        try:
+            await self._device.async_stop_livestream()
+        except SkybellAccessControlException as exc:
+            raise ServiceValidationError(
+                translation_domain=DOMAIN,
+                translation_key="invalid_permissions",
+                translation_placeholders={
+                    "key": self.entity_description.key,
+                },
+            ) from exc
+        except SkybellException as exc:
+            raise ServiceValidationError(
+                translation_domain=DOMAIN,
+                translation_key="turnoff_livestream_failed",
+                translation_placeholders={
+                    "key": self.entity_description.key,
+                    "error": repr(exc),
+                },
+            ) from exc
+        finally:
+            self._kvs_ep = None
