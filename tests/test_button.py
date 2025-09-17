@@ -1,4 +1,4 @@
-"""Test SkyBellGen switch."""
+"""Test SkyBellGen button."""
 
 from homeassistant.components.button import DOMAIN as BUTTON_DOMAIN, SERVICE_PRESS
 from homeassistant.config_entries import ConfigEntryState

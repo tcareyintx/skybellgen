@@ -1,0 +1,46 @@
+{
+  "aws_region": "us-east-2",
+  "channelARN": "arn:aws:kinesisvideo:us-east-2:someotherstuff:channel/channel_id/client_id",
+  "credentials": {
+    "AccessKeyId": "keyid",
+    "Expiration": "2025-07-13T18:53:01.000Z",
+    "SecretAccessKey": "key",
+    "SessionToken": "longtoken"
+  },
+  "endpoints": [
+    {
+      "Protocol": "HTTPS",
+      "ResourceEndpoint": "https://kinesisvideo.us-east-2.amazonaws.com"
+    }
+  ],
+  "ice": [
+    {
+      "urls": "stun:stun.kinesisvideo.us-east-2.amazonaws.com:443"
+    },
+    {
+      "credential": "aGVsbG8gd29ybGQ=",
+      "urls": [
+        "turn:kinesisvideo.us-east-2.amazonaws.com:443?transport=udp",
+        "turns:kinesisvideo.us-east-2.amazonaws.com:443?transport=udp",
+        "turns:kinesisvideo.us-east-2.amazonaws.com:443?transport=tcp"
+      ],
+      "username": "aGVsbG8gd29ybGQ="
+    },
+    {
+      "credential": "aGVsbG8gd29ybGQ=",
+      "urls": [
+        "turn:kinesisvideo.us-east-2.amazonaws.com:443?transport=udp",
+        "turns:kinesisvideo.us-east-2.amazonaws.com:443?transport=udp",
+        "turns:kinesisvideo.us-east-2.amazonaws.com:443?transport=tcp"
+      ],
+      "username": "aGVsbG8gd29ybGQ="
+    }
+  ],
+  "signed": [
+    "{\"service\":\"kinesisvideo\",\"host\":\"https://kinesisvideo.us-east-2.amazonaws.com\",\"headers\":{\"X-Amz-ChannelARN\":\"arn:aws:kinesisvideo:us-east-2:someotherstuff",
+    "{\"service\":\"kinesisvideo\",\"host\":\"wss://kinesisvideo.us-east-2.amazonaws.com\",\"headers\":{\"X-Amz-ChannelARN\":\"arn:aws:kinesisvideo:us-east-2:someotherstuff"
+  ],
+  "signedHTTPS": "https://r-b0356e67.kinesisvideo.us-east-2.amazonaws.com/?somequery",
+  "signedWSS": "wss://v-dc297268.kinesisvideo.us-east-2.amazonaws.com/?somequery",
+  "state": true
+}
