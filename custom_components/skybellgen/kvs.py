@@ -38,9 +38,7 @@ def sign_ws_endpoint(kvs_endpoint: KVSEndpointData) -> str:
         secret_key=kvs_endpoint.secret_key,
         token=kvs_endpoint.session_token,
     )
-    sigv4 = SigV4QueryAuth(
-        auth_credentials, kvs_endpoint.service, kvs_endpoint.region, 299
-    )
+    sigv4 = SigV4QueryAuth(auth_credentials, kvs_endpoint.service, kvs_endpoint.region)
     aws_request = AWSRequest(
         method="GET",
         url=kvs_endpoint.ws_endpoint,
@@ -115,7 +113,7 @@ def parse_kvs_response(data: dict, device: str) -> KVSEndpointData:
     kvs_endpoint.signed_ws_endpoint = data["signedWSS"]
     signed_url = sign_ws_endpoint(kvs_endpoint)
     if signed_url != kvs_endpoint.ws_endpoint:
-        _LOGGER.debug("Signed url is different than WSS endpoint. Using signed url.")
+        _LOGGER.debug("Signed url is different than WSS endpoint. Using signed url")
         kvs_endpoint.signed_ws_endpoint = signed_url
 
     return kvs_endpoint
