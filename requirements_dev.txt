@@ -1,1 +1,2 @@
 homeassistant
+boto3>=1.39.9

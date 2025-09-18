@@ -19,7 +19,7 @@
 
 The **SkyBellGen** integration is used to integrate with doorbell devices from [SkyBell](https://skybell.com/).
 The access to the doorbell is via the [SkyBellGen communication driver](https://pypi.org/project/aioskybellgen/)
-that implements the [SkyBell cloud API](https://api.skybell.network/docs/). The integration be used in automations that use changes and event's detected by SkyBell doorbell. See the [examples](#examples) section for more ideas of how to use this integration.
+that implements the [SkyBell cloud API](https://api.skybell.network/docs/). The integration can be used in automations that use changes and event's detected by SkyBell doorbell. See the [examples](#examples) section for more ideas of how to use this integration.
 
 ## Prerequisites
 
@@ -65,6 +65,7 @@ custom_components/skybellgen/coordinator.py
 custom_components/skybellgen/diagnostics.py
 custom_components/skybellgen/entity.py
 custom_components/skybellgen/icons.json
+custom_components/skybellgen/kvs.py
 custom_components/skybellgen/light.py
 custom_components/skybellgen/manifest.json
 custom_components/skybellgen/number.py
@@ -83,7 +84,7 @@ This integration follows standard integration removal via the UI.
 
 1. Go to Settings > Devices & Services
 2. Click on the SkyBellGen integration that you loaded
-3. Click Delete
+3. Delete all the hubs by selecting each hub and then delete from the options menu (vertical dots)
 
 ## Setup
 
@@ -97,7 +98,7 @@ Follow the instructions to configure the integration.
 
 ## Configuration flow
 
-This integration uses the HA configuration flow to setup the SkyBellGen hub.
+This integration uses the HA configuration flow to setup a new SkyBellGen hub by selecting the Add hub option from the integration.
 
 email:
 
@@ -108,9 +109,9 @@ password:
 - description: Your password that you used when setting up the account on the SkyBell app. If you
   change your password you can use the reconfigure or re-authentication options of the integration configuration flow.
 
-use local event server:
+use local UDP server for event capture:
 
-- description: When checked and the Local event server has been started (via a service), you will receive Button Pressed and Motion Detection events locally that are broadcasted by the device.
+- description: When checked and the local UDP event server has been started (via a service), you will receive Button Pressed and Motion Detection events locally that are broadcasted by the device.
 
 ## Data updates {#data-updates}
 
@@ -118,12 +119,12 @@ The SkyBellGen integration fetches data from the device via the SkyBell cloud AP
 
 The SkyBellGen integration will refresh hub and session data at least every 3600 seconds (1 hour). The timeframe may be sooner passed on the session refresh expiration period received from the Cloud API server.
 
-If the refresh cycle for the device data isn't frequent enough, you can create an automation forr any entity in the device that receives it's data from the cloud API to manually update its data at a faster pace. It is recommended that the shortest interval is 30 seconds as to not overload the Cloud API server with many requests. If you need a faster poll cycle, look into using the local event server. In future releases, webhook triggers will be available for use as well.
+If the refresh cycle for the device data isn't frequent enough, you can create an automation for any entity in the device that receives it's data from the cloud API to manually update its data at a faster pace. It is recommended that the shortest interval is 30 seconds as to not overload the Cloud API server with many requests. If you need a faster poll cycle, look into using the local event server.
 
 ## Examples {#examples}
 
 The SkyBellGen integration provides actuators to modify attributes of the SkyBell devices. Additionally the integration provides sensors that are updated with the refresh cycle documented in the [Data updates](#data-updates) section.
-This actuators and sensors provided by the integration permits example automations as described in this section.
+These actuators and sensors provided by the integration permits example automations as described in this section.
 
 ### Turning on the exterior lights when motion is detected by the SkyBell
 
@@ -153,17 +154,17 @@ The following devices are not supported by the integration:
 
 The SkyBellGen integration provides support for the platforms listed below.
 
-| Platform        | Description                                         |
-| --------------- | --------------------------------------------------- |
-| `binary_sensor` | Show info from switch and light actuators           |
-| `button`        | Trigger actions like reboot doorbell                |
-| `camera`        | Show images and videos of activities                |
-| `light`         | Actuator for the doorbell's led.                    |
-| `number`        | Actuator for entities that input numeric values.    |
-| `select`        | Actuator for entities that input enumerated values. |
-| `sensor`        | Show info from actuators and diagnostic sensors.    |
-| `switch`        | Actuator for entities that input binary values.     |
-| `text`          | Actuator for entities that input text values.       |
+| Platform        | Description                                                                                         |
+| --------------- | --------------------------------------------------------------------------------------------------- |
+| `binary_sensor` | Show info from switch and light actuators.                                                          |
+| `button`        | Trigger actions like reboot doorbell.                                                               |
+| `camera`        | Show snapshot images, videos of activities and view real-time(live) video from the doorbell camera. |
+| `light`         | Actuator for the doorbell's led.                                                                    |
+| `number`        | Actuator for entities that input numeric values.                                                    |
+| `select`        | Actuator for entities that input enumerated values.                                                 |
+| `sensor`        | Show info from actuators and diagnostic sensors.                                                    |
+| `switch`        | Actuator for entities that input binary values.                                                     |
+| `text`          | Actuator for entities that input text values.                                                       |
 
 ### Entities
 
@@ -176,6 +177,7 @@ Sensors for corresponding entities in Light and Switch entities. These sensors c
 #### Buttons
 
 - **Reboot doorbell**
+
   - **Description**: Reboots the doorbell.
 
 #### Camera
@@ -184,7 +186,12 @@ Sensors for corresponding entities in Light and Switch entities. These sensors c
 
   - **Description**: The last recorded activity such as a livestream, button press or motion detection event.
 
+- **Livestream**
+
+  - **Description**: The real-time (live) stream from the doorbell's camera.
+
 - **Snapshot**
+
   - **Description**: The last recorded snapshot using the doorbell's camera.
 
 #### Light
@@ -220,6 +227,7 @@ Sensors for corresponding entities in Light and Switch entities. These sensors c
   - **Description**: The latitude coordinate for where the doorbell is located.
 
 - **Location longitude**
+
   - **Description**: The langitude coordinate for where the doorbell is located.
 
 #### Selects
@@ -235,6 +243,7 @@ Sensors for corresponding entities in Light and Switch entities. These sensors c
   - **Options**: Low, Medium, High
 
 - **Image quality**
+
   - **Description**: Resolutions associated with video recordings
   - **Options**: Low (480p), Medium (720p), High (720p), Highest (1080p)
 
@@ -286,6 +295,7 @@ Sensors for corresponding entities in Light and Switch entities. These sensors c
   - **Remarks**: Not this entity should be off if the Indoor chime is enabled.
 
 - **Outdoor chime**
+
   - **Description**: Wnen enabled, the outdoor chime will be used.
 
 #### Sensors
@@ -333,6 +343,7 @@ Sensors for corresponding entities in Number, Select and Text entities. These se
   - **Remarks**: Diagnostics, disabled by default
 
 - **Wi-Fi link quality**
+
   - **Description**: The link quality (xx/100) of the doorbell's Wi-Fi connection.
   - **Remarks**: Diagnostics, disabled by default
 
@@ -344,6 +355,7 @@ Sensors for corresponding entities in Number, Select and Text entities. These se
   - **Remarks**: Entities for the doorbell use the name of the doorbell when the device is first discovered. Changing the name does not change the entity ids for the doorbell's entities.
 
 - **Location place**
+
   - **Description**: The name that will be associated with the location's longitude and latitude coordinates.
 
 ## Services
@@ -376,14 +388,17 @@ The SkyBell integration exposes many of the capabilities and attributes of the S
 2. The use of Access tokens to log into the SkyBell cloud API
 3. Adding and removing new devices to the SkyBell cloud API
 4. Maintaining (deleting) and viewing the historical activity events
-5. Livestreaming through the doorbell's camera
-6. Webhook triggers emitted by the Cloud API for various doorbell events (coming soon)
+5. Webhook triggers emitted by the Cloud API for various doorbell events
 
 ### SkyBell cloud API attributes that are not supported
 
 1. SkyBell premium account attributes and capabilities
 2. Setting chime tones for the doorbell press and motion detection events
 3. Advanced motion detection zones
+
+### Multiple camera viewers for real-time(live) streaming is not supported
+
+1. Currently only one camera can view the real-time(live) streaming event at a time. If the livestream camera is used by another device or a different browser (viewer) on the same device, the new viewer will see the snapshot of the livestream but will not be able to view the livestream.
 
 ## Troubleshooting
 

@@ -14,12 +14,27 @@ from aioskybellgen.exceptions import (
     SkybellException,
 )
 import aioskybellgen.helpers.const as CONST
+from aioskybellgen.helpers.models import LiveStreamConnectionData
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.skybellgen.const import DOMAIN
 
 from .const import MOCK_CONFIG, MOCK_PLATFORMS, USER_ID
+
+
+def get_livestream(nows: bool = False) -> LiveStreamConnectionData:
+    """Return two SkyBell devices."""
+    filename = "data/start_livestream.json"
+    if nows:
+        filename = "data/start_livestream nows.json"
+    data: LiveStreamConnectionData = {}
+    basepath = path.dirname(__file__)
+    filepath = path.abspath(path.join(basepath, filename))
+    with open(filepath, "r", encoding="utf-8") as file:
+        data = json.load(file)
+
+    return data
 
 
 def get_two_devices() -> list[SkybellDevice]:
