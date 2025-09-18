@@ -154,17 +154,17 @@ The following devices are not supported by the integration:
 
 The SkyBellGen integration provides support for the platforms listed below.
 
-| Platform        | Description                                         |
-| --------------- | --------------------------------------------------- |
-| `binary_sensor` | Show info from switch and light actuators.          |
-| `button`        | Trigger actions like reboot doorbell.               |
+| Platform        | Description                                                                                        |
+| --------------- | -------------------------------------------------------------------------------------------------- |
+| `binary_sensor` | Show info from switch and light actuators.                                                         |
+| `button`        | Trigger actions like reboot doorbell.                                                              |
 | `camera`        | Show snapshot images, videos of activities and view real-time(live) video from the doorbell camera.|
-| `light`         | Actuator for the doorbell's led.                    |
-| `number`        | Actuator for entities that input numeric values.    |
-| `select`        | Actuator for entities that input enumerated values. |
-| `sensor`        | Show info from actuators and diagnostic sensors.    |
-| `switch`        | Actuator for entities that input binary values.     |
-| `text`          | Actuator for entities that input text values.       |
+| `light`         | Actuator for the doorbell's led.                                                                   |
+| `number`        | Actuator for entities that input numeric values.                                                   |
+| `select`        | Actuator for entities that input enumerated values.                                                |
+| `sensor`        | Show info from actuators and diagnostic sensors.                                                   |
+| `switch`        | Actuator for entities that input binary values.                                                    |
+| `text`          | Actuator for entities that input text values.                                                      |
 
 ### Entities
 
@@ -177,17 +177,21 @@ Sensors for corresponding entities in Light and Switch entities. These sensors c
 #### Buttons
 
 - **Reboot doorbell**
+
   - **Description**: Reboots the doorbell.
 
 #### Camera
 
 - **Last activity**
+
   - **Description**: The last recorded activity such as a livestream, button press or motion detection event.
 
 - **Livestream**
+
   - **Description**: The real-time (live) stream from the doorbell's camera.
 
 - **Snapshot**
+
   - **Description**: The last recorded snapshot using the doorbell's camera.
 
 #### Light
@@ -199,78 +203,99 @@ Sensors for corresponding entities in Light and Switch entities. These sensors c
 #### Numbers
 
 - **Motion sensitivity**
+
   - **Description**: The sensitivity used by the doorbell's camera to determine if there is motion detected.
   - **Remarks**: Values are expressed as percentages between .3 and 100.0 percent.
 
 - **Human detection sensitivity**
+
   - **Description**: The sensitivity used by the doorbell's camera to determine if there is a human body is detected.
   - **Remarks**: Values are expressed as percentages between .3 and 100.0 percent.
 
 - **Facial detection sensitivity**
+
   - **Description**: The sensitivity used by the doorbell's camera to determine if there is a human face detected.
   - **Remarks**: Values are expressed as percentages between .3 and 100.0 percent.
 
 - **Infrared sensitivity**
+
   - **Description**: The infrared radiation (heat) sensitivity used by the doorbell's camera to determine if there is motion detected.
   - **Remarks**: Values are expressed as percentages between .3 and 100.0 percent.
 
 - **Location latitude**
+
   - **Description**: The latitude coordinate for where the doorbell is located.
 
 - **Location longitude**
+
   - **Description**: The langitude coordinate for where the doorbell is located.
 
 #### Selects
 
 - **Outdoor chime volume**
+
   - **Description**: When the outdoor chime is enabled, the volume of the outdoor chime.
   - **Options**: Low, Medium, High
 
 - **Speaker volume**
+
   - **Description**: When using a livestream vent, the volume of the audio speaker.
   - **Options**: Low, Medium, High
 
 - **Image quality**
+
   - **Description**: Resolutions associated with video recordings
   - **Options**: Low (480p), Medium (720p), High (720p), Highest (1080p)
 
 #### Switches
 
 - **Detect button pressed**
+
   - **Description**: When enabled, notifications are emitted with the doorbell button is pressed.
 
 - **Detect motion**
+
   - **Description**: Motion detection is enabled or disabled.
 
 - **Detect motion - debug**
+
   - **Description**: When motion detection is enabled, a box is drawn around the detected person or face when is enabled.
 
 - **Notify on motion detection event**
+
   - **Description**: Wnen motion detection is enabled, determines if notifications are emitted.
 
 - **Record on motion detection event**
+
   - **Description**: Wnen motion detection is enabled, determines if video is recorded.
 
 - **Notify on human body detection event**
+
   - **Description**: Wnen motion detection is enabled, determines if notifications are emitted.
 
 - **Record on human body detection event**
+
   - **Description**: Wnen motion detection is enabled, determines if video is recorded.
 
 - **Notify on facial detection event**
+
   - **Description**: Wnen motion detection is enabled, determines if notifications are emitted.
 
 - **Record on facial detection event**
+
   - **Description**: Wnen motion detection is enabled, determines if video is recorded.
 
 - **Indoor chime**
+
   - **Description**: Wnen enabled, the indoor mechanical chime will be used.
 
 - **Indoor digital chime**
+
   - **Description**: Wnen enabled, the indoor digital chime will be used.
   - **Remarks**: Not this entity should be off if the Indoor chime is enabled.
 
 - **Outdoor chime**
+
   - **Description**: Wnen enabled, the outdoor chime will be used.
 
 #### Sensors
@@ -278,47 +303,59 @@ Sensors for corresponding entities in Light and Switch entities. These sensors c
 Sensors for corresponding entities in Number, Select and Text entities. These sensors can be used when the doorbell is shared and the user has "read-only" privileges and are considered diagnostic sensors. Additionally:
 
 - **Last button event**
+
   - **Description**: The timestamp of the last recorded doorbell button pressed event provided by the Cloud API.
 
 - **Last motion event**
+
   - **Description**: The timestamp of the last recorded doorbell motion event provided by the Cloud API.
 
 - **Last local button event**
+
   - **Description**: The timestamp of the last recorded doorbell button pressed event broadcast by the device.
 
 - **Last local motion event**
+
   - **Description**: The timestamp of the last recorded doorbell motion event broadcast by the device.
 
 - **Last livestream event**
+
   - **Description**: The timestamp of the last recorded doorbell livestream event.
 
 - **Last seen**
+
   - **Description**: The last time the doorbell has checked in with the SkyBell cloud.
   - **Remarks**: Diagnostics, disabled by default
 
 - **Last connected**
+
   - **Description**: The timestamp of the last recorded doorbell connection event.
   - **Remarks**: Diagnostics, disabled by default
 
 - **Last disconnected**
+
   - **Description**: The timestamp of the last recorded doorbell disconnection event.
   - **Remarks**: Diagnostics, disabled by default
 
 - **Wi-Fi SSID**
+
   - **Description**: The SSID that the doorbell's of the Access Point to which the doorbell is connected.
   - **Remarks**: Diagnostics, disabled by default
 
 - **Wi-Fi link quality**
+
   - **Description**: The link quality (xx/100) of the doorbell's Wi-Fi connection.
   - **Remarks**: Diagnostics, disabled by default
 
 #### Texts
 
 - **Doorbell name**
+
   - **Description**: The name that will be associated with the doorbell.
   - **Remarks**: Entities for the doorbell use the name of the doorbell when the device is first discovered. Changing the name does not change the entity ids for the doorbell's entities.
 
 - **Location place**
+
   - **Description**: The name that will be associated with the location's longitude and latitude coordinates.
 
 ## Services
