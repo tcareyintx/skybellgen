@@ -154,17 +154,17 @@ The following devices are not supported by the integration:
 
 The SkyBellGen integration provides support for the platforms listed below.
 
-| Platform        | Description                                                                                        |
-| --------------- | -------------------------------------------------------------------------------------------------- |
-| `binary_sensor` | Show info from switch and light actuators.                                                         |
-| `button`        | Trigger actions like reboot doorbell.                                                              |
-| `camera`        | Show snapshot images, videos of activities and view real-time(live) video from the doorbell camera.|
-| `light`         | Actuator for the doorbell's led.                                                                   |
-| `number`        | Actuator for entities that input numeric values.                                                   |
-| `select`        | Actuator for entities that input enumerated values.                                                |
-| `sensor`        | Show info from actuators and diagnostic sensors.                                                   |
-| `switch`        | Actuator for entities that input binary values.                                                    |
-| `text`          | Actuator for entities that input text values.                                                      |
+| Platform        | Description                                                                                         |
+| --------------- | --------------------------------------------------------------------------------------------------- |
+| `binary_sensor` | Show info from switch and light actuators.                                                          |
+| `button`        | Trigger actions like reboot doorbell.                                                               |
+| `camera`        | Show snapshot images, videos of activities and view real-time(live) video from the doorbell camera. |
+| `light`         | Actuator for the doorbell's led.                                                                    |
+| `number`        | Actuator for entities that input numeric values.                                                    |
+| `select`        | Actuator for entities that input enumerated values.                                                 |
+| `sensor`        | Show info from actuators and diagnostic sensors.                                                    |
+| `switch`        | Actuator for entities that input binary values.                                                     |
+| `text`          | Actuator for entities that input text values.                                                       |
 
 ### Entities
 
