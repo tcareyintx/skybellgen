@@ -127,12 +127,23 @@ class SkybellActivityCamera(SkybellCamera):
 
     async def handle_async_mjpeg_stream(
         self, request: web.Request
-    ) -> web.StreamResponse:
+    ) -> web.StreamResponse | None:
         """Generate an HTTP MJPEG stream from the latest recorded activity."""
-        stream = CameraMjpeg(get_ffmpeg_manager(self.hass).binary)
-        url = await self.coordinator.device.async_get_activity_video_url()
-        await stream.open_camera(url, extra_cmd="-r 210")
+        try:
+            url = await self.coordinator.device.async_get_activity_video_url()
+        except SkybellException:
+            url = None
 
+        if url is None or not url:
+            url = ""
+            _LOGGER.warning(
+                "No video URL for entity %s on device %s",
+                self.entity_id,
+                self._device.device_id,
+            )
+
+        stream = CameraMjpeg(get_ffmpeg_manager(self.hass).binary)
+        await stream.open_camera(url, extra_cmd="-r 210")
         try:
             return await async_aiohttp_proxy_stream(
                 self.hass,
