@@ -7,7 +7,10 @@ import logging
 from typing import cast
 
 from aiohttp import web
-from aioskybellgen.exceptions import SkybellAccessControlException, SkybellException
+from aioskybellgen.exceptions import (
+    SkybellAccessControlException,
+    SkybellException,
+)
 from aioskybellgen.helpers import const as CONST
 from aioskybellgen.helpers.models import LiveStreamConnectionData
 from go2rtc_client import Go2RtcRestClient
@@ -39,7 +42,9 @@ from homeassistant.helpers.aiohttp_client import (
     async_get_clientsession,
 )
 from homeassistant.helpers.entity import EntityDescription
-from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
+from homeassistant.helpers.entity_platform import (
+    AddConfigEntryEntitiesCallback,
+)
 from webrtc_models import RTCIceCandidateInit
 
 from .const import DOMAIN
@@ -82,15 +87,21 @@ async def async_setup_entry(
         new_device_ids: set[str] = set()
         for entity in CAMERA_TYPES:
             for coordinator in entry.runtime_data.device_coordinators:
-                if not isinstance(coordinator, SkybellDeviceDataUpdateCoordinator):
+                if not isinstance(
+                    coordinator, SkybellDeviceDataUpdateCoordinator
+                ):
                     continue
                 if coordinator.device.device_id not in known_device_ids:
                     if entity.key == CONST.SNAPSHOT:
                         entities.append(SkybellCamera(coordinator, entity))
                     elif entity.key == CONST.ACTIVITY:
-                        entities.append(SkybellActivityCamera(coordinator, entity))
+                        entities.append(
+                            SkybellActivityCamera(coordinator, entity)
+                        )
                     else:
-                        entities.append(SkybellLiveStreamCamera(coordinator, entity))
+                        entities.append(
+                            SkybellLiveStreamCamera(coordinator, entity)
+                        )
                     new_device_ids.add(coordinator.device.device_id)
         if entities:
             known_device_ids.update(new_device_ids)
@@ -148,7 +159,10 @@ class SkybellActivityCamera(SkybellCamera):
                     "error": repr(exc),
                 },
             ) from exc
-        
+
+        if url is None or not url:
+            return None
+
         stream = CameraMjpeg(get_ffmpeg_manager(self.hass).binary)
         await stream.open_camera(url, extra_cmd="-r 210")
         try:
@@ -202,18 +216,24 @@ class SkybellLiveStreamCamera(SkybellCamera):
             value: WebRTCMessage
             match message:
                 case WebRTCCandidate():
-                    value = HAWebRTCCandidate(RTCIceCandidateInit(message.candidate))
+                    value = HAWebRTCCandidate(
+                        RTCIceCandidateInit(message.candidate)
+                    )
                 case WebRTCAnswer():
                     value = HAWebRTCAnswer(message.sdp)
                 case WsError():
-                    value = WebRTCError("go2rtc_webrtc_offer_failed", message.error)
+                    value = WebRTCError(
+                        "go2rtc_webrtc_offer_failed", message.error
+                    )
                     self.close_webrtc_session(session_id)
 
             send_message(value)
 
         ws_client.subscribe(on_messages)
         config = self.async_get_webrtc_client_configuration()
-        await ws_client.send(WebRTCOffer(offer_sdp, config.configuration.ice_servers))
+        await ws_client.send(
+            WebRTCOffer(offer_sdp, config.configuration.ice_servers)
+        )
 
     async def async_on_webrtc_candidate(
         self, session_id: str, candidate: RTCIceCandidateInit
@@ -238,7 +258,9 @@ class SkybellLiveStreamCamera(SkybellCamera):
             self.hass.async_create_task(ws_client.close())
         if not self._sessions:
             self.hass.async_create_task(self._async_stop_livestream())
-            _LOGGER.debug("session %s. Created task to stop livestream", session_id)
+            _LOGGER.debug(
+                "session %s. Created task to stop livestream", session_id
+            )
 
     def _get_go2rtc_url(self) -> str:
         """Get the WS Signed url for kvs in go2rtc format."""
@@ -301,7 +323,9 @@ class SkybellLiveStreamCamera(SkybellCamera):
         """Handle starting the live stream."""
 
         try:
-            ls: LiveStreamConnectionData = await self._device.async_start_livestream()
+            ls: LiveStreamConnectionData = (
+                await self._device.async_start_livestream()
+            )
         except SkybellAccessControlException as exc:
             raise ServiceValidationError(
                 translation_domain=DOMAIN,
