@@ -129,10 +129,28 @@ class SkybellActivityCamera(SkybellCamera):
         self, request: web.Request
     ) -> web.StreamResponse:
         """Generate an HTTP MJPEG stream from the latest recorded activity."""
+        try:
+            url = await self.coordinator.device.async_get_activity_video_url()
+        except SkybellAccessControlException as exc:
+            raise ServiceValidationError(
+                translation_domain=DOMAIN,
+                translation_key="invalid_permissions",
+                translation_placeholders={
+                    "key": self.entity_description.key,
+                },
+            ) from exc
+        except SkybellException as exc:
+            raise ServiceValidationError(
+                translation_domain=DOMAIN,
+                translation_key="get_video_url_failed",
+                translation_placeholders={
+                    "key": self.entity_description.key,
+                    "error": repr(exc),
+                },
+            ) from exc
+        
         stream = CameraMjpeg(get_ffmpeg_manager(self.hass).binary)
-        url = await self.coordinator.device.async_get_activity_video_url()
         await stream.open_camera(url, extra_cmd="-r 210")
-
         try:
             return await async_aiohttp_proxy_stream(
                 self.hass,

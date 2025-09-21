@@ -82,6 +82,9 @@
     },
     "turnoff_livestream_failed": {
       "message": "Device failed to turn off livestream with the exception: {error}"
+    },
+     "get_video_url_failed": {
+      "message": "Device failed to get requested video url with the exception: {error}"
     }
   },
   "entity": {
