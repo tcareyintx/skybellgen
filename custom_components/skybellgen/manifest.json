@@ -1,6 +1,6 @@
 {
   "domain": "skybellgen",
-  "name": "SkyBellGen Custom Component",
+  "name": "SkyBellGen",
   "codeowners": ["@tcarey"],
   "config_flow": true,
   "dependencies": ["ffmpeg", "go2rtc"],
@@ -10,5 +10,5 @@
   "issue_tracker": "https://github.com/tcareyintx/skybellgen/issues",
   "loggers": ["skybellgen"],
   "requirements": ["aioskybellgen==0.1.4", "boto3>=1.39.9"],
-  "version": "0.3.1"
+  "version": "0.3.2"
 }
