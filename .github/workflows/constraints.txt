@@ -2,4 +2,4 @@ pip==25.2
 pre-commit==4.3.0
 black==25.9.0
 flake8==7.3.0
-isort==6.1.0
+isort==7.0.0
