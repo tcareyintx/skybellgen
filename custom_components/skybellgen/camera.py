@@ -40,6 +40,7 @@ from homeassistant.helpers.aiohttp_client import (
 )
 from homeassistant.helpers.entity import EntityDescription
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
+from sqlalchemy import String
 from webrtc_models import RTCIceCandidateInit
 
 from .const import DOMAIN
@@ -177,14 +178,22 @@ class SkybellLiveStreamCamera(SkybellCamera):
 
         return self._device.images.get(CONST.SNAPSHOT, b"")
 
+    def get_serverapi_url(self) -> str:
+        """Get the server API URL for the livestream."""
+        _go2rtc_server_url = self.hass.data["go2rtc"]
+        if not isinstance(_go2rtc_server_url, String):
+            _go2rtc_server_url = _go2rtc_server_url.url
+        return _go2rtc_server_url
+
     async def async_handle_async_webrtc_offer(
         self, offer_sdp: str, session_id: str, send_message: WebRTCSendMessage
     ) -> None:
         """Handle the async WebRTC offer."""
 
+        _go2rtc_server_url = self.get_serverapi_url()
         self._sessions[session_id] = ws_client = Go2RtcWsClient(
             async_get_clientsession(self.hass),
-            self.hass.data["go2rtc"],
+            _go2rtc_server_url,
             source=self.entity_id,
         )
         await self._async_register_go2rtc_stream()
@@ -275,8 +284,9 @@ class SkybellLiveStreamCamera(SkybellCamera):
     async def _async_register_go2rtc_stream(self) -> None:
         """Register the stream in go2rtc if it does not already exist."""
 
+        _go2rtc_server_url = self.get_serverapi_url()
         rest_client = Go2RtcRestClient(
-            async_get_clientsession(self.hass), self.hass.data["go2rtc"]
+            async_get_clientsession(self.hass), _go2rtc_server_url
         )
 
         signed_url = await self._async_get_webrtc_signalling()
