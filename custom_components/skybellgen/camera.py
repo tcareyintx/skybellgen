@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 import logging
 from typing import cast
 
-from aiohttp import web
+from aiohttp import ClientSession, web
 from aioskybellgen.exceptions import SkybellAccessControlException, SkybellException
 from aioskybellgen.helpers import const as CONST
 from aioskybellgen.helpers.models import LiveStreamConnectionData
@@ -185,14 +185,24 @@ class SkybellLiveStreamCamera(SkybellCamera):
             _go2rtc_server_url = _go2rtc_server_url.url
         return _go2rtc_server_url
 
+    def get_serverapi_session(self) -> ClientSession:
+        """Get the server API Session for the livestream."""
+        _go2rtc_server_session = self.hass.data["go2rtc"]
+        if not isinstance(_go2rtc_server_session, String):
+            _go2rtc_server_session = _go2rtc_server_session.session
+        else:
+            _go2rtc_server_session = async_get_clientsession(self.hass)
+        return _go2rtc_server_session
+
     async def async_handle_async_webrtc_offer(
         self, offer_sdp: str, session_id: str, send_message: WebRTCSendMessage
     ) -> None:
         """Handle the async WebRTC offer."""
 
         _go2rtc_server_url = self.get_serverapi_url()
+        _go2rtc_server_session = self.get_serverapi_session()
         self._sessions[session_id] = ws_client = Go2RtcWsClient(
-            async_get_clientsession(self.hass),
+            _go2rtc_server_session,
             _go2rtc_server_url,
             source=self.entity_id,
         )
@@ -285,9 +295,8 @@ class SkybellLiveStreamCamera(SkybellCamera):
         """Register the stream in go2rtc if it does not already exist."""
 
         _go2rtc_server_url = self.get_serverapi_url()
-        rest_client = Go2RtcRestClient(
-            async_get_clientsession(self.hass), _go2rtc_server_url
-        )
+        _go2rtc_server_sssion = self.get_serverapi_session()
+        rest_client = Go2RtcRestClient(_go2rtc_server_sssion, _go2rtc_server_url)
 
         signed_url = await self._async_get_webrtc_signalling()
 
