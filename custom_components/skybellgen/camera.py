@@ -181,14 +181,18 @@ class SkybellLiveStreamCamera(SkybellCamera):
     def get_serverapi_url(self) -> str:
         """Get the server API URL for the livestream."""
         _go2rtc_server_url = self.hass.data["go2rtc"]
-        if not isinstance(_go2rtc_server_url, String):
+        if not isinstance(_go2rtc_server_url, String) and not isinstance(
+            _go2rtc_server_url, str
+        ):
             _go2rtc_server_url = _go2rtc_server_url.url
         return _go2rtc_server_url
 
     def get_serverapi_session(self) -> ClientSession:
         """Get the server API Session for the livestream."""
         _go2rtc_server_session = self.hass.data["go2rtc"]
-        if not isinstance(_go2rtc_server_session, String):
+        if not isinstance(_go2rtc_server_session, String) and not isinstance(
+            _go2rtc_server_session, str
+        ):
             _go2rtc_server_session = _go2rtc_server_session.session
         else:
             _go2rtc_server_session = async_get_clientsession(self.hass)
