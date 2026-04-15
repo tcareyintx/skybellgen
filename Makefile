@@ -9,11 +9,7 @@ requirements: ## Install requirements
 	@python3 -m pip --disable-pip-version-check install -r requirements_test.txt
 
 lint: ## Lint all files
-	@python3 -m isort .
-	@python3 -m black --fast custom_components/skybellgen tests
-	@python3 -m pylint custom_components/skybellgen tests
-	@python3 -m flake8 --max-line-length=88 custom_components/skybellgen tests
-	@python3 -m mypy custom_components/skybellgen
+	@pre-commit run --all-files
 
 coverage: ## Check the coverage of the package
 	@python3 -m pytest tests
