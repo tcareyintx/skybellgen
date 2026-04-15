@@ -4,4 +4,3 @@ aioskybellgen==0.1.5
 ha-ffmpeg
 freezegun>=1.5.1
 pytest-mock
-pre-commit>=4.5.0
