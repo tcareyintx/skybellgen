@@ -10,5 +10,5 @@
   "issue_tracker": "https://github.com/tcareyintx/skybellgen/issues",
   "loggers": ["skybellgen"],
   "requirements": ["aioskybellgen==0.1.5", "boto3>=1.39.9"],
-  "version": "0.3.3"
+  "version": "0.3.4"
 }
