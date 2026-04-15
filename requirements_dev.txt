@@ -1,2 +1,2 @@
-homeassistant
+homeassistant==2026.4.2
 boto3>=1.39.9

@@ -42,6 +42,6 @@
   },
   "editor.formatOnType": true,
   "makefile.configureOnOpen": false,
-  "git.requireGitUserConfig": false
+  "git.requireGitUserConfig": false,
   "git.allowNoVerifyCommit": true
 }
