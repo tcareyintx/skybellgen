@@ -2,5 +2,5 @@
 pytest-homeassistant-custom-component==0.13.324
 aioskybellgen==0.1.5
 ha-ffmpeg
-freezegun>=1.5.1
+freezegun>=1.5.5
 pytest-mock
