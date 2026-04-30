@@ -1,2 +1,2 @@
 homeassistant==2026.4.3
-boto3>=1.42.95
+boto3>=1.43.0
