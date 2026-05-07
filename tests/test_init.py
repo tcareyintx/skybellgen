@@ -50,6 +50,9 @@ async def test_setup_and_unload_entry(
 
     # Execute the Unload the entry
     assert await async_unload_entry(hass, config_entry)
+    # Clean up the DataCoordinators and HubCoordinator after unloading the entry
+    await hc.async_shutdown()
+    await dc[0].async_shutdown()
 
 
 async def test_setup_entry_exception(hass, error_initialize):
