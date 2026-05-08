@@ -1,5 +1,4 @@
 {
-  "python.linting.pylintEnabled": true,
   "python.linting.enabled": true,
   "python.formatting.provider": "black",
   "isort.args": [
@@ -18,7 +17,7 @@
     "--known-first-party=custom_components.skybellgen,tests",
     "--combine-as-imports"
   ],
-  "python.pythonPath": "venv/bin/python",
+  "python.pythonPath": "usr/local/bin/python",
   "files.associations": {
     "*.yaml": "home-assistant"
   },

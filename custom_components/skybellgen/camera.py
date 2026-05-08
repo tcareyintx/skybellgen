@@ -287,6 +287,7 @@ class SkybellLiveStreamCamera(SkybellCamera):
         if expiration_ts < datetime.now(tz=timezone.utc):
             _LOGGER.info(
                 "Livestream endpoint expired. Restarting livestream for %s",
+                self.entity_id,
             )
             await self._async_stop_livestream()
             await self._async_start_livestream()

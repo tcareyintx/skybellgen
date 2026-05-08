@@ -32,7 +32,7 @@ PLATFORMS = [
 # Calls to the communications driver should be serialized
 PARALLEL_UPDATES = 1
 
-CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)  # pylint: disable=C0103
 
 
 @dataclass
