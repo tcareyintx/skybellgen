@@ -1,2 +1,2 @@
 homeassistant==2026.7.4
-boto3>=1.43.56
+boto3>=1.43.62
