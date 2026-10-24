@@ -1,7 +1,6 @@
 {
   "domain": "skybellgen",
   "name": "SkyBellGen",
-  "categories": ["security_safety"],
   "codeowners": ["@tcarey"],
   "config_flow": true,
   "dependencies": ["ffmpeg", "go2rtc"],
