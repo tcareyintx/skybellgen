@@ -53,7 +53,9 @@ async def test_hub_coord_stale(hass, remove_platforms, mocker):
     assert device_id in config_entry.runtime_data.known_device_ids
     # device should be in the device and entity registries
     device_registry = dr.async_get(hass)
-    device_entry = device_registry.async_get_device(identifiers={(DOMAIN, device_id)})
+    device_entry = device_registry.async_get_device_by_identifier(
+        identifier=(DOMAIN, device_id), config_entry_id=config_entry.entry_id
+    )
     assert isinstance(device_entry, DeviceEntry)
 
     entity_registry = er.async_get(hass)
@@ -73,7 +75,9 @@ async def test_hub_coord_stale(hass, remove_platforms, mocker):
     assert device_id not in config_entry.runtime_data.known_device_ids
     # device should not be in the device and entity registries
     device_registry = dr.async_get(hass)
-    device_entry = device_registry.async_get_device(identifiers={(DOMAIN, device_id)})
+    device_entry = device_registry.async_get_device_by_identifier(
+        identifier=(DOMAIN, device_id), config_entry_id=config_entry.entry_id
+    )
     assert device_entry is None
     entity_registry = er.async_get(hass)
     devices = entity_registry.async_device_ids()
@@ -97,7 +101,9 @@ async def test_hub_coord_add(hass, remove_platforms, mocker):
     assert device_id in config_entry.runtime_data.known_device_ids
     # device should be in the device and entity registries
     device_registry = dr.async_get(hass)
-    device_entry = device_registry.async_get_device(identifiers={(DOMAIN, device_id)})
+    device_entry = device_registry.async_get_device_by_identifier(
+        identifier=(DOMAIN, device_id), config_entry_id=config_entry.entry_id
+    )
     assert isinstance(device_entry, DeviceEntry)
 
     entity_registry = er.async_get(hass)
@@ -116,7 +122,9 @@ async def test_hub_coord_add(hass, remove_platforms, mocker):
     assert device_id in config_entry.runtime_data.known_device_ids
     # device should be in the device and entity registries
     device_registry = dr.async_get(hass)
-    device_entry = device_registry.async_get_device(identifiers={(DOMAIN, device_id)})
+    device_entry = device_registry.async_get_device_by_identifier(
+        identifier=(DOMAIN, device_id), config_entry_id=config_entry.entry_id
+    )
     assert isinstance(device_entry, DeviceEntry)
 
     entity_registry = er.async_get(hass)
@@ -146,7 +154,9 @@ async def test_hub_coord_refresh(
     assert device_id in config_entry.runtime_data.known_device_ids
     # device should be in the device and entity registries
     device_registry = dr.async_get(hass)
-    device_entry = device_registry.async_get_device(identifiers={(DOMAIN, device_id)})
+    device_entry = device_registry.async_get_device_by_identifier(
+        identifier=(DOMAIN, device_id), config_entry_id=config_entry.entry_id
+    )
     assert isinstance(device_entry, DeviceEntry)
 
     entity_registry = er.async_get(hass)
@@ -201,7 +211,9 @@ async def test_hub_coord_refresh_exc(
     assert device_id in config_entry.runtime_data.known_device_ids
     # device should be in the device and entity registries
     device_registry = dr.async_get(hass)
-    device_entry = device_registry.async_get_device(identifiers={(DOMAIN, device_id)})
+    device_entry = device_registry.async_get_device_by_identifier(
+        identifier=(DOMAIN, device_id), config_entry_id=config_entry.entry_id
+    )
     assert isinstance(device_entry, DeviceEntry)
 
     entity_registry = er.async_get(hass)
@@ -252,7 +264,9 @@ async def test_hub_coord_no_api(
     assert device_id in config_entry.runtime_data.known_device_ids
     # device should be in the device and entity registries
     device_registry = dr.async_get(hass)
-    device_entry = device_registry.async_get_device(identifiers={(DOMAIN, device_id)})
+    device_entry = device_registry.async_get_device_by_identifier(
+        identifier=(DOMAIN, device_id), config_entry_id=config_entry.entry_id
+    )
     assert isinstance(device_entry, DeviceEntry)
 
     entity_registry = er.async_get(hass)

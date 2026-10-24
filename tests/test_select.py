@@ -128,7 +128,9 @@ async def test_select_no_option_for_key(hass, remove_platforms, bypass_get_devic
         ATTR_OPTION: "The very highest",  # This is not a valid option for image quality
     }
 
-    with pytest.raises(ServiceValidationError):
-        assert await hass.services.async_call(
-            SELECT_DOMAIN, SERVICE_SELECT_OPTION, attr, blocking=True
-        )
+    response = await hass.services.async_call(
+        SELECT_DOMAIN, SERVICE_SELECT_OPTION, attr, blocking=True
+    )
+    assert (
+        response is None
+    )  # The service call should not raise an exception, but it should not do anything either

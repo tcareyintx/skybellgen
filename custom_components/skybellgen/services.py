@@ -5,6 +5,7 @@ from __future__ import annotations
 from aioskybellgen import Skybell
 from homeassistant.core import HomeAssistant, ServiceCall, callback
 from homeassistant.helpers import config_validation as cv
+import probatio
 import voluptuous as vol
 
 from .const import (
@@ -14,7 +15,7 @@ from .const import (
     SERVICE_STOP_LOCAL_EVENT_SERVER,
 )
 
-SERVICE_START_LOCAL_EVENT_SERVER_SCHEMA = vol.Schema(
+SERVICE_START_LOCAL_EVENT_SERVER_SCHEMA = probatio.Schema(
     {
         vol.Optional(SERVICE_CONF_INTERFACE): cv.string,
     }
@@ -43,7 +44,7 @@ def async_setup_services(hass: HomeAssistant) -> None:
         DOMAIN,
         SERVICE_START_LOCAL_EVENT_SERVER,
         _start_local_event_server,
-        SERVICE_START_LOCAL_EVENT_SERVER_SCHEMA,
+        schema=SERVICE_START_LOCAL_EVENT_SERVER_SCHEMA,
     )
 
     hass.services.async_register(
