@@ -35,7 +35,9 @@ async def test_diagnostic_device(hass, remove_platforms, bypass_get_devices):
     # device should be in the device registry
     device_id = DEVICE_ID
     device_registry = dr.async_get(hass)
-    device_entry = device_registry.async_get_device(identifiers={(DOMAIN, device_id)})
+    device_entry = device_registry.async_get_device_by_identifier(
+        identifier=(DOMAIN, device_id), config_entry_id=config_entry.entry_id
+    )
     assert isinstance(device_entry, DeviceEntry)
 
     retval = await async_get_device_diagnostics(hass, config_entry, device_entry)
