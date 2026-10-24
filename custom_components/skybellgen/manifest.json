@@ -1,6 +1,7 @@
 {
   "domain": "skybellgen",
   "name": "SkyBellGen",
+  "categories": ["security_safety.doorbells_intercoms"],
   "codeowners": ["@tcarey"],
   "config_flow": true,
   "dependencies": ["ffmpeg", "go2rtc"],
