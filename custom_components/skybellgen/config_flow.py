@@ -12,6 +12,7 @@ from aioskybellgen.exceptions import SkybellAuthenticationException, SkybellExce
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 from homeassistant.const import CONF_EMAIL, CONF_PASSWORD
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+import probatio
 import voluptuous as vol
 
 from .const import CONF_USE_LOCAL_SERVER, DOMAIN
@@ -58,7 +59,7 @@ class SkybellFlowHandler(ConfigFlow, domain=DOMAIN):  # type: ignore[call-arg]
             errors["base"] = error
         return self.async_show_form(
             step_id="reauth_confirm",
-            data_schema=vol.Schema({vol.Required(CONF_PASSWORD): str}),
+            data_schema=probatio.Schema({vol.Required(CONF_PASSWORD): str}),
             description_placeholders={CONF_EMAIL: reauth_email},
             errors=errors,
         )
@@ -96,7 +97,7 @@ class SkybellFlowHandler(ConfigFlow, domain=DOMAIN):  # type: ignore[call-arg]
         return self.async_show_form(
             step_id="reconfigure",
             description_placeholders={CONF_EMAIL: email},
-            data_schema=vol.Schema(
+            data_schema=probatio.Schema(
                 {
                     vol.Required(CONF_PASSWORD): str,
                     vol.Required(
@@ -139,7 +140,7 @@ class SkybellFlowHandler(ConfigFlow, domain=DOMAIN):  # type: ignore[call-arg]
         user_input = user_input or {}
         return self.async_show_form(
             step_id="user",
-            data_schema=vol.Schema(
+            data_schema=probatio.Schema(
                 {
                     vol.Required(CONF_EMAIL, default=user_input.get(CONF_EMAIL)): str,
                     vol.Required(CONF_PASSWORD): str,
