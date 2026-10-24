@@ -37,9 +37,9 @@ async def test_setup_and_unload_entry(
 
     # Check that the device registry has been loaded
     device_registry = dr.async_get(hass)
-    device_entry = device_registry.async_get_device(
-        identifiers={(DOMAIN, "012345670123456789abcdef")}
-    )
+    device_entry = device_registry.async_get_device_by_identifier(
+        identifier={(DOMAIN, "012345670123456789abcdef")},
+        config_entry_id=config_entry.entry_id)
     assert isinstance(device_entry, dr.DeviceEntry)
     # We have to reload the platforms because the test auto tears down the integration
     # after the test is done.
